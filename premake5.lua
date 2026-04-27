@@ -28,7 +28,7 @@ project "Krux"
 
     includedirs
     {
-        "src"
+        "%{prj.name}/src"
     }
 
     links 
