@@ -17,6 +17,9 @@ project "Krux"
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    pchheader "krxpch.h"
+    pchsource "%{prj.name}/src/krxpch.cpp"
+
     files
     {
         "%{prj.name}/src/**.h",
@@ -25,7 +28,7 @@ project "Krux"
 
     includedirs
     {
-        "Krux/src"
+        "src"
     }
 
     links 
@@ -46,12 +49,15 @@ project "Krux"
         }
 
     filter "configurations:Debug"
+        defines "KRX_DEBUG"
         symbols "On"
 
     filter "configurations:Release"
+        defines "KRX_RELEASE"
         optimize "On"
 
     filter "configurations:Dist"
+        defines "KRX_DIST"
         optimize "On"
 
 
@@ -89,10 +95,13 @@ project "Sandbox"
         }
 
     filter "configurations:Debug"
+        defines "KRX_DEBUG"
         symbols "On"
 
     filter "configurations:Release"
+        defines "KRX_RELEASE"
         optimize "On"
 
     filter "configurations:Dist"
+        defines "KRX_DIST"
         optimize "On"

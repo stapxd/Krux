@@ -1,3 +1,4 @@
+#include "krxpch.h"
 #include "Application.h"
 
 namespace Krux {

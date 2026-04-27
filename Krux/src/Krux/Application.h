@@ -1,6 +1,6 @@
 #pragma once
 
-#include "krxpch.h"
+#include <iostream>
 
 namespace Krux {
 
