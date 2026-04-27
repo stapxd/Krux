@@ -1,7 +1,11 @@
 #pragma once
 
-#include <iostream>
+#include "Application.h"
+
+extern Krux::Application* Krux::Create();
 
 int main() {
-	std::cout << "Hello World!";
+	Krux::Application* app = Krux::Create();
+	app->Run();
+	delete app;
 }

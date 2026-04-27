@@ -4,9 +4,10 @@
 [Bb]in-int/
 
 # VS Files
-*.vs
+*.vs/
 *.sln
 *.vcxproj
+*.filters
 
 # User related files
 *.user

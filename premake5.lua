@@ -25,6 +25,7 @@ project "Krux"
 
     includedirs
     {
+        "Krux/src"
     }
 
     links 
@@ -41,6 +42,7 @@ project "Krux"
 
         defines
         {
+            "KRX_SYS_WINDOWS"
         }
 
     filter "configurations:Debug"
