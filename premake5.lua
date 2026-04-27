@@ -14,21 +14,26 @@ project "Krux"
     language "C++"
     cppdialect "C++17"
 
+    buildoptions { "/utf-8" }
+
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "krxpch.h"
     pchsource "%{prj.name}/src/krxpch.cpp"
 
+    local p = "%{prj.name}"
+
     files
     {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        p .. "/src/**.h",
+        p .. "/src/**.cpp"
     }
 
     includedirs
     {
-        "%{prj.name}/src"
+        p .. "/src",
+        p .. "/vendor/spdlog/include"
     }
 
     links 
@@ -67,6 +72,8 @@ project "Sandbox"
     language "C++"
     cppdialect "C++17"
 
+    buildoptions { "/utf-8" }
+    
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -78,7 +85,8 @@ project "Sandbox"
 
     includedirs
     {
-        "Krux/src"
+        "Krux/src",
+        "Krux/vendor/spdlog/include"
     }
 
     links 

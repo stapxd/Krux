@@ -1,0 +1,3 @@
+[submodule "Krux/vendor/spdlog"]
+	path = Krux/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git

@@ -15,7 +15,7 @@ namespace Krux {
 
 	void Application::Run()
 	{
-		std::cout << "app run\n";
+		
 	}
 
 }
