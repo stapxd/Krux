@@ -8,13 +8,20 @@ workspace "Krux"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDirs = {}
+IncludeDirs['GLFW'] = "Krux/vendor/GLFW/include"
+
+group "Dependencies"
+    include "Krux/vendor/GLFW"
+group ""
+
 project "Krux"
     location "Krux"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
 
-    buildoptions { "/utf-8" }
+    characterset "Unicode"
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -33,11 +40,13 @@ project "Krux"
     includedirs
     {
         p .. "/src",
-        p .. "/vendor/spdlog/include"
+        p .. "/vendor/spdlog/include",
+        "%{IncludeDirs.GLFW}"
     }
 
     links 
     {
+        "GLFW"
     }
 
     libdirs 
@@ -47,10 +56,13 @@ project "Krux"
     filter "system:windows"
         cppdialect "C++17"
         systemversion "latest"
+    
+        buildoptions { "/utf-8" }
 
         defines
         {
-            "KRX_SYS_WINDOWS"
+            "KRX_SYS_WINDOWS",
+            "GLFW_INCLUDE_NONE",
         }
 
     filter "configurations:Debug"
@@ -72,7 +84,7 @@ project "Sandbox"
     language "C++"
     cppdialect "C++17"
 
-    buildoptions { "/utf-8" }
+    characterset "Unicode"
     
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -97,6 +109,8 @@ project "Sandbox"
     filter "system:windows"
         cppdialect "C++17"
         systemversion "latest"
+
+        buildoptions { "/utf-8" }
 
         defines
         {

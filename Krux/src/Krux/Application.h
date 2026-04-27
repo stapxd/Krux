@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Window.h"
+
 #include <iostream>
 
 namespace Krux {
@@ -27,8 +29,11 @@ namespace Krux {
 		inline static Application* m_Instance = nullptr;
 
 		ApplicationSpecification m_Specification;
+
+		Window* m_Window = nullptr;
+		bool m_IsRunning = true;
 	};
 
-	Application* Create();
+	Application* CreateApplication();
 }
 

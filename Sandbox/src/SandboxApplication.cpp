@@ -13,6 +13,6 @@ public:
 	}
 };
 
-Krux::Application* Krux::Create() {
-	return new SandboxApplication({ "Sandbox" });
+Krux::Application* Krux::CreateApplication() {
+	return new SandboxApplication({ "Sandbox123", 1000, 550 });
 }
