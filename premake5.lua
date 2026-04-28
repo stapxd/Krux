@@ -9,10 +9,12 @@ workspace "Krux"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDirs = {}
-IncludeDirs['GLFW'] = "Krux/vendor/GLFW/include"
+IncludeDirs['GLFW']  = "Krux/vendor/GLFW/include"
+IncludeDirs['ImGui'] = "Krux/vendor/ImGui"
 
 group "Dependencies"
     include "Krux/vendor/GLFW"
+    include "Krux/vendor/ImGui"
 group ""
 
 project "Krux"
@@ -41,12 +43,14 @@ project "Krux"
     {
         p .. "/src",
         p .. "/vendor/spdlog/include",
-        "%{IncludeDirs.GLFW}"
+        "%{IncludeDirs.GLFW}",
+        "%{IncludeDirs.ImGui}"
     }
 
     links 
     {
-        "GLFW"
+        "GLFW",
+        "ImGui"
     }
 
     libdirs 
@@ -56,6 +60,7 @@ project "Krux"
     filter "system:windows"
         cppdialect "C++17"
         systemversion "latest"
+        staticruntime "On"
     
         buildoptions { "/utf-8" }
 
@@ -98,7 +103,8 @@ project "Sandbox"
     includedirs
     {
         "Krux/src",
-        "Krux/vendor/spdlog/include"
+        "Krux/vendor/spdlog/include",
+        "%{IncludeDirs.ImGui}"
     }
 
     links 
@@ -109,6 +115,7 @@ project "Sandbox"
     filter "system:windows"
         cppdialect "C++17"
         systemversion "latest"
+        staticruntime "On"
 
         buildoptions { "/utf-8" }
 

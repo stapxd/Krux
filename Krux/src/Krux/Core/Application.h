@@ -2,6 +2,7 @@
 
 #include "Window.h"
 
+#include "Krux/ImGui/ImGuiLayer.h"
 #include "LayerStack.h"
 
 #include "Krux/Events/WindowEvents.h"
@@ -45,6 +46,7 @@ namespace Krux {
 		Window* m_Window = nullptr;
 		bool m_IsRunning = true;
 
+		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 	};
 

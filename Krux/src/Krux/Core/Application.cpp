@@ -18,6 +18,9 @@ namespace Krux {
 		m_Window = CreateApplicationWindow({ specification.Name, specification.Width, specification.Height });
 		m_Window->Initialize();
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -56,6 +59,12 @@ namespace Krux {
 			for (auto it : m_LayerStack) {
 				it->OnUpdate();
 			}
+
+			m_ImGuiLayer->Begin();
+			for (auto it : m_LayerStack) {
+				it->OnImGuiRender();
+			}
+			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
 		}
