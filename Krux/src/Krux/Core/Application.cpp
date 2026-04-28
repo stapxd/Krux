@@ -10,12 +10,6 @@
 
 namespace Krux {
 
-	#ifdef KRX_SYS_WINDOWS
-		Window* CreateApplicationWindow(WindowSpecification windowSpec) {
-			return new WindowsWindow(windowSpec);
-		}
-	#endif
-
 	Application::Application(ApplicationSpecification specification)
 		: m_Specification(specification)
 	{

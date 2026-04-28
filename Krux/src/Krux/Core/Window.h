@@ -47,6 +47,6 @@ namespace Krux {
 		EventCallback m_EventCallback;
 	};
 
-	Window* CreateApplicationWindow();
+	Window* CreateApplicationWindow(WindowSpecification windowSpec);
 }
 
