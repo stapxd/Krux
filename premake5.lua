@@ -114,6 +114,7 @@ project "Sandbox"
 
         defines
         {
+            "KRX_SYS_WINDOWS"
         }
 
     filter "configurations:Debug"

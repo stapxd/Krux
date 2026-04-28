@@ -36,17 +36,33 @@ namespace Krux {
 		EventDispatcher d(e);
 		d.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
 
-		d.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OnWindowResize));
-		d.Dispatch<WindowMovedEvent>(BIND_EVENT_FUNC(OnWindowMoved));
-		d.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(OnKeyPressed));
-		d.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FUNC(OnMouseButtonPressed));
-		d.Dispatch<MouseScrollEvent>(BIND_EVENT_FUNC(OnMouseScrolled));
-		d.Dispatch<MouseMovedEvent>(BIND_EVENT_FUNC(OnMouseMoved));
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++) {
+			(*it)->OnEvent(e);
+			if (e.IsHandled)
+				break;
+		}
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
+
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::Run()
 	{
 		while (m_IsRunning) {
+
+			for (auto it : m_LayerStack) {
+				it->OnUpdate();
+			}
+
 			m_Window->OnUpdate();
 		}
 	}
@@ -54,42 +70,6 @@ namespace Krux {
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_IsRunning = false;
-		return true;
-	}
-
-	bool Application::OnWindowResize(WindowResizeEvent& e)
-	{
-		KRX_CORE_TRACE("x: {} y: {}", e.GetWidth(), e.GetHeight());
-		return true;
-	}
-
-	bool Application::OnWindowMoved(WindowMovedEvent& e)
-	{
-		KRX_CORE_TRACE("x: {} y: {}", e.GetXPos(), e.GetYPos());
-		return true;
-	}
-
-	bool Application::OnKeyPressed(KeyPressedEvent& e)
-	{
-		KRX_CORE_TRACE("{}", (char)e.GetKey());
-		return true;
-	}
-
-	bool Application::OnMouseButtonPressed(MouseButtonPressedEvent& e)
-	{
-		KRX_CORE_TRACE("{}", e.GetKey());
-		return true;
-	}
-
-	bool Application::OnMouseScrolled(MouseScrollEvent& e)
-	{
-		KRX_CORE_TRACE("x= {} : y= {}", e.GetXOffset(), e.GetYOffset());
-		return true;
-	}
-
-	bool Application::OnMouseMoved(MouseMovedEvent& e)
-	{
-		KRX_CORE_TRACE("x= {} : y= {}", e.GetXPos(), e.GetYPos());
 		return true;
 	}
 }
