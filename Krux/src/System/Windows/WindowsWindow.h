@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Krux/Window.h"
+#include "Krux/Core/Window.h"
 
 #include <GLFW/glfw3.h>
 
@@ -12,6 +12,8 @@ namespace Krux {
 		WindowsWindow(WindowSpecification windowSpec);
 		~WindowsWindow();
 
+		virtual void* GetNativeWindow() override { return m_Window; }
+
 		virtual void Initialize() override;
 		virtual void OnUpdate() override;
 
@@ -19,8 +21,8 @@ namespace Krux {
 
 	private:
 		void Shutdown();
-	private:
 
+	private:
 		GLFWwindow* m_Window = nullptr;
 	};
 }

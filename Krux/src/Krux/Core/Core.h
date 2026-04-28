@@ -6,7 +6,7 @@
 	#error "Krux supports only windows!"
 #endif
 
-
+#define BIND_EVENT_FUNC(name) [this](auto& event) { return name(event); }
 
 #define KRX_ENABLE_ASSERT 1
 

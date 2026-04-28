@@ -1,4 +1,4 @@
-#include "Krux/EntryPoint.h"
+#include "Krux/Core/EntryPoint.h"
 
 class SandboxApplication : public Krux::Application {
 public:
