@@ -111,12 +111,18 @@ project "Sandbox"
         "Krux/src",
         "Krux/vendor/spdlog/include",
         "%{IncludeDirs.ImGui}",
-        "%{IncludeDirs.glm}"
+        "%{IncludeDirs.glm}",
+
+        --temp
+        "%{IncludeDirs.Glad}"
     }
 
     links 
     {
-        "Krux"
+        "Krux",
+
+        -- temp
+        "Glad"
     }
 
     filter "system:windows"
