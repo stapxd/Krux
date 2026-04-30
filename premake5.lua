@@ -11,10 +11,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDirs = {}
 IncludeDirs['GLFW']  = "Krux/vendor/GLFW/include"
 IncludeDirs['ImGui'] = "Krux/vendor/ImGui"
+IncludeDirs['Glad'] = "Krux/vendor/Glad/include"
 
 group "Dependencies"
     include "Krux/vendor/GLFW"
     include "Krux/vendor/ImGui"
+    include "Krux/vendor/Glad"
 group ""
 
 project "Krux"
@@ -44,12 +46,14 @@ project "Krux"
         p .. "/src",
         p .. "/vendor/spdlog/include",
         "%{IncludeDirs.GLFW}",
-        "%{IncludeDirs.ImGui}"
+        "%{IncludeDirs.ImGui}",
+        "%{IncludeDirs.Glad}"
     }
 
     links 
     {
         "GLFW",
+        "Glad",
         "ImGui"
     }
 

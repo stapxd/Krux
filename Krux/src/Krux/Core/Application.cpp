@@ -5,6 +5,8 @@
 
 #include "System/Windows/WindowsWindow.h"
 
+#include "Krux/Render/RenderAPI.h"
+
 #include <iostream>
 #include <functional>
 
@@ -18,6 +20,9 @@ namespace Krux {
 		m_Window = CreateApplicationWindow({ specification.Name, specification.Width, specification.Height });
 		m_Window->Initialize();
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
+
+		m_Context = RenderContext::Create(RenderAPI::API());
+		m_Context->Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -66,7 +71,7 @@ namespace Krux {
 			}
 			m_ImGuiLayer->End();
 
-			m_Window->OnUpdate();
+			m_Context->SwapBuffers();
 		}
 	}
 

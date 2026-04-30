@@ -43,8 +43,6 @@ namespace Krux {
             KRX_CORE_ASSERT(false);
         }
 
-        glfwMakeContextCurrent(m_Window);
-
         glfwSwapInterval(m_Specification.IsVSync);
 
         KRX_CORE_INFO("Initialized Windows Window: {}, {}:{}", m_Specification.Name, m_Specification.Width, m_Specification.Height);

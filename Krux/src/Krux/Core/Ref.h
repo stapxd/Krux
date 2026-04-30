@@ -72,6 +72,11 @@ namespace Krux {
 
 		explicit operator bool() const { return m_Ptr != nullptr; }
 
+		template<typename... Args>
+		static Ref<T> Create(Args&&... args) {
+			return Ref<T>(new T(std::forward<Args>(args)...));
+		}
+
 	private:
 		T* m_Ptr;
 	};
@@ -92,11 +97,4 @@ namespace Krux {
 		template<typename T>
 		friend class Ref;
 	};
-
-	template<typename T, typename... Args>
-	static Ref<T> Create(Args&&... args) {
-		return Ref<T>(new T(std::forward<Args>(args)...));
-	}
-
 }
-

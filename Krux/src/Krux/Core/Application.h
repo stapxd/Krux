@@ -9,6 +9,10 @@
 #include "Krux/Events/KeyEvents.h"
 #include "Krux/Events/MouseEvents.h"
 
+#include "Ref.h"
+
+#include "Krux/Render/RenderContext.h"
+
 #include <iostream>
 
 namespace Krux {
@@ -42,6 +46,8 @@ namespace Krux {
 		inline static Application* m_Instance = nullptr;
 
 		ApplicationSpecification m_Specification;
+
+		Ref<RenderContext> m_Context;
 
 		Window* m_Window = nullptr;
 		bool m_IsRunning = true;
