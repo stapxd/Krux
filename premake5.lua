@@ -12,6 +12,7 @@ IncludeDirs = {}
 IncludeDirs['GLFW']  = "Krux/vendor/GLFW/include"
 IncludeDirs['ImGui'] = "Krux/vendor/ImGui"
 IncludeDirs['Glad'] = "Krux/vendor/Glad/include"
+IncludeDirs['glm'] = "Krux/vendor/glm"
 
 group "Dependencies"
     include "Krux/vendor/GLFW"
@@ -47,7 +48,8 @@ project "Krux"
         p .. "/vendor/spdlog/include",
         "%{IncludeDirs.GLFW}",
         "%{IncludeDirs.ImGui}",
-        "%{IncludeDirs.Glad}"
+        "%{IncludeDirs.Glad}",
+        "%{IncludeDirs.glm}"
     }
 
     links 
@@ -108,7 +110,8 @@ project "Sandbox"
     {
         "Krux/src",
         "Krux/vendor/spdlog/include",
-        "%{IncludeDirs.ImGui}"
+        "%{IncludeDirs.ImGui}",
+        "%{IncludeDirs.glm}"
     }
 
     links 

@@ -6,6 +6,7 @@
 #include "System/Windows/WindowsWindow.h"
 
 #include "Krux/Render/RenderAPI.h"
+#include "Krux/Render/Renderer.h"
 
 #include <iostream>
 #include <functional>
@@ -26,6 +27,8 @@ namespace Krux {
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+
+		Renderer::Init();
 	}
 
 	Application::~Application()
@@ -60,6 +63,8 @@ namespace Krux {
 	void Application::Run()
 	{
 		while (m_IsRunning) {
+
+			Renderer::Clear();
 
 			for (auto it : m_LayerStack) {
 				it->OnUpdate();

@@ -22,6 +22,11 @@ namespace Krux {
             return false;
         }
 
+        KRX_CORE_INFO("OpenGL Info:");
+        KRX_CORE_INFO("  Vendor: {}", (const char*)glGetString(GL_VENDOR));
+        KRX_CORE_INFO("  Renderer: {}", (const char*)glGetString(GL_RENDERER));
+        KRX_CORE_INFO("  Version: {}", (const char*)glGetString(GL_VERSION));
+
         return true;
     }
 

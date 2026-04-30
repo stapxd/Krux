@@ -7,6 +7,10 @@ namespace Krux {
 	{
 	public:
 		static void Init();
+
+		static void Clear();
+		static void ClearColor(glm::vec4 color);
+
 	private:
 		static Ref<RenderAPI> m_API;
 	};

@@ -3,6 +3,8 @@
 #include "Krux/Core/Core.h"
 #include "Krux/Events/KeyEvents.h"
 
+#include "Krux/Render/Renderer.h"
+
 #include <imgui.h>
 
 class SandboxWorldLayer : public Krux::Layer {
@@ -22,6 +24,10 @@ public:
 	void OnImGuiRender() override {
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
+	}
+
+	void OnUpdate() {
+
 	}
 
 	void OnEvent(Krux::Event& e) override {
