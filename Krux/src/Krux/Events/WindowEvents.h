@@ -9,6 +9,7 @@ namespace Krux {
 		WindowCloseEvent() {}
 
 		EVENT_SET_TYPE(WindowClose);
+		EVENT_SET_CATEGORY(WindowEvent);
 	};
 
 	class WindowResizeEvent : public Event {
@@ -18,6 +19,7 @@ namespace Krux {
 		{}
 
 		EVENT_SET_TYPE(WindowResize);
+		EVENT_SET_CATEGORY(WindowEvent);
 
 		int GetWidth() const { return m_Width; }
 		int GetHeight() const { return m_Height; }
@@ -33,7 +35,8 @@ namespace Krux {
 			: m_XPos(xpos), m_YPos(ypos)
 		{}
 
-		EVENT_SET_TYPE(MouseMoved);
+		EVENT_SET_TYPE(WindowMoved);
+		EVENT_SET_CATEGORY(WindowEvent);
 
 		double GetXPos() const { return m_XPos; }
 		double GetYPos() const { return m_YPos; }

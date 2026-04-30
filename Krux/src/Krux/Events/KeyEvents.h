@@ -11,6 +11,7 @@ namespace Krux {
 		{}
 
 		EVENT_SET_TYPE(KeyPressed);
+		EVENT_SET_CATEGORY(KeyEvent);
 
 		int GetKey() const { return m_KeyCode; }
 		int IsRepeated() const { return m_IsRepeated; }
@@ -27,6 +28,7 @@ namespace Krux {
 		{}
 
 		EVENT_SET_TYPE(KeyReleased);
+		EVENT_SET_CATEGORY(KeyEvent);
 
 		int GetKey() const { return m_KeyCode; }
 

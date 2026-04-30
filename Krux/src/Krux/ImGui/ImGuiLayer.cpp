@@ -41,6 +41,15 @@ namespace Krux {
 		ImGui::DestroyContext();
 	}
 
+	void ImGuiLayer::OnEvent(Event& e)
+	{
+		if (m_BlockEvents) {
+			ImGuiIO& io = ImGui::GetIO();
+			e.IsHandled |= e.IsInCategory(KeyEvent) && io.WantCaptureKeyboard;
+			e.IsHandled |= e.IsInCategory(MouseButtonEvent) && io.WantCaptureMouse;
+		}
+	}
+
 	void ImGuiLayer::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();

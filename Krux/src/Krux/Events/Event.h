@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Krux/Core/Core.h"
+
 #include <functional>
 
 namespace Krux {
@@ -11,8 +13,18 @@ namespace Krux {
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
+	enum EventCategoty {
+		None = 0,
+		WindowEvent = BIT(1),
+		KeyEvent = BIT(2),
+		MouseEvent = BIT(3),
+		MouseButtonEvent = BIT(4),
+	};
+
 	#define EVENT_SET_TYPE(type) static EventType GetStaticType() { return EventType::##type; } \
 								 virtual EventType GetType() override { return  GetStaticType(); }
+
+	#define EVENT_SET_CATEGORY(category) virtual EventCategoty GetCategoty() override { return category; }
 
 	class Event
 	{
@@ -20,7 +32,10 @@ namespace Krux {
 		bool IsHandled = false;
 	
 	public:
+		bool IsInCategory(EventCategoty category) { return (int)GetCategoty() & (int)category; }
+
 		virtual EventType GetType() = 0;
+		virtual EventCategoty GetCategoty() = 0;
 
 	protected:
 		static EventType m_Type;
