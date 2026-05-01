@@ -12,6 +12,7 @@
 // TEMP
 #include "Krux/Render/Buffer.h"
 #include "Krux/Render/VertexArray.h"
+#include "Krux/Render/Shader.h"
 
 class SandboxWorldLayer : public Krux::Layer {
 public:
@@ -30,4 +31,5 @@ private:
 	Krux::Ref<Krux::VertexArray> VAO;
 	Krux::Ref<Krux::VertexBuffer> VBO;
 	Krux::Ref<Krux::IndexBuffer> EBO;
+	Krux::Ref<Krux::Shader> Shader;
 };

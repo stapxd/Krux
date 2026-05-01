@@ -6,35 +6,45 @@
 
 void SandboxWorldLayer::OnAttach()
 {
+	Shader = Krux::Shader::Create("assets/shaders/color.glsl");
+
 	// VAO
-	VAO = Krux::VertexArray::Create();
+	{
+		VAO = Krux::VertexArray::Create();
+	}
 
 	// VBO
-	float vertices[3 * 3] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};
+	{
+		float vertices[3 * 3] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f
+		};
 
-	VBO = Krux::VertexBuffer::Create();
-	VBO->SetData(vertices, sizeof(vertices), Krux::BufferUsage::StaticDraw);
+		VBO = Krux::VertexBuffer::Create();
+		VBO->SetData(vertices, sizeof(vertices), Krux::BufferUsage::StaticDraw);
+	}
 
 	// Layout
-	Krux::VertexLayout layout = {
-		{ 3, Krux::VertexLayoutType::Float, false }
-	};
-	
-	VAO->AttachVertexBuffer(VBO, layout);
+	{
+		Krux::VertexLayout layout = {
+			{ 3, Krux::VertexLayoutType::Float, false }
+		};
+
+		VAO->AttachVertexBuffer(VBO, layout);
+	}
 
 	// IBO
-	unsigned int indices[3] = {
-		0, 1, 2
-	};
+	{
+		unsigned int indices[3] = {
+			0, 1, 2
+		};
 
-	EBO = Krux::IndexBuffer::Create();
-	EBO->SetData(indices, sizeof(indices) / 4, Krux::BufferUsage::StaticDraw);
+		EBO = Krux::IndexBuffer::Create();
+		EBO->SetData(indices, sizeof(indices) / 4, Krux::BufferUsage::StaticDraw);
 
-	VAO->AttachElementBuffer(EBO);
+		VAO->AttachElementBuffer(EBO); 
+	}
 }
 
 void SandboxWorldLayer::OnDetach()
@@ -50,7 +60,9 @@ void SandboxWorldLayer::OnImGuiRender()
 void SandboxWorldLayer::OnUpdate()
 {
 	// Render
+	Shader->Bind();
 	Krux::RenderCommand::DrawIndexed(VAO, EBO->GetCount());
+	Shader->UnBind();
 }
 
 void SandboxWorldLayer::OnEvent(Krux::Event& e)
