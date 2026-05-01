@@ -3,26 +3,9 @@
 
 #include "Krux/Core/Core.h"
 
-#include <glad/glad.h>
+#include "Krux/Utils/Utils.h"
 
 namespace Krux {
-
-    namespace Utils {
-        GLenum ConvertBufferUsageToOpenGLBufferUsage(BufferUsage usage) {
-            switch (usage)
-            {
-            case Krux::BufferUsage::StreamDraw:
-                return GL_STREAM_DRAW;
-            case Krux::BufferUsage::StaticDraw:
-                return GL_STATIC_DRAW;
-            case Krux::BufferUsage::DynamicDraw:
-                return GL_DYNAMIC_DRAW;
-            }
-
-            KRX_CORE_ASSERT(false, "Invalid BufferUsage!");
-            return 0;
-        }
-    }
 
     // Vertex Buffer ----------------
 
@@ -76,9 +59,10 @@ namespace Krux {
     {
     }
 
-    void OpenGLIndexBuffer::SetData(const void* data, uint32_t count, BufferUsage usage) const
+    void OpenGLIndexBuffer::SetData(const void* data, uint32_t count, BufferUsage usage)
     {
         glNamedBufferData(m_RendererID, count * sizeof(unsigned int), data, Utils::ConvertBufferUsageToOpenGLBufferUsage(usage));
+        m_Count = count;
     }
 
     uint32_t OpenGLIndexBuffer::GetRendererID() const

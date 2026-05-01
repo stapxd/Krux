@@ -29,7 +29,7 @@ namespace Krux {
 		Application(ApplicationSpecification specification);
 		virtual ~Application();
 		
-		static Application* Instance() { return m_Instance; }
+		static Application* Instance() { return s_Instance; }
 
 		const ApplicationSpecification& GetSpecification() const { return m_Specification; }
 		Window* GetWindow() const { return m_Window; }
@@ -43,7 +43,7 @@ namespace Krux {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 	protected:
-		inline static Application* m_Instance = nullptr;
+		inline static Application* s_Instance = nullptr;
 
 		ApplicationSpecification m_Specification;
 

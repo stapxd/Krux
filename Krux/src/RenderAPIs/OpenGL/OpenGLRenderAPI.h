@@ -8,7 +8,7 @@ namespace Krux {
 	public:
 		virtual void Clear() override;
 		virtual void ClearColor(glm::vec4 color) override;
-		virtual void DrawIndexed() override;
+		virtual void DrawIndexed(Ref<VertexArray> vao, uint32_t indexCount = 0) override;
 	};
 
 }

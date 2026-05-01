@@ -3,21 +3,26 @@
 
 namespace Krux {
 
-	Ref<RenderAPI> RenderCommand::m_API = nullptr;
+	Ref<RenderAPI> RenderCommand::s_API = nullptr;
 
 	void RenderCommand::Init()
 	{
-		m_API = RenderAPI::Create();
+		s_API = RenderAPI::Create();
 	}
 
 	void RenderCommand::Clear()
 	{
-		m_API->Clear();
+		s_API->Clear();
 	}
 
 	void RenderCommand::ClearColor(glm::vec4 color)
 	{
-		m_API->ClearColor(color);
+		s_API->ClearColor(color);
+	}
+
+	void RenderCommand::DrawIndexed(Ref<VertexArray> vao, uint32_t indexCount /*= 0*/)
+	{
+		s_API->DrawIndexed(vao, indexCount);
 	}
 
 }

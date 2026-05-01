@@ -7,7 +7,7 @@
 
 namespace Krux {
 
-	RenderAPIType RenderAPI::m_API = RenderAPIType::OpenGL;
+	RenderAPIType RenderAPI::s_API = RenderAPIType::OpenGL;
 
 	Ref<RenderAPI> RenderAPI::Create()
 	{

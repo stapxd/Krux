@@ -1,9 +1,10 @@
 #include "krxpch.h"
 #include "OpenGLVertexArray.h"
 
-#include <glad/glad.h>
+#include "Krux/Utils/Utils.h"
 
 namespace Krux {
+
     OpenGLVertexArray::OpenGLVertexArray()
     {
         glCreateVertexArrays(1, &m_RendererID);
@@ -24,9 +25,23 @@ namespace Krux {
         glBindVertexArray(0);
     }
 
-    void OpenGLVertexArray::AttachVertexBuffer(Ref<VertexBuffer> vbo) // add layout
+    void OpenGLVertexArray::AttachVertexBuffer(Ref<VertexBuffer> vbo, const VertexLayout& layout)
     {
-        glVertexArrayVertexBuffer(m_RendererID, m_VertexBufferIndex, vbo->GetRendererID(), 0, 3 * sizeof(float)); // change stride via layout
+        glVertexArrayVertexBuffer(m_RendererID, m_VertexBufferIndex, vbo->GetRendererID(), 0, layout.GetStride());
+
+        int attribIndex = 0;
+        for (auto& el : layout.GetElements()) {
+            glEnableVertexArrayAttrib(m_RendererID, attribIndex);
+
+            GLuint relativeOffset = 0;
+            glVertexArrayAttribFormat(m_RendererID, attribIndex, el.Count, Utils::GetOpenGLTypeFromVertexLayoutType(el.Type), el.Normalized ? GL_TRUE : GL_FALSE, relativeOffset);
+            relativeOffset += el.Count * Utils::GetSizeOfVertexLayoutType(el.Type);
+
+            glVertexArrayAttribBinding(m_RendererID, attribIndex, m_VertexBufferIndex);
+
+            attribIndex++;
+        }
+
         m_VertexBufferIndex++;
     }
 

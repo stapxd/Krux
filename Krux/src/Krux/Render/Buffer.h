@@ -39,11 +39,14 @@ namespace Krux {
 		virtual void UnBind() const = 0;
 		// -----------------
 
-		virtual void SetData(const void* data, uint32_t count, BufferUsage usage) const = 0;
+		virtual void SetData(const void* data, uint32_t count, BufferUsage usage) = 0;
 
 		virtual uint32_t GetRendererID() const = 0;
+		uint32_t GetCount() const { return m_Count; }
 
 		static Ref<IndexBuffer> Create();
+	protected:
+		uint32_t m_Count = 0;
 	};
 
 }

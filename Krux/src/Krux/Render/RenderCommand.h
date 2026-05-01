@@ -2,6 +2,8 @@
 
 #include "RenderAPI.h"
 
+#include "Krux/Render/VertexArray.h"
+
 namespace Krux {
 	class RenderCommand
 	{
@@ -11,8 +13,10 @@ namespace Krux {
 		static void Clear();
 		static void ClearColor(glm::vec4 color);
 
+		static void DrawIndexed(Ref<VertexArray> vao, uint32_t indexCount = 0);
+
 	private:
-		static Ref<RenderAPI> m_API;
+		static Ref<RenderAPI> s_API;
 	};
 }
 

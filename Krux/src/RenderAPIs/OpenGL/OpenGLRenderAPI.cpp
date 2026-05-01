@@ -1,7 +1,7 @@
 #include "krxpch.h"
 #include "OpenGLRenderAPI.h"
 
-#include <glad/glad.h>
+#include "Krux/Render/VertexArray.h"
 
 namespace Krux {
 
@@ -15,8 +15,11 @@ namespace Krux {
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRenderAPI::DrawIndexed()
+	void OpenGLRenderAPI::DrawIndexed(Ref<VertexArray> vao, uint32_t indexCount /*= 0*/)
 	{
+		vao->Bind();
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+		vao->UnBind();
 	}
 
 }

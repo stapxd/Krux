@@ -1,7 +1,8 @@
 #include "SandboxWorldLayer.h"
 
 // temp
-#include <glad/glad.h>
+#include "Krux/Render/VertexLayout.h"
+#include "Krux/Render/RenderCommand.h"
 
 void SandboxWorldLayer::OnAttach()
 {
@@ -18,12 +19,12 @@ void SandboxWorldLayer::OnAttach()
 	VBO = Krux::VertexBuffer::Create();
 	VBO->SetData(vertices, sizeof(vertices), Krux::BufferUsage::StaticDraw);
 
-	VAO->AttachVertexBuffer(VBO);
-
 	// Layout
-	glEnableVertexArrayAttrib(VAO->GetRendererID(), 0);
-	glVertexArrayAttribFormat(VAO->GetRendererID(), 0, 3, GL_FLOAT, false, 0);
-	glVertexArrayAttribBinding(VAO->GetRendererID(), 0, 0);
+	Krux::VertexLayout layout = {
+		{ 3, Krux::VertexLayoutType::Float, false }
+	};
+	
+	VAO->AttachVertexBuffer(VBO, layout);
 
 	// IBO
 	unsigned int indices[3] = {
@@ -49,10 +50,7 @@ void SandboxWorldLayer::OnImGuiRender()
 void SandboxWorldLayer::OnUpdate()
 {
 	// Render
-	// RenderCommand::DrawIndexed(VAO);
-	VAO->Bind();
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-	VAO->UnBind();
+	Krux::RenderCommand::DrawIndexed(VAO, EBO->GetCount());
 }
 
 void SandboxWorldLayer::OnEvent(Krux::Event& e)

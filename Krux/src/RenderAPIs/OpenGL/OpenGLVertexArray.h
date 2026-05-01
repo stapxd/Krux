@@ -12,7 +12,7 @@ namespace Krux {
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
 
-		virtual void AttachVertexBuffer(Ref<VertexBuffer> vbo) override;
+		virtual void AttachVertexBuffer(Ref<VertexBuffer> vbo, const VertexLayout& layout) override;
 		virtual void AttachElementBuffer(Ref<IndexBuffer> ebo) override;
 
 		virtual uint32_t GetRendererID() const override { return m_RendererID; };
