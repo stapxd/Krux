@@ -6,7 +6,7 @@
 void SandboxWorldLayer::OnAttach()
 {
 	// VAO
-	glCreateVertexArrays(1, &VAO);
+	VAO = Krux::VertexArray::Create();
 
 	// VBO
 	float vertices[3 * 3] = {
@@ -15,29 +15,29 @@ void SandboxWorldLayer::OnAttach()
 		 0.0f,  0.5f, 0.0f
 	};
 
-	glCreateBuffers(1, &VBO);
-	glNamedBufferData(VBO, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 3 * sizeof(float));
+	VBO = Krux::VertexBuffer::Create();
+	VBO->SetData(vertices, sizeof(vertices), Krux::BufferUsage::StaticDraw);
+
+	VAO->AttachVertexBuffer(VBO);
 
 	// Layout
-	glEnableVertexArrayAttrib(VAO, 0);
-	glVertexArrayAttribFormat(VAO, 0, 3, GL_FLOAT, false, 0);
-	glVertexArrayAttribBinding(VAO, 0, 0);
+	glEnableVertexArrayAttrib(VAO->GetRendererID(), 0);
+	glVertexArrayAttribFormat(VAO->GetRendererID(), 0, 3, GL_FLOAT, false, 0);
+	glVertexArrayAttribBinding(VAO->GetRendererID(), 0, 0);
 
 	// IBO
 	unsigned int indices[3] = {
 		0, 1, 2
 	};
-	glCreateBuffers(1, &IBO);
-	glNamedBufferData(IBO, sizeof(indices), indices, GL_STATIC_DRAW);
-	glVertexArrayElementBuffer(VAO, IBO);
+
+	EBO = Krux::IndexBuffer::Create();
+	EBO->SetData(indices, sizeof(indices) / 4, Krux::BufferUsage::StaticDraw);
+
+	VAO->AttachElementBuffer(EBO);
 }
 
 void SandboxWorldLayer::OnDetach()
 {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &IBO);
 }
 
 void SandboxWorldLayer::OnImGuiRender()
@@ -48,11 +48,11 @@ void SandboxWorldLayer::OnImGuiRender()
 
 void SandboxWorldLayer::OnUpdate()
 {
-	glBindVertexArray(VAO);
 	// Render
+	// RenderCommand::DrawIndexed(VAO);
+	VAO->Bind();
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-	//glDrawArrays(GL_TRIANGLES, 1, 3);
-	glBindVertexArray(0);
+	VAO->UnBind();
 }
 
 void SandboxWorldLayer::OnEvent(Krux::Event& e)

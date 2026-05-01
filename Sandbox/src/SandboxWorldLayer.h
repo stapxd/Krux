@@ -9,6 +9,10 @@
 
 #include <imgui.h>
 
+// TEMP
+#include "Krux/Render/Buffer.h"
+#include "Krux/Render/VertexArray.h"
+
 class SandboxWorldLayer : public Krux::Layer {
 public:
 	SandboxWorldLayer()
@@ -23,7 +27,7 @@ public:
 	bool OnKeyPressed(Krux::KeyPressedEvent& e);
 
 private:
-	uint32_t VAO;
-	uint32_t VBO;
-	uint32_t IBO;
+	Krux::Ref<Krux::VertexArray> VAO;
+	Krux::Ref<Krux::VertexBuffer> VBO;
+	Krux::Ref<Krux::IndexBuffer> EBO;
 };
