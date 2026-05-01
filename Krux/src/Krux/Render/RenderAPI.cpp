@@ -11,7 +11,7 @@ namespace Krux {
 
 	Ref<RenderAPI> RenderAPI::Create()
 	{
-        switch (m_API)
+        switch (s_API)
         {
         case Krux::RenderAPIType::None:
             KRX_CORE_ASSERT(false, "Current version does not support RenderAPIType::None!");

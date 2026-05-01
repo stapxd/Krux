@@ -16,7 +16,7 @@ namespace Krux {
 	Application::Application(ApplicationSpecification specification)
 		: m_Specification(specification)
 	{
-		m_Instance = this;
+		s_Instance = this;
 
 		m_Window = CreateApplicationWindow({ specification.Name, specification.Width, specification.Height });
 		m_Window->Initialize();

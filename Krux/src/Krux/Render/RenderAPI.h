@@ -18,7 +18,7 @@ namespace Krux {
 		virtual void ClearColor(glm::vec4 color) = 0;
 		virtual void DrawIndexed(Ref<VertexArray> vao, uint32_t indexCount = 0) = 0;
 
-		static RenderAPIType API() { return m_API; }
+		static RenderAPIType API() { return s_API; }
 
 		static Ref<RenderAPI> Create();
 	private:
