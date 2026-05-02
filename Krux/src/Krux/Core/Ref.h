@@ -72,6 +72,11 @@ namespace Krux {
 
 		explicit operator bool() const { return m_Ptr != nullptr; }
 
+		template<typename T>
+		Ref<T> As() {
+			return Ref<T>((T*)m_Ptr);
+		}
+
 		template<typename... Args>
 		static Ref<T> Create(Args&&... args) {
 			return Ref<T>(new T(std::forward<Args>(args)...));

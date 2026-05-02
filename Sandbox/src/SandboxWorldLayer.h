@@ -12,7 +12,7 @@
 // TEMP
 #include "Krux/Render/Buffer.h"
 #include "Krux/Render/VertexArray.h"
-#include "Krux/Render/Shader.h"
+#include "Krux/Render/Assets/Shader.h"
 
 class SandboxWorldLayer : public Krux::Layer {
 public:

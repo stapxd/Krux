@@ -3,10 +3,14 @@
 // temp
 #include "Krux/Render/VertexLayout.h"
 #include "Krux/Render/RenderCommand.h"
+#include "Krux/Render/Assets/AssetManager.h"
 
 void SandboxWorldLayer::OnAttach()
 {
-	Shader = Krux::Shader::Create("assets/shaders/color.glsl");
+	Krux::AssetHandle handle = Krux::AssetManager::Load<Krux::Shader>("assets/shaders/color.glsl");
+	Shader = Krux::AssetManager::GetAsset<Krux::Shader>(handle);
+
+	//Shader = Krux::Shader::Create("assets/shaders/color.glsl");
 
 	// VAO
 	{

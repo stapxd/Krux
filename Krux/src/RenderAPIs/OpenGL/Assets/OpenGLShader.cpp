@@ -9,16 +9,24 @@ namespace Krux {
 
 	OpenGLShader::OpenGLShader(const std::filesystem::path& path)
 	{
-		auto& shaderSources = ParseShader(path);
-		std::string vertex_shader_source_str = shaderSources[ShaderType::Vertex].str();
-		std::string fragment_shader_source_str = shaderSources[ShaderType::Fragment].str();
-
-		Compile(vertex_shader_source_str.c_str(), fragment_shader_source_str.c_str());
+		if (!Load(path)) {
+			KRX_CORE_ERROR("Failed to load Shader Asset in \'{}\'", path.string());
+		}
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
 		glDeleteProgram(m_RendererID);
+	}
+
+	bool OpenGLShader::Load(const std::filesystem::path& path)
+	{
+		m_Path = path;
+		auto& shaderSources = ParseShader(path);
+		std::string vertex_shader_source_str = shaderSources[ShaderType::Vertex].str();
+		std::string fragment_shader_source_str = shaderSources[ShaderType::Fragment].str();
+
+		return Compile(vertex_shader_source_str.c_str(), fragment_shader_source_str.c_str());
 	}
 
 	void OpenGLShader::Bind() const
@@ -33,7 +41,7 @@ namespace Krux {
 		glUseProgram(0);
 	}
 
-	void OpenGLShader::Compile(const char* vertex_shader_source, const char* fragment_shader_source)
+	bool OpenGLShader::Compile(const char* vertex_shader_source, const char* fragment_shader_source)
 	{
 		GLuint vshader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vshader, 1, &vertex_shader_source, NULL); // vertex_shader_source is a GLchar* containing glsl shader source code
@@ -48,6 +56,7 @@ namespace Krux {
 			glGetShaderInfoLog(vshader, 1024, &log_length, message);
 
 			KRX_CORE_ERROR("Failed to compile vertex shader with message: {}", (char*)message);
+			return false;
 		}
 
 		GLuint fshader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -63,6 +72,7 @@ namespace Krux {
 			glGetShaderInfoLog(fshader, 1024, &log_length, message);
 
 			KRX_CORE_ERROR("Failed to compile fragment shader with message: {}", (char*)message);
+			return false;
 		}
 
 		GLuint program = glCreateProgram();
@@ -80,9 +90,11 @@ namespace Krux {
 			glGetProgramInfoLog(program, 1024, &log_length, message);
 
 			KRX_CORE_ERROR("Failed to link shader program: {}", (char*)message);
+			return false;
 		}
 
 		m_RendererID = program;
+		return true;
 	}
 
 	std::unordered_map<ShaderType, std::stringstream> OpenGLShader::ParseShader(const std::filesystem::path& path)

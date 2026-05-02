@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Krux/Core/Ref.h"
+#include "Asset.h"
 
 #include <filesystem>
 
@@ -12,7 +13,7 @@ namespace Krux {
 		Fragment
 	};
 
-	class Shader : public RefCounted {
+	class Shader : public Asset {
 	public:
 		virtual ~Shader() = default;
 
@@ -24,7 +25,7 @@ namespace Krux {
 		static Ref<Shader> Create(const std::filesystem::path& path);
 
 	protected:
-		virtual void Compile(const char* vertex_shader_source, const char* fragment_shader_source) = 0;
+		virtual bool Compile(const char* vertex_shader_source, const char* fragment_shader_source) = 0;
 		virtual std::unordered_map<ShaderType, std::stringstream> ParseShader(const std::filesystem::path& path) = 0;
 	};
 

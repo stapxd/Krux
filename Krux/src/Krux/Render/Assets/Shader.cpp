@@ -5,7 +5,7 @@
 
 #include "Krux/Render/RenderAPI.h"
 
-#include "RenderAPIs/OpenGL/OpenGLShader.h"
+#include "RenderAPIs/OpenGL/Assets/OpenGLShader.h"
 
 namespace Krux {
     Ref<Shader> Shader::Create(const std::filesystem::path& path)
