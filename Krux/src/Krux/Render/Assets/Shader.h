@@ -4,6 +4,7 @@
 #include "Asset.h"
 
 #include <filesystem>
+#include <glm/glm.hpp>
 
 namespace Krux {
 
@@ -23,6 +24,11 @@ namespace Krux {
 		virtual uint32_t GetRendererID() const = 0;
 
 		static Ref<Shader> Create(const std::filesystem::path& path);
+
+		// Uniform binds
+		virtual void SetFloat4(const char* location, float v0, float v1, float v2, float v3) = 0;
+
+		virtual void SetMat4(const char* location, const glm::mat4& matrix) = 0;
 
 	protected:
 		virtual bool Compile(const char* vertex_shader_source, const char* fragment_shader_source) = 0;

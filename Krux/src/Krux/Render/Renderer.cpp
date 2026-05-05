@@ -2,6 +2,7 @@
 #include "Renderer.h"
 
 #include "RenderCommand.h"
+#include "Renderer2D.h"
 
 namespace Krux {
 
@@ -10,6 +11,8 @@ namespace Krux {
 		RenderCommand::Init();
 
 		RenderCommand::ClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+
+		Renderer2D::Init();
 	}
 
 	void Renderer::Clear()

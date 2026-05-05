@@ -41,6 +41,16 @@ namespace Krux {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetFloat4(const char* location, float v0, float v1, float v2, float v3)
+	{
+		glUniform4f(GetUniformLocation(location), v0, v1, v2, v3);
+	}
+
+	void OpenGLShader::SetMat4(const char* location, const glm::mat4& matrix)
+	{
+		glUniformMatrix4fv(GetUniformLocation(location), 1, GL_FALSE, &matrix[0][0]);
+	}
+
 	bool OpenGLShader::Compile(const char* vertex_shader_source, const char* fragment_shader_source)
 	{
 		GLuint vshader = glCreateShader(GL_VERTEX_SHADER);
@@ -132,6 +142,20 @@ namespace Krux {
 
 		in.close();
 		return shaderSources;
+	}
+
+	GLint OpenGLShader::GetUniformLocation(const std::string& location)
+	{
+		if (m_UniformLocationCache.find(location) != m_UniformLocationCache.end())
+			return m_UniformLocationCache[location];
+
+		GLint locationIndex = glGetUniformLocation(m_RendererID, location.c_str());
+		if (locationIndex == -1) {
+			KRX_CORE_WARN("Couldn't find uniform location ({})", location);
+		}
+
+		m_UniformLocationCache[location] = locationIndex;
+		return locationIndex;
 	}
 
 }

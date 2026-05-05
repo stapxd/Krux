@@ -26,10 +26,4 @@ public:
 	void OnUpdate() override;
 	void OnEvent(Krux::Event& e) override;
 	bool OnKeyPressed(Krux::KeyPressedEvent& e);
-
-private:
-	Krux::Ref<Krux::VertexArray> VAO;
-	Krux::Ref<Krux::VertexBuffer> VBO;
-	Krux::Ref<Krux::IndexBuffer> EBO;
-	Krux::Ref<Krux::Shader> Shader;
 };
