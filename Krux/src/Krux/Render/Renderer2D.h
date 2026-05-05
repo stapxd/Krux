@@ -32,6 +32,10 @@ namespace Krux {
 	};
 
 	struct RendererData {
+		// Statistics
+		int DrawCallsCount = 0;
+		
+		
 		std::vector<QuadData> QuadsToDraw;
 
 		// Buffers

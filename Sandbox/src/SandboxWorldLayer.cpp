@@ -30,7 +30,7 @@ void SandboxWorldLayer::OnUpdate()
 	Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), { 1.0f, 0.0f, 0.0f, 1.0f });
 	Krux::Renderer2D::DrawQuad({  0.5, -0.5 }, glm::vec2(1.0f), { 0.0f, 1.0f, 0.0f, 1.0f });
 	Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
-	Krux::Renderer2D::DrawQuad({ -0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 1.0f, 1.0f, 1.0f });
+	Krux::Renderer2D::DrawRotatedQuad({ -0.5,  0.5, -1.0f }, glm::vec2(1.0f), 45.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
 
 	Krux::Renderer2D::EndFrame();
 

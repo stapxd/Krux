@@ -52,6 +52,10 @@ namespace Krux {
 
 	void Renderer2D::BeginFrame()
 	{
+		s_RendererStateStack.clear();
+		s_Data.QuadsToDraw.clear();
+		s_Data.DrawCallsCount = 0;
+
 		s_CurrentState = RendererState::BeginFrame;
 		s_RendererStateStack.emplace_back(RendererState::BeginFrame);
 	}
@@ -65,23 +69,27 @@ namespace Krux {
 
 		// Remove Shader and move into Shader Library
 		if (s_Data.QuadsToDraw.size() != 0) {
+			std::sort(s_Data.QuadsToDraw.begin(), s_Data.QuadsToDraw.end(), [](const QuadData& q1, const QuadData& q2) {
+				return q1.ZIndex < q2.ZIndex;
+			});
+
 			Ref<Shader> colorShader = AssetManager::GetAsset<Shader>(s_Data.ColorShaderHandle);
 			colorShader->Bind();
 			for (const auto& quad : s_Data.QuadsToDraw) {
 				
-				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) * glm::scale(glm::mat4(1.0f), glm::vec3(quad.Size, 1.0f));
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) * 
+					glm::rotate(glm::mat4(1.0f), glm::radians(quad.Rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+					glm::scale(glm::mat4(1.0f), glm::vec3(quad.Size, 1.0f));
 				colorShader->SetMat4("u_Model", transform);
 
 				colorShader->SetFloat4("u_Color", quad.Color.r, quad.Color.g, quad.Color.b, quad.Color.a);
 
 				RenderCommand::DrawIndexed(s_Data.QuadVAO, s_Data.QuadEBO->GetCount());
+				s_Data.DrawCallsCount++;
 			}
 			colorShader->UnBind();
-
-			s_Data.QuadsToDraw.clear();
 		}
 
-		s_RendererStateStack.clear();
 		s_CurrentState = RendererState::None;
 	}
 
@@ -94,8 +102,6 @@ namespace Krux {
 	void Renderer2D::EndBatch()
 	{
 		KRX_CORE_ASSERT(s_CurrentState == RendererState::BeginBatch, "Forgot to call Renderer2D::BeginBatch()"); // Or you nested batches into each other that is also prohibited
-
-
 
 		s_CurrentState = RendererState::BeginFrame;
 	}
@@ -126,11 +132,16 @@ namespace Krux {
 
 	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, glm::vec4 color)
 	{
-		auto it = s_RendererStateStack.begin();
-		if (it == s_RendererStateStack.end())
-			KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
+		switch (s_CurrentState)
+		{
+			case RendererState::BeginFrame: {
+				auto it = s_RendererStateStack.begin();
+				if (it == s_RendererStateStack.end())
+					KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
 
-
+				s_Data.QuadsToDraw.emplace_back(position, size, angle, color, position.z);
+			}
+		}
 	}
 
 }
