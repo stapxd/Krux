@@ -27,6 +27,7 @@ project "Krux"
     cppdialect "C++17"
 
     characterset "Unicode"
+    buildoptions { "/utf-8" }
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -45,12 +46,16 @@ project "Krux"
     includedirs
     {
         p .. "/src",
+    }
+    externalincludedirs 
+    {
         p .. "/vendor/spdlog/include",
         "%{IncludeDirs.GLFW}",
         "%{IncludeDirs.ImGui}",
         "%{IncludeDirs.Glad}",
         "%{IncludeDirs.glm}"
     }
+    externalwarnings "Off"
 
     links 
     {
@@ -67,13 +72,12 @@ project "Krux"
         cppdialect "C++17"
         systemversion "latest"
         staticruntime "On"
-    
-        buildoptions { "/utf-8" }
 
         defines
         {
             "KRX_SYS_WINDOWS",
             "GLFW_INCLUDE_NONE",
+            "_CRT_SECURE_NO_WARNINGS"
         }
 
     filter "configurations:Debug"
@@ -96,6 +100,7 @@ project "Sandbox"
     cppdialect "C++17"
 
     characterset "Unicode"
+    buildoptions { "/utf-8" }
     
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -108,21 +113,20 @@ project "Sandbox"
 
     includedirs
     {
+    
+    }
+    externalincludedirs 
+    {
         "Krux/src",
         "Krux/vendor/spdlog/include",
         "%{IncludeDirs.ImGui}",
-        "%{IncludeDirs.glm}",
-
-        --temp
-        "%{IncludeDirs.Glad}"
+        "%{IncludeDirs.glm}"
     }
+    externalwarnings "Off"
 
     links 
     {
         "Krux",
-
-        -- temp
-        "Glad"
     }
 
     filter "system:windows"
@@ -130,11 +134,11 @@ project "Sandbox"
         systemversion "latest"
         staticruntime "On"
 
-        buildoptions { "/utf-8" }
 
         defines
         {
-            "KRX_SYS_WINDOWS"
+            "KRX_SYS_WINDOWS",
+            "_CRT_SECURE_NO_WARNINGS"
         }
 
     filter "configurations:Debug"

@@ -50,9 +50,9 @@ namespace Krux {
 		
 		// Batch
 		std::vector<QuadData> BatchQuadsToDraw;
-		uint32_t MaxQuads = 20000;
-		uint32_t MaxQuadVertices = MaxQuads * 4;
-		uint32_t MaxQuadIndices  = MaxQuads * 6;
+		static uint32_t constexpr MaxQuads = 20000;
+		static uint32_t constexpr MaxQuadVertices = MaxQuads * 4;
+		static uint32_t constexpr MaxQuadIndices  = MaxQuads * 6;
 
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
@@ -62,7 +62,7 @@ namespace Krux {
 		Ref<IndexBuffer> BatchQuadEBO;
 		AssetHandle BatchColorShaderHandle;
 
-		glm::vec4 QuadVertexPositions[4];
+		glm::vec4 QuadVertexPositions[4]{};
 		uint32_t QuadIndexCount = 0;
 
 		// Quad Draw

@@ -48,7 +48,7 @@ namespace Krux {
 			uint32_t* quadIndices = new uint32_t[s_Data.MaxQuadIndices];
 
 			uint32_t offset = 0;
-			for (int i = 0; i < s_Data.MaxQuadIndices; i += 6) {
+			for (uint32_t i = 0; i < s_Data.MaxQuadIndices; i += 6) {
 				quadIndices[i + 0] = offset + 0;
 				quadIndices[i + 1] = offset + 1;
 				quadIndices[i + 2] = offset + 2;
