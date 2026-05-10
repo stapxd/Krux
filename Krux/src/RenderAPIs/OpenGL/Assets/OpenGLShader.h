@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <glm/glm.hpp>
 
+#include <glad/glad.h>
+
 namespace Krux {
 
 	class OpenGLShader : public Shader

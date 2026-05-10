@@ -3,6 +3,8 @@
 
 #include "Krux/Utils/Utils.h"
 
+#include <glad/glad.h>
+
 namespace Krux {
 
     OpenGLVertexArray::OpenGLVertexArray()
@@ -30,10 +32,10 @@ namespace Krux {
         glVertexArrayVertexBuffer(m_RendererID, m_VertexBufferIndex, vbo->GetRendererID(), 0, layout.GetStride());
 
         int attribIndex = 0;
+        GLuint relativeOffset = 0;
         for (auto& el : layout.GetElements()) {
             glEnableVertexArrayAttrib(m_RendererID, attribIndex);
 
-            GLuint relativeOffset = 0;
             glVertexArrayAttribFormat(m_RendererID, attribIndex, el.Count, Utils::GetOpenGLTypeFromVertexLayoutType(el.Type), el.Normalized ? GL_TRUE : GL_FALSE, relativeOffset);
             relativeOffset += el.Count * Utils::GetSizeOfVertexLayoutType(el.Type);
 

@@ -10,11 +10,9 @@ namespace Krux {
 			switch (type)
 			{
 			case Krux::VertexLayoutType::Float:
-				return sizeof(float);
 			case Krux::VertexLayoutType::Int:
-				return sizeof(int);
 			case Krux::VertexLayoutType::UnsignedInt:
-				return sizeof(unsigned int);
+				return 4;
 			}
 
 			KRX_CORE_ASSERT(false, "Invalid VertexLayoutType!");

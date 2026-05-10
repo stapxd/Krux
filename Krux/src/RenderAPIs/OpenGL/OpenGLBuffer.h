@@ -15,6 +15,7 @@ namespace Krux {
 		virtual void UnBind() const override;
 
 		virtual void SetData(const void* data, uint32_t size, BufferUsage usage) const override;
+		virtual void SetSubData(const void* data, uint32_t size, uint32_t offset) const override;
 
 		virtual uint32_t GetRendererID() const override;
 

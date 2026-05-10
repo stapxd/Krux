@@ -15,6 +15,11 @@ namespace Krux {
 		Renderer2D::Init();
 	}
 
+	void Renderer::Shutdown()
+	{
+		Renderer2D::Shutdown();
+	}
+
 	void Renderer::Clear()
 	{
 		RenderCommand::Clear();

@@ -17,11 +17,24 @@ namespace Krux {
 		BeginBatch
 	};
 
+	struct QuadVertex {
+		glm::vec3 Position;
+		glm::vec4 Color;
+
+		// TODO: add textures
+
+		QuadVertex(glm::vec3 pos = glm::vec3(0), glm::vec4 color = glm::vec4(1.0f))
+			: Position(pos), Color(color)
+		{}
+	};
+
 	struct QuadData {
+		glm::vec4 Color = glm::vec4(1.0f);
+
+		// Transform
 		glm::vec3 Position = glm::vec3(0.0f);
 		glm::vec2 Size = glm::vec2(1.0f);
 		float Rotation = 0.0f;
-		glm::vec4 Color = glm::vec4(1.0f);
 
 		// Sorting
 		float ZIndex = 0.0f;
@@ -35,10 +48,25 @@ namespace Krux {
 		// Statistics
 		int DrawCallsCount = 0;
 		
-		
-		std::vector<QuadData> QuadsToDraw;
+		// Batch
+		std::vector<QuadData> BatchQuadsToDraw;
+		uint32_t MaxQuads = 20000;
+		uint32_t MaxQuadVertices = MaxQuads * 4;
+		uint32_t MaxQuadIndices  = MaxQuads * 6;
 
-		// Buffers
+		QuadVertex* QuadVertexBufferBase = nullptr;
+		QuadVertex* QuadVertexBufferPtr = nullptr;
+
+		Ref<VertexArray> BatchQuadVAO;
+		Ref<VertexBuffer> BatchQuadVBO;
+		Ref<IndexBuffer> BatchQuadEBO;
+		AssetHandle BatchColorShaderHandle;
+
+		glm::vec4 QuadVertexPositions[4];
+		uint32_t QuadIndexCount = 0;
+
+		// Quad Draw
+		std::vector<QuadData> QuadsToDraw;
 		Ref<VertexArray> QuadVAO;
 		Ref<VertexBuffer> QuadVBO;
 		Ref<IndexBuffer> QuadEBO;
@@ -50,6 +78,7 @@ namespace Krux {
 	class Renderer2D {
 	public:
 		static void Init();
+		static void Shutdown();
 		
 		static void BeginFrame();
 		static void EndFrame();
@@ -62,6 +91,13 @@ namespace Krux {
 
 		static void DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, glm::vec4 color = glm::vec4(1.0f));
 		static void DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, glm::vec4 color = glm::vec4(1.0f));
+
+		static int GetDrawCallsCount() { return s_Data.DrawCallsCount; }
+
+	private:
+		static void StartBatch();
+		static void NextBatch();
+		static void Flush();
 
 	private:
 		static std::vector<RendererState> s_RendererStateStack;

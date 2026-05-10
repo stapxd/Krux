@@ -3,6 +3,8 @@
 
 #include "Krux/Render/VertexArray.h"
 
+#include <glad/glad.h>
+
 namespace Krux {
 
 	void OpenGLRenderAPI::Clear()

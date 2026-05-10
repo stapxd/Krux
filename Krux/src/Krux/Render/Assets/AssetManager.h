@@ -72,7 +72,7 @@ namespace Krux {
 	private:
 		struct AssetElement {
 			Ref<Asset> Asset;
-			uint16_t Magic;
+			uint16_t Magic = 0;
 		};
 
 		inline static std::unordered_map<uint32_t, AssetElement> s_Assets;

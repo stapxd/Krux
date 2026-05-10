@@ -3,6 +3,8 @@
 
 #include "Krux/Core/Core.h"
 
+#include <glad/glad.h>
+
 #include <ios>
 
 namespace Krux {

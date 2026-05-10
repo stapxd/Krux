@@ -17,26 +17,32 @@ void SandboxWorldLayer::OnDetach()
 
 void SandboxWorldLayer::OnImGuiRender()
 {
-	static bool show = true;
-	ImGui::ShowDemoWindow(&show);
+	/*static bool show = true;
+	ImGui::ShowDemoWindow(&show);*/
+
+	ImGui::Begin("Stats");
+
+	ImGui::Text("Draw Calls: %d", Krux::Renderer2D::GetDrawCallsCount());
+
+	ImGui::End();
 }
 
 void SandboxWorldLayer::OnUpdate()
 {
 	// Render
-
 	Krux::Renderer2D::BeginFrame();
 
-	Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), { 1.0f, 0.0f, 0.0f, 1.0f });
-	Krux::Renderer2D::DrawQuad({  0.5, -0.5 }, glm::vec2(1.0f), { 0.0f, 1.0f, 0.0f, 1.0f });
-	Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
-	Krux::Renderer2D::DrawRotatedQuad({ -0.5,  0.5, -1.0f }, glm::vec2(1.0f), 45.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
+		Krux::Renderer2D::BeginBatch();
+
+			Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), { 1.0f, 0.0f, 0.0f, 1.0f });
+			Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
+			Krux::Renderer2D::DrawRotatedQuad({ -0.5,  0.5, -1.0f }, glm::vec2(1.0f), 45.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
+
+		Krux::Renderer2D::EndBatch();
+
+		Krux::Renderer2D::DrawQuad({ 0.5, -0.5 }, glm::vec2(1.0f), { 0.0f, 1.0f, 0.0f, 1.0f });
 
 	Krux::Renderer2D::EndFrame();
-
-	/*Shader->Bind();
-	Krux::RenderCommand::DrawIndexed(VAO, EBO->GetCount());
-	Shader->UnBind();*/
 }
 
 void SandboxWorldLayer::OnEvent(Krux::Event& e)

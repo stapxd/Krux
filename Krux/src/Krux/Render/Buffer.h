@@ -22,6 +22,7 @@ namespace Krux {
 		// -----------------
 
 		virtual void SetData(const void* data, uint32_t size, BufferUsage usage) const = 0;
+		virtual void SetSubData(const void* data, uint32_t size, uint32_t offset) const = 0;
 
 		virtual uint32_t GetRendererID() const = 0;
 

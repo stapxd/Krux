@@ -5,6 +5,8 @@
 
 #include "Krux/Utils/Utils.h"
 
+#include <glad/glad.h>
+
 namespace Krux {
 
     // Vertex Buffer ----------------
@@ -32,6 +34,11 @@ namespace Krux {
     void OpenGLVertexBuffer::SetData(const void* data, uint32_t size, BufferUsage usage) const
     {
         glNamedBufferData(m_RendererID, size, data, Utils::ConvertBufferUsageToOpenGLBufferUsage(usage));
+    }
+
+    void OpenGLVertexBuffer::SetSubData(const void* data, uint32_t size, uint32_t offset) const
+    {
+        glNamedBufferSubData(m_RendererID, offset, size, data);
     }
 
     uint32_t OpenGLVertexBuffer::GetRendererID() const
