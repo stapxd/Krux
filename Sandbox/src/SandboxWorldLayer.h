@@ -10,9 +10,8 @@
 #include <imgui.h>
 
 // TEMP
-#include "Krux/Render/Buffer.h"
-#include "Krux/Render/VertexArray.h"
-#include "Krux/Render/Assets/Shader.h"
+#include "Krux/Render/Assets/AssetManager.h"
+#include "Krux/Render/Assets/Texture2D.h"
 
 class SandboxWorldLayer : public Krux::Layer {
 public:
@@ -26,4 +25,7 @@ public:
 	void OnUpdate() override;
 	void OnEvent(Krux::Event& e) override;
 	bool OnKeyPressed(Krux::KeyPressedEvent& e);
+
+private:
+	Krux::AssetHandle m_Texture;
 };

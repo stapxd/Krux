@@ -4,6 +4,8 @@
 #include "Krux/Core/Core.h"
 
 #include "Assets/AssetManager.h"
+#include "Krux/Render/Assets/Shader.h"
+#include "Krux/Render/Assets/Texture2D.h"
 
 #include "RenderCommand.h"
 
@@ -69,15 +71,15 @@ namespace Krux {
 
 		// Regular draw
 		{
-			s_Data.ColorShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/color.glsl");
+			s_Data.QuadTextureShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/QuadTexture.glsl");
 
 			s_Data.QuadVAO = VertexArray::Create();
 
-			float vertices[4 * 3] = {
-				-0.5f, -0.5f, 0.0f,
-				 0.5f, -0.5f, 0.0f,
-				 0.5f,  0.5f, 0.0f,
-				-0.5f,  0.5f, 0.0f,
+			float vertices[4 * 5] = {
+				-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+				 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+				 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,
+				-0.5f,  0.5f, 0.0f,	0.0f, 1.0f
 			};
 
 			s_Data.QuadVBO = VertexBuffer::Create();
@@ -85,7 +87,8 @@ namespace Krux {
 
 
 			VertexLayout layout = {
-				{ 3, VertexLayoutType::Float, false }
+				{ 3, VertexLayoutType::Float, false }, // Position
+				{ 2, VertexLayoutType::Float, false }  // Texture Coords
 			};
 
 			s_Data.QuadVAO->AttachVertexBuffer(s_Data.QuadVBO, layout);
@@ -100,6 +103,8 @@ namespace Krux {
 
 			s_Data.QuadVAO->AttachElementBuffer(s_Data.QuadEBO);
 		}
+
+		s_Data.WhiteTextureHanle = AssetManager::CreateMemoryOnlyAsset<Texture2D>();
 	}
 
 	void Renderer2D::Shutdown() 
@@ -130,21 +135,26 @@ namespace Krux {
 				return q1.ZIndex < q2.ZIndex;
 			});
 
-			Ref<Shader> colorShader = AssetManager::GetAsset<Shader>(s_Data.ColorShaderHandle);
-			colorShader->Bind();
-			for (const auto& quad : s_Data.QuadsToDraw) {
+			Ref<Shader> quadTextureShader = AssetManager::GetAsset<Shader>(s_Data.QuadTextureShaderHandle);
+			quadTextureShader->Bind();
+			for (auto& quad : s_Data.QuadsToDraw) {
 				
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) * 
 					glm::rotate(glm::mat4(1.0f), glm::radians(quad.Rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
 					glm::scale(glm::mat4(1.0f), glm::vec3(quad.Size, 1.0f));
-				colorShader->SetMat4("u_Model", transform);
+				quadTextureShader->SetMat4("u_Model", transform);
 
-				colorShader->SetFloat4("u_Color", quad.Color.r, quad.Color.g, quad.Color.b, quad.Color.a);
+				quadTextureShader->SetFloat4("u_TintColor", quad.Color.r, quad.Color.g, quad.Color.b, quad.Color.a);
+
+				Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(quad.Texture);
+				texture->Bind(0);
+				quadTextureShader->SetInt1("u_Texture", 0);
+				quadTextureShader->SetInt1("u_TilingFactor", quad.TilingFactor);
 
 				RenderCommand::DrawIndexed(s_Data.QuadVAO, s_Data.QuadEBO->GetCount());
 				s_Data.DrawCallsCount++;
 			}
-			colorShader->UnBind();
+			quadTextureShader->UnBind();
 		}
 
 		s_CurrentState = RendererState::None;
@@ -237,11 +247,33 @@ namespace Krux {
 		switch (s_CurrentState) 
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, color, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle, 1, color, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, color, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle,1, color, position.z);
+				break;
+			}
+		}
+	}
+
+	void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+		DrawQuad(glm::vec3(position, 0.0f), size, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawQuad(glm::vec3 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+		auto it = s_RendererStateStack.begin();
+		if (it == s_RendererStateStack.end())
+			KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
+
+		switch (s_CurrentState)
+		{
+			case RendererState::BeginFrame: {
+				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, texture, tilingFactor, tintColor, position.z);
+				break;
+			}
+			case RendererState::BeginBatch: {
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, texture, tilingFactor, tintColor, position.z);
 				break;
 			}
 		}
@@ -261,14 +293,38 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, angle, color, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1, color, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, color, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1, color, position.z);
 				break;
 			}
 		}
+	}
+
+	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+		DrawRotatedQuad(glm::vec3(position, 0.0f), size, angle, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+
+		auto it = s_RendererStateStack.begin();
+		if (it == s_RendererStateStack.end())
+			KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
+
+		switch (s_CurrentState)
+		{
+			case RendererState::BeginFrame: {
+				s_Data.QuadsToDraw.emplace_back(position, size, angle, texture, tilingFactor, tintColor, position.z);
+				break;
+			}
+			case RendererState::BeginBatch: {
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, texture, tilingFactor, tintColor, position.z);
+				break;
+			}
+		}
+
 	}
 
 }

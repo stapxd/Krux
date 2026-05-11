@@ -23,7 +23,10 @@ namespace Krux {
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 		// Uniform Binds
+		virtual void SetInt1(const char* location, int value) override;
+
 		virtual void SetFloat4(const char* location, float v0, float v1, float v2, float v3) override;
+
 		virtual void SetMat4(const char* location, const glm::mat4& matrix) override;
 
 	protected:

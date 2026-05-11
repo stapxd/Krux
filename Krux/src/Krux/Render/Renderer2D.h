@@ -2,7 +2,7 @@
 
 #include "Krux/Render/Buffer.h"
 #include "Krux/Render/VertexArray.h"
-#include "Krux/Render/Assets/Shader.h"
+
 #include "Krux/Render/Assets/AssetManager.h"
 
 #include <glm/glm.hpp>
@@ -30,6 +30,8 @@ namespace Krux {
 
 	struct QuadData {
 		glm::vec4 Color = glm::vec4(1.0f);
+		AssetHandle Texture;
+		uint16_t TilingFactor = 1;
 
 		// Transform
 		glm::vec3 Position = glm::vec3(0.0f);
@@ -39,8 +41,8 @@ namespace Krux {
 		// Sorting
 		float ZIndex = 0.0f;
 
-		QuadData(glm::vec3 pos, glm::vec2 size, float rotation, glm::vec4 color, float zIndex)
-			: Position(pos), Size(size), Rotation(rotation), Color(color), ZIndex(zIndex)
+		QuadData(glm::vec3 pos, glm::vec2 size, float rotation, AssetHandle texture, uint16_t tilingFactor, glm::vec4 color, float zIndex)
+			: Position(pos), Size(size), Rotation(rotation), Texture(texture), TilingFactor(tilingFactor), Color(color), ZIndex(zIndex)
 		{}
 	};
 
@@ -72,7 +74,9 @@ namespace Krux {
 		Ref<IndexBuffer> QuadEBO;
 
 		// TODO: change to shader library
-		AssetHandle ColorShaderHandle;
+		AssetHandle QuadTextureShaderHandle;
+
+		AssetHandle WhiteTextureHanle;
 	};
 
 	class Renderer2D {
@@ -88,9 +92,13 @@ namespace Krux {
 		
 		static void DrawQuad(glm::vec2 position, glm::vec2 size, glm::vec4 color = glm::vec4(1.0f));
 		static void DrawQuad(glm::vec3 position, glm::vec2 size, glm::vec4 color = glm::vec4(1.0f));
+		static void DrawQuad(glm::vec2 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
+		static void DrawQuad(glm::vec3 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
 
 		static void DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, glm::vec4 color = glm::vec4(1.0f));
 		static void DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, glm::vec4 color = glm::vec4(1.0f));
+		static void DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
+		static void DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
 
 		static int GetDrawCallsCount() { return s_Data.DrawCallsCount; }
 

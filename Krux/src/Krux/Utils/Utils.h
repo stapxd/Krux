@@ -5,6 +5,8 @@
 #include "Krux/Render/VertexLayout.h"
 #include "Krux/Render/Buffer.h"
 
+#include "Krux/Render/Assets/Texture2D.h"
+
 #include <glad/glad.h>
 
 namespace Krux {
@@ -15,6 +17,12 @@ namespace Krux {
 		// OpenGL ---------------
 		GLenum GetOpenGLTypeFromVertexLayoutType(VertexLayoutType type);
 		GLenum ConvertBufferUsageToOpenGLBufferUsage(BufferUsage usage);
+			
+			// Texture
+		GLint TextureFilterToOpenGLParam(TextureFilter filter);
+		GLint TextureWrapToOpenGLParam(TextureWrap wrap);
+		GLint TextureInternalFormatToOpenGLFormat(TextureInternalFormat format);
+		GLint TexturePixelFormatToOpenGLFormat(TextureInternalFormat format);
 	}
 
 }

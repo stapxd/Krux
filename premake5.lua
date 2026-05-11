@@ -13,6 +13,7 @@ IncludeDirs['GLFW']  = "Krux/vendor/GLFW/include"
 IncludeDirs['ImGui'] = "Krux/vendor/ImGui"
 IncludeDirs['Glad'] = "Krux/vendor/Glad/include"
 IncludeDirs['glm'] = "Krux/vendor/glm"
+IncludeDirs['stb'] = "Krux/vendor/stb/include"
 
 group "Dependencies"
     include "Krux/vendor/GLFW"
@@ -40,7 +41,12 @@ project "Krux"
     files
     {
         p .. "/src/**.h",
-        p .. "/src/**.cpp"
+        p .. "/src/**.cpp",
+        
+        p .. "/vendor/stb/include/stb/**.h",
+		p .. "/vendor/stb/include/stb/**.cpp",
+		p .. "/vendor/glm/glm/**.hpp",
+		p .. "/vendor/glm/glm/**.inl",
     }
 
     includedirs
@@ -53,7 +59,8 @@ project "Krux"
         "%{IncludeDirs.GLFW}",
         "%{IncludeDirs.ImGui}",
         "%{IncludeDirs.Glad}",
-        "%{IncludeDirs.glm}"
+        "%{IncludeDirs.glm}",
+        "%{IncludeDirs.stb}"
     }
     externalwarnings "Off"
 
@@ -67,6 +74,9 @@ project "Krux"
     libdirs 
     {
     }
+
+    filter "files:Krux/vendor/stb/include/stb/**.cpp"
+        enablepch "Off"
 
     filter "system:windows"
         cppdialect "C++17"
@@ -108,7 +118,7 @@ project "Sandbox"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
     }
 
     includedirs
@@ -119,8 +129,9 @@ project "Sandbox"
     {
         "Krux/src",
         "Krux/vendor/spdlog/include",
+        "Krux/vendor/stb/include",
         "%{IncludeDirs.ImGui}",
-        "%{IncludeDirs.glm}"
+        "%{IncludeDirs.glm}",
     }
     externalwarnings "Off"
 

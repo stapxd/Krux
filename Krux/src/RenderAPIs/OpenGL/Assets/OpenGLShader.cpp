@@ -43,6 +43,11 @@ namespace Krux {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetInt1(const char* location, int value)
+	{
+		glUniform1i(GetUniformLocation(location), value);
+	}
+
 	void OpenGLShader::SetFloat4(const char* location, float v0, float v1, float v2, float v3)
 	{
 		glUniform4f(GetUniformLocation(location), v0, v1, v2, v3);

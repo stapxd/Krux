@@ -27,8 +27,8 @@ namespace Krux {
 
 	class AssetManager {
 	public:
-		template<typename T>
-		static AssetHandle Load(const std::filesystem::path& path) {
+		template<typename T, typename... Args>
+		static AssetHandle Load(const std::filesystem::path& path, Args&&... args) {
 			uint32_t currentID = s_ID++;
 			uint16_t currentMagic = s_MagicCount++;
 
@@ -39,8 +39,18 @@ namespace Krux {
 				return AssetHandle(id, magic);
 			}
 
-			s_Assets[currentID] = { T::Create(path), currentMagic };
+			s_Assets[currentID] = { T::Create(path, std::forward<Args>(args)...), currentMagic };
 			s_PathCache[pathStr] = currentID;
+
+			return AssetHandle(currentID, currentMagic);
+		}
+
+		template<typename T>
+		static AssetHandle CreateMemoryOnlyAsset() {
+			uint32_t currentID = s_ID++;
+			uint16_t currentMagic = s_MagicCount++;
+
+			s_Assets[currentID] = { T::Create(), currentMagic };
 
 			return AssetHandle(currentID, currentMagic);
 		}

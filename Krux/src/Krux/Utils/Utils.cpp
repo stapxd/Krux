@@ -48,6 +48,69 @@ namespace Krux {
 			KRX_CORE_ASSERT(false, "Invalid BufferUsage!");
 			return 0;
 		}
+		GLint TextureFilterToOpenGLParam(TextureFilter filter)
+		{
+			switch (filter)
+			{
+			case Krux::TextureFilter::Linear:
+				return GL_LINEAR;
+			case Krux::TextureFilter::Nearest:
+				return GL_NEAREST;
+			}
+			
+			KRX_CORE_ASSERT(false, "Invalid TextureFilter!");
+			return 0;
+		}
+		GLint TextureWrapToOpenGLParam(TextureWrap wrap)
+		{
+			switch (wrap)
+			{
+			case Krux::TextureWrap::ClampToEdge:
+				return GL_CLAMP_TO_EDGE;
+			case Krux::TextureWrap::ClampToBorder:
+				return GL_CLAMP_TO_BORDER;
+			case Krux::TextureWrap::Repeat:
+				return GL_REPEAT;
+			case Krux::TextureWrap::MirroredRepeat:
+				return GL_MIRRORED_REPEAT;
+			case Krux::TextureWrap::MirrorClampToEdge:
+				return GL_MIRROR_CLAMP_TO_EDGE;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid TextureWrap!");
+			return 0;
+		}
+		GLint TextureInternalFormatToOpenGLFormat(TextureInternalFormat format)
+		{
+			switch (format)
+			{
+			case Krux::TextureInternalFormat::R8:
+				return GL_R8;
+			case Krux::TextureInternalFormat::RGB8:
+				return GL_RGB8;
+			case Krux::TextureInternalFormat::RGBA8:
+				return GL_RGBA8;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid TextureInternalFormat!");
+			return 0;
+		}
+
+		GLint TexturePixelFormatToOpenGLFormat(TextureInternalFormat format)
+		{
+			switch (format)
+			{
+			case Krux::TextureInternalFormat::R8:
+				return GL_RED;
+			case Krux::TextureInternalFormat::RGB8:
+				return GL_RGB;
+			case Krux::TextureInternalFormat::RGBA8:
+				return GL_RGBA;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid TexturePixelFormat!");
+			return 0;
+		}
     }
 
 }
