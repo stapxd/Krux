@@ -111,6 +111,22 @@ namespace Krux {
 			KRX_CORE_ASSERT(false, "Invalid TexturePixelFormat!");
 			return 0;
 		}
+
+		uint32_t GetTextureInternalFormatBPP(TextureInternalFormat format)
+		{
+			switch (format)
+			{
+			case Krux::TextureInternalFormat::R8:
+				return 1;
+			case Krux::TextureInternalFormat::RGB8:
+				return 3;
+			case Krux::TextureInternalFormat::RGBA8:
+				return 4;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid TexturePixelFormat!");
+			return 0;
+		}
     }
 
 }

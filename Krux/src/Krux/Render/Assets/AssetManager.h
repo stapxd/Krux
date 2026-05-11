@@ -19,6 +19,7 @@ namespace Krux {
 		int16_t Magic = -1;
 
 		bool operator != (const AssetHandle& other) { return Index != other.Index; }
+		bool operator == (const AssetHandle& other) { return Index == other.Index; }
 
 		bool IsValid() {
 			return *this != AssetHandle();

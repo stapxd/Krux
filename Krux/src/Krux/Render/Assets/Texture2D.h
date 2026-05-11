@@ -50,6 +50,8 @@ namespace Krux {
 
 		virtual void Bind(uint8_t slot = 0) = 0;
 
+		virtual void SetData(const void* data, uint32_t size) = 0;
+
 		virtual uint32_t GetRendererID() const = 0;
 
 		uint32_t GetWidth() { return m_Specification.Width; }

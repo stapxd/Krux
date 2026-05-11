@@ -11,6 +11,8 @@ namespace Krux {
 
 		virtual bool Load(const std::filesystem::path& path) override;
 
+		virtual void SetData(const void* data, uint32_t size) override;
+
 		virtual void Bind(uint8_t slot = 0) override;
 
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }

@@ -15,8 +15,6 @@ namespace Krux {
 		m_Specification = spec;
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
-		unsigned int white = 0xffffffff;
-
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, Utils::TextureFilterToOpenGLParam(spec.MinFilter));
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, Utils::TextureFilterToOpenGLParam(spec.MagFilter));
 
@@ -25,9 +23,6 @@ namespace Krux {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_R, Utils::TextureWrapToOpenGLParam(spec.WrapR));
 
 		glTextureStorage2D(m_RendererID, 1, Utils::TextureInternalFormatToOpenGLFormat(m_Specification.InternalFormat), m_Specification.Width, m_Specification.Height);
-
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specification.Width, m_Specification.Height,
-			Utils::TexturePixelFormatToOpenGLFormat(m_Specification.InternalFormat), GL_UNSIGNED_BYTE, &white);
 
 		glGenerateTextureMipmap(m_RendererID);
 	}
@@ -74,7 +69,7 @@ namespace Krux {
 				m_Specification.InternalFormat = TextureInternalFormat::RGBA8;
 			}
 
-			KRX_CORE_ASSERT((bool)m_Specification.InternalFormat, "Texture2D formats are insupported!");
+			KRX_CORE_ASSERT((bool)m_Specification.InternalFormat, "Texture2D format is insupported!");
 
 			glTextureStorage2D(m_RendererID, 1, Utils::TextureInternalFormatToOpenGLFormat(m_Specification.InternalFormat), m_Specification.Width, m_Specification.Height);
 
@@ -88,6 +83,18 @@ namespace Krux {
 		else {
 			return false;
 		}
+	}
+
+	void OpenGLTexture2D::SetData(const void* data, uint32_t size)
+	{
+		KRX_CORE_ASSERT((bool)m_Specification.InternalFormat, "Texture2D format is insupported!");
+
+		uint32_t BPP = Utils::GetTextureInternalFormatBPP(m_Specification.InternalFormat);
+
+		KRX_CORE_ASSERT(size == m_Specification.Width * m_Specification.Height * BPP, "Data must be entire texture!");
+
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specification.Width, m_Specification.Height,
+			Utils::TexturePixelFormatToOpenGLFormat(m_Specification.InternalFormat), GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint8_t slot)

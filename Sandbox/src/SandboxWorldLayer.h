@@ -28,4 +28,5 @@ public:
 
 private:
 	Krux::AssetHandle m_Texture;
+	Krux::AssetHandle m_Texture2;
 };

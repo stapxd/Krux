@@ -23,6 +23,7 @@ namespace Krux {
 		GLint TextureWrapToOpenGLParam(TextureWrap wrap);
 		GLint TextureInternalFormatToOpenGLFormat(TextureInternalFormat format);
 		GLint TexturePixelFormatToOpenGLFormat(TextureInternalFormat format);
+		uint32_t GetTextureInternalFormatBPP(TextureInternalFormat format);
 	}
 
 }

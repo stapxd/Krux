@@ -22,6 +22,11 @@ namespace Krux {
 
 	void Renderer2D::Init()
 	{
+
+		s_Data.WhiteTextureHanle = AssetManager::CreateMemoryOnlyAsset<Texture2D>();
+		uint32_t white = 0xffffffff;
+		AssetManager::GetAsset<Texture2D>(s_Data.WhiteTextureHanle)->SetData(&white, sizeof(uint32_t));
+
 		// Batch draw
 		{
 			KRX_CORE_ASSERT(s_Data.MaxQuads != 0, "Batch Max Quads should not be 0!");
@@ -31,7 +36,12 @@ namespace Krux {
 			s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
 			s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
-			s_Data.BatchColorShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/batchColor.glsl");
+			s_Data.QuadTexCoords[0] = { 0.0f, 0.0f };
+			s_Data.QuadTexCoords[1] = { 1.0f, 0.0f };
+			s_Data.QuadTexCoords[2] = { 1.0f, 1.0f };
+			s_Data.QuadTexCoords[3] = { 0.0f, 1.0f };
+
+			s_Data.BatchColorShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/QuadTextureBatch.glsl");
 
 			s_Data.BatchQuadVAO = VertexArray::Create();
 
@@ -39,8 +49,11 @@ namespace Krux {
 			s_Data.BatchQuadVBO->SetData(nullptr, s_Data.MaxQuadVertices * sizeof(QuadVertex), BufferUsage::DynamicDraw);
 
 			VertexLayout batchLayout = {
-				{ 3, VertexLayoutType::Float, false },
-				{ 4, VertexLayoutType::Float, false },
+				{ 3, VertexLayoutType::Float, false }, // Position
+				{ 4, VertexLayoutType::Float, false }, // Color
+				{ 2, VertexLayoutType::Float, false }, // TexCoords
+				{ 1, VertexLayoutType::Float, false }, // TexIndex
+				{ 1, VertexLayoutType::Float, false }, // TilingFactor
 			};
 
 			s_Data.BatchQuadVAO->AttachVertexBuffer(s_Data.BatchQuadVBO, batchLayout);
@@ -67,6 +80,11 @@ namespace Krux {
 
 			delete[] quadIndices;
 
+			s_Data.TextureSlots[0] = s_Data.WhiteTextureHanle;
+			s_Data.TextureIndex = 1;
+
+			for (int32_t i = 0; i < 32; i++)
+				s_Data.Samplers[i] = i;
 		}
 
 		// Regular draw
@@ -104,7 +122,6 @@ namespace Krux {
 			s_Data.QuadVAO->AttachElementBuffer(s_Data.QuadEBO);
 		}
 
-		s_Data.WhiteTextureHanle = AssetManager::CreateMemoryOnlyAsset<Texture2D>();
 	}
 
 	void Renderer2D::Shutdown() 
@@ -149,7 +166,7 @@ namespace Krux {
 				Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(quad.Texture);
 				texture->Bind(0);
 				quadTextureShader->SetInt1("u_Texture", 0);
-				quadTextureShader->SetInt1("u_TilingFactor", quad.TilingFactor);
+				quadTextureShader->SetFloat("u_TilingFactor", quad.TilingFactor);
 
 				RenderCommand::DrawIndexed(s_Data.QuadVAO, s_Data.QuadEBO->GetCount());
 				s_Data.DrawCallsCount++;
@@ -173,6 +190,8 @@ namespace Krux {
 
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+		s_Data.TextureIndex = 1;
 	}
 
 	void Renderer2D::NextBatch() {
@@ -182,12 +201,19 @@ namespace Krux {
 
 	void Renderer2D::Flush() {
 		if (s_Data.QuadIndexCount) {
-
+			// TODO: Remove Shader and move into Shader Library
 			Ref<Shader> BatchColorShader = AssetManager::GetAsset<Shader>(s_Data.BatchColorShaderHandle);
 			BatchColorShader->Bind();
 
 			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
 			s_Data.BatchQuadVBO->SetSubData(s_Data.QuadVertexBufferBase, dataSize, 0);
+
+			for (uint32_t i = 0; i < s_Data.TextureIndex; i++) {
+				//KRX_CORE_INFO("Texture id: {}",AssetManager::GetAsset<Texture2D>(s_Data.TextureSlots[i])->GetRendererID());
+				AssetManager::GetAsset<Texture2D>(s_Data.TextureSlots[i])->Bind(i);
+			}
+
+			BatchColorShader->SetIntV("u_Textures", 32, s_Data.Samplers);
 
 			RenderCommand::DrawIndexed(s_Data.BatchQuadVAO, s_Data.QuadIndexCount);
 			s_Data.DrawCallsCount++;
@@ -200,7 +226,6 @@ namespace Krux {
 	{
 		KRX_CORE_ASSERT(s_CurrentState == RendererState::BeginBatch, "Forgot to call Renderer2D::BeginBatch()"); // Or you nested batches into each other that is also prohibited
 
-		// Remove Shader and move into Shader Library
 		if (s_Data.BatchQuadsToDraw.size() != 0) {
 			std::sort(s_Data.BatchQuadsToDraw.begin(), s_Data.BatchQuadsToDraw.end(), [](const QuadData& q1, const QuadData& q2) {
 				return q1.ZIndex < q2.ZIndex;
@@ -213,6 +238,25 @@ namespace Krux {
 				if (s_Data.QuadIndexCount >= s_Data.MaxQuadIndices)
 					NextBatch();
 
+				float texIndex = -1.0f;
+				for (uint32_t i = 0; i < s_Data.TextureIndex; i++) {
+					if (s_Data.TextureSlots[i] == quad.Texture) {
+						texIndex = (float)i;
+						break;
+					}
+				}
+
+				if (texIndex == -1.0f) {
+					if (s_Data.TextureIndex >= s_Data.MaxTextureSlots)
+						NextBatch();
+
+					s_Data.TextureSlots[s_Data.TextureIndex] = quad.Texture;
+					texIndex = (float)s_Data.TextureIndex;
+					s_Data.TextureIndex++;
+
+					//KRX_CORE_INFO("texIndex assigned: {}, TextureIndex now: {}", texIndex, s_Data.TextureIndex);
+				}
+
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) *
 					glm::rotate(glm::mat4(1.0f), glm::radians(quad.Rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
 					glm::scale(glm::mat4(1.0f), glm::vec3(quad.Size, 1.0f));
@@ -221,6 +265,9 @@ namespace Krux {
 				{
 					s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
 					s_Data.QuadVertexBufferPtr->Color = quad.Color;
+					s_Data.QuadVertexBufferPtr->TextureCoords = s_Data.QuadTexCoords[i];
+					s_Data.QuadVertexBufferPtr->TextureIndex = texIndex;
+					s_Data.QuadVertexBufferPtr->TilingFactor = quad.TilingFactor;
 					s_Data.QuadVertexBufferPtr++;
 				}
 
@@ -247,21 +294,21 @@ namespace Krux {
 		switch (s_CurrentState) 
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle, 1, color, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle,1, color, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 		}
 	}
 
-	void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+	void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 size, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
 		DrawQuad(glm::vec3(position, 0.0f), size, texture, tilingFactor, tintColor);
 	}
-
-	void Renderer2D::DrawQuad(glm::vec3 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+	
+	void Renderer2D::DrawQuad(glm::vec3 position, glm::vec2 size, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
 		auto it = s_RendererStateStack.begin();
 		if (it == s_RendererStateStack.end())
 			KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
@@ -293,21 +340,21 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1, color, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1, color, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 		}
 	}
 
-	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
 		DrawRotatedQuad(glm::vec3(position, 0.0f), size, angle, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
 
 		auto it = s_RendererStateStack.begin();
 		if (it == s_RendererStateStack.end())

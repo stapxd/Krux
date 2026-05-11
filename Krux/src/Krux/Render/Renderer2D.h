@@ -20,18 +20,19 @@ namespace Krux {
 	struct QuadVertex {
 		glm::vec3 Position;
 		glm::vec4 Color;
+		glm::vec2 TextureCoords;
+		float TextureIndex = 0.0f;
+		float TilingFactor = 1.0f;
 
-		// TODO: add textures
-
-		QuadVertex(glm::vec3 pos = glm::vec3(0), glm::vec4 color = glm::vec4(1.0f))
-			: Position(pos), Color(color)
+		QuadVertex(glm::vec3 pos = glm::vec3(0), glm::vec4 color = glm::vec4(1.0f), glm::vec2 texCoords = glm::vec2(0), float texIndex = 0, float tilingFactor = 1)
+			: Position(pos), Color(color), TextureCoords(texCoords), TextureIndex(texIndex), TilingFactor(tilingFactor)
 		{}
 	};
 
 	struct QuadData {
 		glm::vec4 Color = glm::vec4(1.0f);
 		AssetHandle Texture;
-		uint16_t TilingFactor = 1;
+		float TilingFactor = 1.0f;
 
 		// Transform
 		glm::vec3 Position = glm::vec3(0.0f);
@@ -41,7 +42,7 @@ namespace Krux {
 		// Sorting
 		float ZIndex = 0.0f;
 
-		QuadData(glm::vec3 pos, glm::vec2 size, float rotation, AssetHandle texture, uint16_t tilingFactor, glm::vec4 color, float zIndex)
+		QuadData(glm::vec3 pos, glm::vec2 size, float rotation, AssetHandle texture, float tilingFactor, glm::vec4 color, float zIndex)
 			: Position(pos), Size(size), Rotation(rotation), Texture(texture), TilingFactor(tilingFactor), Color(color), ZIndex(zIndex)
 		{}
 	};
@@ -65,7 +66,13 @@ namespace Krux {
 		AssetHandle BatchColorShaderHandle;
 
 		glm::vec4 QuadVertexPositions[4]{};
+		glm::vec2 QuadTexCoords[4]{};
 		uint32_t QuadIndexCount = 0;
+
+		uint32_t MaxTextureSlots = 2;
+		uint32_t TextureIndex = 1;
+		std::unordered_map<uint32_t, AssetHandle> TextureSlots;
+		int32_t Samplers[32]{};
 
 		// Quad Draw
 		std::vector<QuadData> QuadsToDraw;
@@ -92,13 +99,13 @@ namespace Krux {
 		
 		static void DrawQuad(glm::vec2 position, glm::vec2 size, glm::vec4 color = glm::vec4(1.0f));
 		static void DrawQuad(glm::vec3 position, glm::vec2 size, glm::vec4 color = glm::vec4(1.0f));
-		static void DrawQuad(glm::vec2 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
-		static void DrawQuad(glm::vec3 position, glm::vec2 size, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
+		static void DrawQuad(glm::vec2 position, glm::vec2 size, AssetHandle texture, float tilingFactor = 1.0f, glm::vec4 tintColor = glm::vec4(1.0f));
+		static void DrawQuad(glm::vec3 position, glm::vec2 size, AssetHandle texture, float tilingFactor = 1.0f, glm::vec4 tintColor = glm::vec4(1.0f));
 
 		static void DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, glm::vec4 color = glm::vec4(1.0f));
 		static void DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, glm::vec4 color = glm::vec4(1.0f));
-		static void DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
-		static void DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, uint16_t tilingFactor = 1, glm::vec4 tintColor = glm::vec4(1.0f));
+		static void DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, float tilingFactor = 1.0f, glm::vec4 tintColor = glm::vec4(1.0f));
+		static void DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, float tilingFactor = 1.0f, glm::vec4 tintColor = glm::vec4(1.0f));
 
 		static int GetDrawCallsCount() { return s_Data.DrawCallsCount; }
 
