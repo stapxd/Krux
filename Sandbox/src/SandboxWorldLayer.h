@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Krux/Core/Application.h"
 #include "Krux/Core/Core.h"
 #include "Krux/Events/KeyEvents.h"
 
@@ -10,13 +11,14 @@
 #include <imgui.h>
 
 // TEMP
+#include "Krux/Render/OrthographicCamera.h"
 #include "Krux/Render/Assets/AssetManager.h"
 #include "Krux/Render/Assets/Texture2D.h"
 
 class SandboxWorldLayer : public Krux::Layer {
 public:
 	SandboxWorldLayer()
-		: Layer("World Layer")
+		: Layer("World Layer"), m_Camera(Krux::Application::Instance()->GetWidth(), Krux::Application::Instance()->GetHeight())
 	{}
 	
 	void OnAttach() override;
@@ -27,6 +29,8 @@ public:
 	bool OnKeyPressed(Krux::KeyPressedEvent& e);
 
 private:
+	Krux::OrthographicCamera m_Camera;
+
 	Krux::AssetHandle m_Texture;
 	Krux::AssetHandle m_Texture2;
 };

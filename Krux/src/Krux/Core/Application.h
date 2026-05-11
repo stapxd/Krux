@@ -32,6 +32,8 @@ namespace Krux {
 		static Application* Instance() { return s_Instance; }
 
 		const ApplicationSpecification& GetSpecification() const { return m_Specification; }
+		int GetWidth()  { return m_Specification.Width;  }
+		int GetHeight() { return m_Specification.Height; }
 		Window* GetWindow() const { return m_Window; }
 
 		void PushLayer(Layer* layer);

@@ -4,6 +4,7 @@
 layout(location = 0) in vec3 a_Pos;
 layout(location = 1) in vec2 a_TextureCoord;
 
+uniform mat4 u_ProjView;
 uniform mat4 u_Model;
 
 out vec2 v_TexCoord;
@@ -11,7 +12,7 @@ out vec2 v_TexCoord;
 void main()
 {
     v_TexCoord = a_TextureCoord;
-    gl_Position = u_Model * vec4(a_Pos, 1.0);
+    gl_Position = u_ProjView * u_Model * vec4(a_Pos, 1.0);
 }
 
 #type fragment

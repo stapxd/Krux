@@ -5,6 +5,8 @@
 
 #include "Krux/Render/Assets/AssetManager.h"
 
+#include "Camera.h"
+
 #include <glm/glm.hpp>
 
 #include <vector>
@@ -69,7 +71,7 @@ namespace Krux {
 		glm::vec2 QuadTexCoords[4]{};
 		uint32_t QuadIndexCount = 0;
 
-		uint32_t MaxTextureSlots = 2;
+		uint32_t MaxTextureSlots = 32;
 		uint32_t TextureIndex = 1;
 		std::unordered_map<uint32_t, AssetHandle> TextureSlots;
 		int32_t Samplers[32]{};
@@ -83,7 +85,10 @@ namespace Krux {
 		// TODO: change to shader library
 		AssetHandle QuadTextureShaderHandle;
 
+		// Textures
 		AssetHandle WhiteTextureHanle;
+
+		glm::mat4 ProjectionView;
 	};
 
 	class Renderer2D {
@@ -91,7 +96,7 @@ namespace Krux {
 		static void Init();
 		static void Shutdown();
 		
-		static void BeginFrame();
+		static void BeginFrame(const Camera& camera);
 		static void EndFrame();
 
 		static void BeginBatch();
