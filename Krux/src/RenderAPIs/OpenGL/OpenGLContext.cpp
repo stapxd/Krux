@@ -26,6 +26,9 @@ namespace Krux {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         KRX_CORE_INFO("OpenGL Info:");
         //KRX_CORE_INFO("  Vendor: {}", (const char*)glGetString(GL_VENDOR));
         //KRX_CORE_INFO("  Renderer: {}", (const char*)glGetString(GL_RENDERER));
