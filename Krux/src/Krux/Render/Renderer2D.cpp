@@ -27,6 +27,8 @@ namespace Krux {
 		uint32_t white = 0xffffffff;
 		AssetManager::GetAsset<Texture2D>(s_Data.WhiteTextureHanle)->SetData(&white, sizeof(uint32_t));
 
+		s_Data.CameraUniform = UniformBuffer::Create(sizeof(RendererData::CameraData), 0, BufferUsage::DynamicDraw);
+
 		// Batch draw
 		{
 			KRX_CORE_ASSERT(s_Data.MaxQuads != 0, "Batch Max Quads should not be 0!");
@@ -131,7 +133,8 @@ namespace Krux {
 
 	void Renderer2D::BeginFrame(const Camera& camera)
 	{
-		s_Data.ProjectionView = camera.GetProjectionView();
+		s_Data.CameraSettings.ProjectionView = camera.GetProjectionView();
+		s_Data.CameraUniform->SetData(&s_Data.CameraSettings, sizeof(RendererData::CameraData));
 
 		s_RendererStateStack.clear();
 		s_Data.QuadsToDraw.clear();
@@ -139,6 +142,8 @@ namespace Krux {
 
 		s_CurrentState = RendererState::BeginFrame;
 		s_RendererStateStack.emplace_back(RendererState::BeginFrame);
+
+		
 	}
 
 	void Renderer2D::EndFrame()
@@ -156,8 +161,6 @@ namespace Krux {
 
 			Ref<Shader> quadTextureShader = AssetManager::GetAsset<Shader>(s_Data.QuadTextureShaderHandle);
 			quadTextureShader->Bind();
-
-			quadTextureShader->SetMat4("u_ProjView", s_Data.ProjectionView);
 
 			for (auto& quad : s_Data.QuadsToDraw) {
 				
@@ -220,8 +223,6 @@ namespace Krux {
 
 			BatchColorShader->SetIntV("u_Textures", 32, s_Data.Samplers);
 			
-			BatchColorShader->SetMat4("u_ProjView", s_Data.ProjectionView);
-
 			RenderCommand::DrawIndexed(s_Data.BatchQuadVAO, s_Data.QuadIndexCount);
 			s_Data.DrawCallsCount++;
 

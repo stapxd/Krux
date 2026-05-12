@@ -36,7 +36,7 @@ namespace Krux {
 			direction.x =  1.0f;
 		}
 
-		m_Camera.Move(glm::vec3(direction, 0.0f) * m_CameraSpeed * m_Camera.GetZoom() * time.DeltaTime());
+		m_Camera.Move((glm::vec3(direction, 0.0f) * m_CameraSpeed * m_Camera.GetZoom()) * time.DeltaTime());
 	}
 
 }

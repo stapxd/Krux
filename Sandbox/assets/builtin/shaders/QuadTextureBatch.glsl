@@ -12,7 +12,9 @@ out vec2 v_TexCoords;
 out float v_TexIndex;
 out float v_TilingFactor;
 
-uniform mat4 u_ProjView;
+layout(std140, binding = 0) uniform Camera {
+	mat4 ProjView;
+} u_Camera;
 
 void main()
 {
@@ -21,7 +23,7 @@ void main()
     v_TexIndex = a_TexIndex;
     v_TilingFactor = a_TilingFactor;
 
-    gl_Position = u_ProjView * vec4(a_Pos, 1.0);
+    gl_Position = u_Camera.ProjView * vec4(a_Pos, 1.0);
 }
 
 #type fragment

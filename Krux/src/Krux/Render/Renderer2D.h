@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Krux/Render/Buffer.h"
-#include "Krux/Render/VertexArray.h"
+#include "Buffer.h"
+#include "VertexArray.h"
+#include "UniformBuffer.h"
 
-#include "Krux/Render/Assets/AssetManager.h"
+#include "Assets/AssetManager.h"
 
 #include "Camera.h"
 
@@ -88,7 +89,12 @@ namespace Krux {
 		// Textures
 		AssetHandle WhiteTextureHanle;
 
-		glm::mat4 ProjectionView;
+		// Uniform Data
+		struct CameraData {
+			glm::mat4 ProjectionView;
+		};
+		CameraData CameraSettings;
+		Ref<UniformBuffer> CameraUniform;
 	};
 
 	class Renderer2D {
