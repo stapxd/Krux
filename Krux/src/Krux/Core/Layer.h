@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Krux/Events/Event.h"
+#include "Time.h"
 
 namespace Krux {
 
@@ -12,7 +13,7 @@ namespace Krux {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Time time) {}
 		virtual void OnEvent(Event& e) {}
 		virtual void OnImGuiRender() {}
 

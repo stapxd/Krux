@@ -26,6 +26,11 @@ namespace Krux {
         glfwSwapInterval(m_Specification.IsVSync);
     }
 
+    float WindowsWindow::GetTime()
+    {
+        return (float)glfwGetTime();
+    }
+
     void WindowsWindow::OnUpdate()
     {
         glfwSwapBuffers(m_Window);

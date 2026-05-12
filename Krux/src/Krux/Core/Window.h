@@ -37,6 +37,7 @@ namespace Krux {
 		void InvokeEventCallback(Event& e) { m_EventCallback(e); }
 
 		virtual void* GetNativeWindow() = 0;
+		virtual float GetTime() = 0;
 
 		virtual void Initialize() = 0;
 		virtual void OnUpdate() = 0;

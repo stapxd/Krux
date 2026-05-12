@@ -34,11 +34,11 @@ void SandboxWorldLayer::OnImGuiRender()
 	ImGui::End();
 }
 
-void SandboxWorldLayer::OnUpdate()
+void SandboxWorldLayer::OnUpdate(Krux::Time time)
 {
 
 	static float rotation = 0.0f;
-	rotation += 0.02f;
+	rotation += 45.0f * time.DeltaTime();
 	// Render
 	Krux::Renderer2D::BeginFrame(m_Camera);
 

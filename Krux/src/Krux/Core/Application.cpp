@@ -64,10 +64,14 @@ namespace Krux {
 	{
 		while (m_IsRunning) {
 
+			float currentTime = m_Window->GetTime();
+			m_Time.SetDeltaTime(currentTime - m_LastFrame);
+			m_LastFrame = currentTime;
+
 			Renderer::Clear();
 
 			for (auto it : m_LayerStack) {
-				it->OnUpdate();
+				it->OnUpdate(m_Time);
 			}
 
 			m_ImGuiLayer->Begin();

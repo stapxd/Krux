@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "Time.h"
 
 #include "Krux/ImGui/ImGuiLayer.h"
 #include "LayerStack.h"
@@ -51,6 +52,8 @@ namespace Krux {
 
 		Ref<RenderContext> m_Context;
 
+		float m_LastFrame = 0.0f;
+		Time m_Time;
 		Window* m_Window = nullptr;
 		bool m_IsRunning = true;
 

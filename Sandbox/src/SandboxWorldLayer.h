@@ -2,6 +2,7 @@
 
 #include "Krux/Core/Application.h"
 #include "Krux/Core/Core.h"
+#include "Krux/Core/Time.h"
 #include "Krux/Events/KeyEvents.h"
 
 #include "Krux/Render/Renderer.h"
@@ -24,7 +25,7 @@ public:
 	void OnAttach() override;
 	void OnDetach() override;
 	void OnImGuiRender() override;
-	void OnUpdate() override;
+	void OnUpdate(Krux::Time time) override;
 	void OnEvent(Krux::Event& e) override;
 	bool OnKeyPressed(Krux::KeyPressedEvent& e);
 

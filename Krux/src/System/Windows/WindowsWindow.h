@@ -18,6 +18,7 @@ namespace Krux {
 		virtual void OnUpdate() override;
 
 		virtual void SetVSync(bool value) override;
+		virtual float GetTime() override;
 
 	private:
 		void Shutdown();
