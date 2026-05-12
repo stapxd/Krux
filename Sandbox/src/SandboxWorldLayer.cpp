@@ -6,6 +6,7 @@
 #include "Krux/Render/Assets/AssetManager.h"
 
 #include "Krux/Render/Renderer2D.h"
+#include "Krux/Core/Input.h"
 
 void SandboxWorldLayer::OnAttach()
 {
@@ -36,7 +37,6 @@ void SandboxWorldLayer::OnImGuiRender()
 
 void SandboxWorldLayer::OnUpdate(Krux::Time time)
 {
-
 	static float rotation = 0.0f;
 	rotation += 45.0f * time.DeltaTime();
 	// Render
