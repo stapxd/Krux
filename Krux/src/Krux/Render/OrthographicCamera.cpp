@@ -6,18 +6,17 @@
 namespace Krux {
 
     OrthographicCamera::OrthographicCamera(uint32_t width, uint32_t height)
-        : m_Width(width), m_Height(height), m_AspectRatio(m_Width / m_Height)
+        : Camera(width, height)
     {
         UpdateProjection();
         UpdateView();
     }
 
-    void OrthographicCamera::SetViewport(uint32_t width, uint32_t height)
+    void OrthographicCamera::SetZoom(float value)
     {
-        m_Width = width;
-        m_Height = height;
+        m_Zoom = value;
+        m_Zoom = glm::clamp(m_Zoom, 1.0f, 10.0f);
 
-        m_AspectRatio = m_Width / m_Height;
         UpdateProjection();
     }
 
@@ -28,7 +27,7 @@ namespace Krux {
 
     void OrthographicCamera::UpdateView()
     {
-        m_View = glm::translate(m_View, m_Position);
+        m_View = glm::translate(glm::mat4(1.0f), -m_Position);
     }
 
     glm::mat4 OrthographicCamera::GetProjectionView() const

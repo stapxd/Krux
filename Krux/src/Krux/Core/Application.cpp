@@ -40,6 +40,7 @@ namespace Krux {
 	{
 		EventDispatcher d(e);
 		d.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
+		d.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OnWindowResize));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++) {
 			(*it)->OnEvent(e);
@@ -88,5 +89,15 @@ namespace Krux {
 	{
 		m_IsRunning = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		m_Specification.Width = e.GetWidth();
+		m_Specification.Height = e.GetHeight();
+
+		m_Context->SetViewport(m_Specification.Width, m_Specification.Height);
+
+		return false;
 	}
 }

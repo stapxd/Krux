@@ -37,6 +37,8 @@ void SandboxWorldLayer::OnImGuiRender()
 
 void SandboxWorldLayer::OnUpdate(Krux::Time time)
 {
+	m_CameraController.OnUpdate(time);
+
 	static float rotation = 0.0f;
 	rotation += 45.0f * time.DeltaTime();
 	// Render
@@ -63,10 +65,24 @@ void SandboxWorldLayer::OnEvent(Krux::Event& e)
 	Krux::EventDispatcher d(e);
 
 	d.Dispatch<Krux::KeyPressedEvent>(BIND_EVENT_FUNC(OnKeyPressed));
+	d.Dispatch<Krux::WindowResizeEvent>(BIND_EVENT_FUNC(OnWindowResize));
+	d.Dispatch<Krux::MouseScrollEvent>(BIND_EVENT_FUNC(OnMouseScroll));
 }
 
 bool SandboxWorldLayer::OnKeyPressed(Krux::KeyPressedEvent& e)
 {
-	KRX_TRACE("{}", (char)e.GetKey());
+	return true;
+}
+
+bool SandboxWorldLayer::OnMouseScroll(Krux::MouseScrollEvent& e)
+{
+	m_CameraController.AddZoom(-(float)e.GetYOffset());
+	return true;
+}
+
+
+bool SandboxWorldLayer::OnWindowResize(Krux::WindowResizeEvent& e)
+{
+	m_Camera.SetViewport(e.GetWidth(), e.GetHeight());
 	return true;
 }

@@ -44,6 +44,7 @@ namespace Krux {
 
 		void OnEvent(Event& e);
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 	protected:
 		inline static Application* s_Instance = nullptr;
