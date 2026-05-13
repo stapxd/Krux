@@ -46,10 +46,27 @@ namespace Krux {
 			return AssetHandle(currentID, currentMagic);
 		}
 
+		// TODO: with this i can create same Asset twice or more
+		template<typename T, typename... Args>
+		static AssetHandle CreateFromArgs(Args&&... args) {
+			uint32_t currentID = s_ID++;
+			uint16_t currentMagic = s_MagicCount++;
+
+			// create cache (maybe with UUIDs?)
+
+			s_Assets[currentID] = { T::Create(std::forward<Args>(args)...), currentMagic };
+			s_PathCache[pathStr] = currentID;
+
+			return AssetHandle(currentID, currentMagic);
+		}
+
+		// TODO: with this i can create same Asset twice or more
 		template<typename T>
 		static AssetHandle CreateMemoryOnlyAsset() {
 			uint32_t currentID = s_ID++;
 			uint16_t currentMagic = s_MagicCount++;
+
+			// create cache (maybe with UUIDs?)
 
 			s_Assets[currentID] = { T::Create(), currentMagic };
 
@@ -57,7 +74,7 @@ namespace Krux {
 		}
 
 		template<typename T>
-		static Ref<T> GetAsset(AssetHandle& handle) {
+		static Ref<T> GetAsset(AssetHandle handle) {
 			if (!handle.IsValid()) return nullptr;
 
 			auto it = s_Assets.find(handle.Index);

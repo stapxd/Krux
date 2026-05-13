@@ -6,6 +6,7 @@
 #include "Assets/AssetManager.h"
 #include "Krux/Render/Assets/Shader.h"
 #include "Krux/Render/Assets/Texture2D.h"
+#include "ShaderLibrary.h"
 
 #include "RenderCommand.h"
 
@@ -45,7 +46,7 @@ namespace Krux {
 				s_Data.QuadTexCoords[2] = { 1.0f, 1.0f };
 				s_Data.QuadTexCoords[3] = { 0.0f, 1.0f };
 
-				s_Data.BatchQuadShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/QuadTextureBatch.glsl");
+				s_Data.BatchQuadShaderHandle = ShaderLibrary::Load("assets/builtin/shaders/QuadTextureBatch.glsl");
 
 				s_Data.BatchQuadVAO = VertexArray::Create();
 
@@ -90,7 +91,7 @@ namespace Krux {
 
 			// Circles
 			{
-				s_Data.BatchCircleShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/CircleBatch.glsl");
+				s_Data.BatchCircleShaderHandle = ShaderLibrary::Load("assets/builtin/shaders/CircleBatch.glsl");
 
 				s_Data.BatchCircleVAO = VertexArray::Create();
 
@@ -119,8 +120,8 @@ namespace Krux {
 
 		// Regular draw
 		{
-			s_Data.QuadTextureShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/QuadTexture.glsl");
-			s_Data.CircleShaderHandle = AssetManager::Load<Shader>("assets/builtin/shaders/Circle.glsl");
+			s_Data.QuadTextureShaderHandle = ShaderLibrary::Load("assets/builtin/shaders/QuadTexture.glsl");
+			s_Data.CircleShaderHandle = ShaderLibrary::Load("assets/builtin/shaders/Circle.glsl");
 
 			// Quad
 			{
@@ -209,15 +210,13 @@ namespace Krux {
 			KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
 		KRX_CORE_ASSERT(s_CurrentState == RendererState::BeginFrame, "Renderer2D::EndFrame() : Forgot to close previous section!");
 
-		// TODO: Remove Shader and move into Shader Library
-		
 		// Quad Draw
 		if (s_Data.QuadsToDraw.size() != 0) {
 			std::sort(s_Data.QuadsToDraw.begin(), s_Data.QuadsToDraw.end(), [](const QuadData& q1, const QuadData& q2) {
 				return q1.ZIndex < q2.ZIndex;
 			});
 
-			Ref<Shader> quadTextureShader = AssetManager::GetAsset<Shader>(s_Data.QuadTextureShaderHandle);
+			Ref<Shader> quadTextureShader = ShaderLibrary::Get(s_Data.QuadTextureShaderHandle);
 			quadTextureShader->Bind();
 
 			for (auto& quad : s_Data.QuadsToDraw) {
@@ -246,7 +245,7 @@ namespace Krux {
 				return q1.ZIndex < q2.ZIndex;
 			});
 
-			Ref<Shader> circleShader = AssetManager::GetAsset<Shader>(s_Data.CircleShaderHandle);
+			Ref<Shader> circleShader = ShaderLibrary::Get(s_Data.CircleShaderHandle);
 			circleShader->Bind();
 
 			for (auto& circle : s_Data.CirclesToDraw) {
@@ -303,8 +302,7 @@ namespace Krux {
 	void Renderer2D::Flush() {
 		// Quads
 		if (s_Data.QuadIndexCount) {
-			// TODO: Remove Shader and move into Shader Library
-			Ref<Shader> BatchQuadShader = AssetManager::GetAsset<Shader>(s_Data.BatchQuadShaderHandle);
+			Ref<Shader> BatchQuadShader = ShaderLibrary::Get(s_Data.BatchQuadShaderHandle);
 			BatchQuadShader->Bind();
 
 			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
@@ -325,8 +323,7 @@ namespace Krux {
 
 		// Circles
 		if (s_Data.CircleIndexCount) {
-			// TODO: Remove Shader and move into Shader Library
-			Ref<Shader> BatchCircleShader = AssetManager::GetAsset<Shader>(s_Data.BatchCircleShaderHandle);
+			Ref<Shader> BatchCircleShader = ShaderLibrary::Get(s_Data.BatchCircleShaderHandle);
 			BatchCircleShader->Bind();
 
 			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.CircleVertexBufferPtr - (uint8_t*)s_Data.CircleVertexBufferBase);

@@ -41,6 +41,7 @@ void SandboxWorldLayer::OnUpdate(Krux::Time time)
 
 	static float rotation = 0.0f;
 	rotation += 45.0f * time.DeltaTime();
+
 	// Render
 	Krux::Renderer2D::BeginFrame(m_Camera);
 
@@ -64,6 +65,11 @@ void SandboxWorldLayer::OnUpdate(Krux::Time time)
 			Krux::Renderer2D::DrawQuad({ 0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
 			Krux::Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
 		Krux::Renderer2D::EndBatch();
+
+		/*Krux::Renderer2D::DrawCircle({ -0.5, -0.5 }, 1.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
+		Krux::Renderer2D::DrawCircle({ 0.5, -0.5 }, 0.5f, { 1.0f, 0.0f, 0.0f, 1.0f });
+		Krux::Renderer2D::DrawQuad({ 0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
+		Krux::Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });*/
 
 	Krux::Renderer2D::EndFrame();
 }
