@@ -30,8 +30,8 @@ namespace Krux {
 	public:
 		template<typename T, typename... Args>
 		static AssetHandle Load(const std::filesystem::path& path, Args&&... args) {
-			uint32_t currentID = s_ID++;
-			uint16_t currentMagic = s_MagicCount++;
+			uint32_t currentID = s_ID;
+			uint16_t currentMagic = s_MagicCount;
 
 			std::string pathStr = path.string();
 			if (s_PathCache.count(pathStr)) {
@@ -43,32 +43,35 @@ namespace Krux {
 			s_Assets[currentID] = { T::Create(path, std::forward<Args>(args)...), currentMagic };
 			s_PathCache[pathStr] = currentID;
 
+			s_ID++;
+			s_MagicCount++;
+
 			return AssetHandle(currentID, currentMagic);
 		}
 
-		// TODO: with this i can create same Asset twice or more
 		template<typename T, typename... Args>
 		static AssetHandle CreateFromArgs(Args&&... args) {
-			uint32_t currentID = s_ID++;
-			uint16_t currentMagic = s_MagicCount++;
-
-			// create cache (maybe with UUIDs?)
+			uint32_t currentID = s_ID;
+			uint16_t currentMagic = s_MagicCount;
 
 			s_Assets[currentID] = { T::Create(std::forward<Args>(args)...), currentMagic };
 			s_PathCache[pathStr] = currentID;
 
+			s_ID++;
+			s_MagicCount++;
+
 			return AssetHandle(currentID, currentMagic);
 		}
 
-		// TODO: with this i can create same Asset twice or more
 		template<typename T>
 		static AssetHandle CreateMemoryOnlyAsset() {
-			uint32_t currentID = s_ID++;
-			uint16_t currentMagic = s_MagicCount++;
-
-			// create cache (maybe with UUIDs?)
+			uint32_t currentID = s_ID;
+			uint16_t currentMagic = s_MagicCount;
 
 			s_Assets[currentID] = { T::Create(), currentMagic };
+
+			s_ID++;
+			s_MagicCount++;
 
 			return AssetHandle(currentID, currentMagic);
 		}
