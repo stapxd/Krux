@@ -20,6 +20,7 @@ namespace Krux {
         KRX_CORE_ERROR("    type: {}", (uint32_t)type);
         KRX_CORE_ERROR("    id: {}", (uint32_t)id);
         KRX_CORE_ERROR("    message: {}", (const char*)message);
+        KRX_CORE_ASSERT(false);
     }
 
     OpenGLContext::OpenGLContext(GLFWwindow* window)
@@ -29,6 +30,8 @@ namespace Krux {
 
     bool OpenGLContext::Init()
     {
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+
         glfwMakeContextCurrent(m_Window);
 
         if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
@@ -36,11 +39,12 @@ namespace Krux {
             return false;
         }
 
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
         
-#ifdef KRX_ENABLE_REDNER_DEBUG_OUTPUT
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+#define KRX_ENABLE_RENDER_DEBUG_OUTPUT 0
+#if KRX_ENABLE_RENDER_DEBUG_OUTPUT
         glDebugMessageCallback(DebugCallback, nullptr);
 #endif
 

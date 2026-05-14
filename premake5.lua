@@ -92,8 +92,7 @@ project "Krux"
 
     filter "configurations:Debug"
         defines {
-            "KRX_DEBUG",
-            "KRX_ENABLE_REDNER_DEBUG_OUTPUT"
+            "KRX_DEBUG"
         }
         symbols "On"
 
