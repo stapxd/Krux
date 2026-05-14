@@ -14,7 +14,7 @@ namespace Krux {
 
 	void OrthographicCameraController::AddZoom(float value)
 	{
-		float newZoom = m_Camera.GetZoom() + value;
+		float newZoom = m_Camera.GetZoom() + value * 0.5f;
 		m_Camera.SetZoom(newZoom);
 	}
 
