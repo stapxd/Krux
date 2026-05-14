@@ -8,6 +8,20 @@
 
 namespace Krux {
 
+    static void APIENTRY DebugCallback(GLenum source,
+        GLenum type,
+        GLuint id,
+        GLenum severity,
+        GLsizei length,
+        const GLchar* message,
+        const void* userParam)
+    {
+        KRX_CORE_ERROR("OpenGL Error:");
+        KRX_CORE_ERROR("    type: {}", (uint32_t)type);
+        KRX_CORE_ERROR("    id: {}", (uint32_t)id);
+        KRX_CORE_ERROR("    message: {}", (const char*)message);
+    }
+
     OpenGLContext::OpenGLContext(GLFWwindow* window)
     {
         m_Window = window;
@@ -23,8 +37,12 @@ namespace Krux {
         }
 
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+        
+#ifdef KRX_ENABLE_REDNER_DEBUG_OUTPUT
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(DebugCallback, nullptr);
+#endif
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
