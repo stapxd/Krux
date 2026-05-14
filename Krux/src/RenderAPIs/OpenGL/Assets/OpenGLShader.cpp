@@ -79,10 +79,12 @@ namespace Krux {
 		if (vertex_compiled != GL_TRUE)
 		{
 			GLsizei log_length = 0;
-			GLchar message[1024];
+			GLchar message[1024] = {};
 			glGetShaderInfoLog(vshader, 1024, &log_length, message);
 
-			KRX_CORE_ERROR("Failed to compile vertex shader with message: {}", (char*)message);
+			GLint length = (GLint)strlen(vertex_shader_source);
+			KRX_CORE_INFO("Shader length: {}", length);
+			KRX_CORE_ERROR("Failed to compile vertex shader with message:\n{}", message);
 			return false;
 		}
 
@@ -98,7 +100,8 @@ namespace Krux {
 			GLchar message[1024];
 			glGetShaderInfoLog(fshader, 1024, &log_length, message);
 
-			KRX_CORE_ERROR("Failed to compile fragment shader with message: {}", (char*)message);
+			KRX_CORE_ERROR("Failed to compile fragment shader with message:");
+			KRX_CORE_ERROR("{0}", std::string(message, log_length));
 			return false;
 		}
 
@@ -116,7 +119,8 @@ namespace Krux {
 			GLchar message[1024];
 			glGetProgramInfoLog(program, 1024, &log_length, message);
 
-			KRX_CORE_ERROR("Failed to link shader program: {}", (char*)message);
+			KRX_CORE_ERROR("Failed to link shader program:");
+			KRX_CORE_ERROR("{0}", std::string(message, log_length));
 			return false;
 		}
 

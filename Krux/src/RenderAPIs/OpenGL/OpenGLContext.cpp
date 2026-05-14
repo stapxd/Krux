@@ -16,10 +16,12 @@ namespace Krux {
         const GLchar* message,
         const void* userParam)
     {
+        std::string msg(message, length);
+
         KRX_CORE_ERROR("OpenGL Error:");
         KRX_CORE_ERROR("    type: {}", (uint32_t)type);
         KRX_CORE_ERROR("    id: {}", (uint32_t)id);
-        KRX_CORE_ERROR("    message: {}", (const char*)message);
+        KRX_CORE_ERROR("    message: {}", msg.c_str());
         KRX_CORE_ASSERT(false);
     }
 
@@ -39,15 +41,14 @@ namespace Krux {
             return false;
         }
 
-        
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-#define KRX_ENABLE_RENDER_DEBUG_OUTPUT 0
+#define KRX_ENABLE_RENDER_DEBUG_OUTPUT 1
 #if KRX_ENABLE_RENDER_DEBUG_OUTPUT
         glDebugMessageCallback(DebugCallback, nullptr);
 #endif
-
+        
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -64,12 +65,16 @@ namespace Krux {
     void OpenGLContext::SwapBuffers()
     {
         glfwSwapBuffers(m_Window);
-        glfwPollEvents();
     }
 
     void OpenGLContext::SetViewport(int width, int height)
     {
         glViewport(0, 0, width, height);
+    }
+
+    void OpenGLContext::MakeCurrnet()
+    {
+        glfwMakeContextCurrent(m_Window);
     }
 
 }

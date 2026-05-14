@@ -30,6 +30,7 @@ public:
 	void OnDetach() override;
 	void OnImGuiRender() override;
 	void OnUpdate(Krux::Time time) override;
+	void OnRender() override;
 	void OnEvent(Krux::Event& e) override;
 
 	bool OnKeyPressed(Krux::KeyPressedEvent& e);
@@ -40,6 +41,8 @@ private:
 	Krux::OrthographicCamera m_Camera;
 	Krux::OrthographicCameraController m_CameraController;
 
-	Krux::AssetHandle m_Texture;
-	Krux::AssetHandle m_Texture2;
+	/*Krux::AssetHandle m_Texture;
+	Krux::AssetHandle m_Texture2;*/
+
+	float m_Rotation = 0.0f;
 };

@@ -13,8 +13,10 @@
 #include "Ref.h"
 
 #include "Krux/Render/RenderContext.h"
+#include "Krux/Render/RenderQueue.h"
 
 #include <iostream>
+#include <condition_variable>
 
 namespace Krux {
 
@@ -40,6 +42,7 @@ namespace Krux {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
+		void OnRenderThread();
 		void Run();
 
 		void OnEvent(Event& e);
@@ -51,7 +54,14 @@ namespace Krux {
 
 		ApplicationSpecification m_Specification;
 
+		// Render
 		Ref<RenderContext> m_Context;
+		std::atomic<bool> m_RenderThreadRunning{ false };
+		std::thread m_RenderThread;
+		RenderQueue m_RenderQueue;
+		std::mutex m_InitMutex;
+		std::condition_variable m_InitCV;
+		bool m_RenderThreadReady = false;
 
 		float m_LastFrame = 0.0f;
 		Time m_Time;

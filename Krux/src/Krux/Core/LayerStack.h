@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Ref.h"
 #include "Layer.h"
 
 #include <vector>
+#include <mutex>
 
 namespace Krux {
 
@@ -11,6 +13,8 @@ namespace Krux {
 	public:
 		LayerStack() = default;
 		~LayerStack();
+
+		std::mutex& GetMutex() { return m_LayerStackMutex; }
 
 		void PushLayer(Layer* layer);
 		void PopLayer(Layer* layer);
@@ -24,8 +28,10 @@ namespace Krux {
 		auto end() { return m_LayerStack.end(); }
 
 	private:
-		std::vector<Layer*> m_LayerStack;
+		std::vector<Ref<Layer>> m_LayerStack;
 		uint32_t m_PushLayerIndex = 0;
+
+		std::mutex m_LayerStackMutex;
 	};
 
 }

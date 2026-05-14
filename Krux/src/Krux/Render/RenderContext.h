@@ -12,6 +12,7 @@ namespace Krux {
 		virtual bool Init() = 0;
 		virtual void SwapBuffers() = 0;
 		virtual void SetViewport(int width, int height) = 0;
+		virtual void MakeCurrnet() = 0;
 
 		static Ref<RenderContext> Create(RenderAPIType type);
 

@@ -33,7 +33,6 @@ namespace Krux {
 
     void WindowsWindow::OnUpdate()
     {
-        glfwSwapBuffers(m_Window);
         glfwPollEvents();
     }
 
@@ -51,6 +50,8 @@ namespace Krux {
         glfwSwapInterval(m_Specification.IsVSync);
 
         KRX_CORE_INFO("Initialized Windows Window: {}, {}:{}", m_Specification.Name, m_Specification.Width, m_Specification.Height);
+
+        glfwMakeContextCurrent(nullptr);
 
         glfwSetWindowUserPointer(m_Window, this);
         // Window Events

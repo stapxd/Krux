@@ -10,13 +10,13 @@
 
 void SandboxWorldLayer::OnAttach()
 {
-	Krux::TextureSpecification spec;
+	/*Krux::TextureSpecification spec;
 	spec.WrapR = Krux::TextureWrap::Repeat;
 	spec.WrapS = Krux::TextureWrap::Repeat;
 	spec.WrapT = Krux::TextureWrap::Repeat;
 
 	m_Texture = Krux::AssetManager::Load<Krux::Texture2D>("assets/textures/CrackTexture.png", spec);
-	m_Texture2 = Krux::AssetManager::Load<Krux::Texture2D>("assets/textures/RedTexture.png",  spec);
+	m_Texture2 = Krux::AssetManager::Load<Krux::Texture2D>("assets/textures/RedTexture.png",  spec);*/
 }
 
 void SandboxWorldLayer::OnDetach()
@@ -28,51 +28,53 @@ void SandboxWorldLayer::OnImGuiRender()
 	/*static bool show = true;
 	ImGui::ShowDemoWindow(&show);*/
 
-	ImGui::Begin("Stats");
+	/*ImGui::Begin("Stats");
 
 	ImGui::Text("Draw Calls: %d", Krux::Renderer2D::GetDrawCallsCount());
 
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void SandboxWorldLayer::OnUpdate(Krux::Time time)
 {
 	m_CameraController.OnUpdate(time);
 
-	static float rotation = 0.0f;
-	rotation += 45.0f * time.DeltaTime();
+	m_Rotation += 45.0f * time.DeltaTime();
+}
 
-	// Render
+void SandboxWorldLayer::OnRender() {
+
 	Krux::Renderer2D::BeginFrame(m_Camera);
 
-		/*Krux::Renderer2D::BeginBatch();
-			Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
-			Krux::Renderer2D::DrawRotatedQuad({ -0.5,  0.5, -1.0f }, glm::vec2(1.0f), 45.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
-
-			Krux::Renderer2D::DrawRotatedQuad({ 0.5, -0.5 }, glm::vec2(1.0f), rotation, m_Texture2, 1, { 1.0f, 1.0f, 1.0f, 1.0f });
-			Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
-		Krux::Renderer2D::EndBatch();*/
-
-		/*Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
+	/*Krux::Renderer2D::BeginBatch();
+		Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
 		Krux::Renderer2D::DrawRotatedQuad({ -0.5,  0.5, -1.0f }, glm::vec2(1.0f), 45.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
 
 		Krux::Renderer2D::DrawRotatedQuad({ 0.5, -0.5 }, glm::vec2(1.0f), rotation, m_Texture2, 1, { 1.0f, 1.0f, 1.0f, 1.0f });
-		Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });*/
-		
+		Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
+	Krux::Renderer2D::EndBatch();*/
+
+	/*Krux::Renderer2D::DrawQuad({  0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
+	Krux::Renderer2D::DrawRotatedQuad({ -0.5,  0.5, -1.0f }, glm::vec2(1.0f), 45.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
+
+	Krux::Renderer2D::DrawRotatedQuad({ 0.5, -0.5 }, glm::vec2(1.0f), rotation, m_Texture2, 1, { 1.0f, 1.0f, 1.0f, 1.0f });
+	Krux::Renderer2D::DrawQuad({ -0.5, -0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });*/
+
 		Krux::Renderer2D::BeginBatch();
 			Krux::Renderer2D::DrawCircle({ -0.5, -0.5 }, 1.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
 			Krux::Renderer2D::DrawCircle({ 0.5, -0.5 }, 0.5f, { 1.0f, 0.0f, 0.0f, 1.0f });
 			Krux::Renderer2D::DrawQuad({ 0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
-			Krux::Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
-			Krux::Renderer2D::DrawQuad({ -1.5, 0.5 }, glm::vec2(1.0f), m_Texture2, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
+			/*Krux::Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
+			Krux::Renderer2D::DrawQuad({ -1.5, 0.5 }, glm::vec2(1.0f), m_Texture2, 5, { 1.0f, 1.0f, 1.0f, 1.0f });*/
 		Krux::Renderer2D::EndBatch();
 
-		/*Krux::Renderer2D::DrawCircle({ -0.5, -0.5 }, 1.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
-		Krux::Renderer2D::DrawCircle({ 0.5, -0.5 }, 0.5f, { 1.0f, 0.0f, 0.0f, 1.0f });
-		Krux::Renderer2D::DrawQuad({ 0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
-		Krux::Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });*/
+	/*Krux::Renderer2D::DrawCircle({ -0.5, -0.5 }, 1.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
+	Krux::Renderer2D::DrawCircle({ 0.5, -0.5 }, 0.5f, { 1.0f, 0.0f, 0.0f, 1.0f });
+	Krux::Renderer2D::DrawQuad({ 0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
+	Krux::Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });*/
 
 	Krux::Renderer2D::EndFrame();
+
 }
 
 void SandboxWorldLayer::OnEvent(Krux::Event& e)
@@ -86,6 +88,7 @@ void SandboxWorldLayer::OnEvent(Krux::Event& e)
 
 bool SandboxWorldLayer::OnKeyPressed(Krux::KeyPressedEvent& e)
 {
+	KRX_CORE_TRACE("Key: {}", (char)e.GetKey());
 	return true;
 }
 

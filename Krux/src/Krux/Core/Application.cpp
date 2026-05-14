@@ -23,17 +23,28 @@ namespace Krux {
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
 
 		m_Context = RenderContext::Create(RenderAPI::API());
-		m_Context->Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
-		Renderer::Init();
+		m_RenderThreadRunning = true;
+		m_RenderThread = std::thread(&Application::OnRenderThread, this);
 	}
 
 	Application::~Application()
 	{
 		delete m_Window;
+	}
+
+	void Application::OnRenderThread()
+	{
+		m_Context->Init();
+		Renderer::Init();
+
+		while (m_RenderThreadRunning) {
+			m_RenderQueue.Execute();
+		}
+
 	}
 
 	void Application::OnEvent(Event& e)
@@ -53,26 +64,43 @@ namespace Krux {
 	{
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
+		/*m_RenderQueue.Submit([layer]() {
+		});*/
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
 		m_LayerStack.PushOverlay(overlay);
 		overlay->OnAttach();
+		/*m_RenderQueue.Submit([overlay]() {
+		});*/
 	}
 
 	void Application::Run()
 	{
 		while (m_IsRunning) {
+			m_RenderQueue.AcquireFrame();
+
+			m_Window->OnUpdate();
 
 			float currentTime = m_Window->GetTime();
 			m_Time.SetDeltaTime(currentTime - m_LastFrame);
 			m_LastFrame = currentTime;
 
-			Renderer::Clear();
 
-			for (auto it : m_LayerStack) {
-				it->OnUpdate(m_Time);
+			m_RenderQueue.Submit([]() {
+				Renderer::Clear();
+			});
+
+			{
+				std::scoped_lock lock(m_LayerStack.GetMutex());
+				for (auto it : m_LayerStack) {
+					it->OnUpdate(m_Time);
+
+					m_RenderQueue.Submit([it]() {
+						it->OnRender();
+					});
+				}
 			}
 
 			m_ImGuiLayer->Begin();
@@ -80,9 +108,16 @@ namespace Krux {
 				it->OnImGuiRender();
 			}
 			m_ImGuiLayer->End();
+			
 
-			m_Context->SwapBuffers();
+			m_RenderQueue.Submit([this]() {
+				m_Context->SwapBuffers();
+				m_RenderQueue.ReleaseFrame();
+			});
 		}
+
+		m_RenderQueue.Shutdowm();
+		m_RenderThread.join();
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -96,7 +131,9 @@ namespace Krux {
 		m_Specification.Width = e.GetWidth();
 		m_Specification.Height = e.GetHeight();
 
-		m_Context->SetViewport(m_Specification.Width, m_Specification.Height);
+		m_RenderQueue.Submit([this]() {
+			m_Context->SetViewport(m_Specification.Width, m_Specification.Height);
+		});
 
 		return false;
 	}

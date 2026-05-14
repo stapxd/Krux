@@ -16,6 +16,10 @@ namespace Krux {
 
 	}
 
+	void ImGuiLayer::OnAttachWindow()
+	{
+	}
+
 	void ImGuiLayer::OnAttach()
 	{
 		ImGui::CreateContext();
@@ -31,7 +35,7 @@ namespace Krux {
 		ImGui::StyleColorsDark();
 
 		ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Application::Instance()->GetWindow()->GetNativeWindow(), true);
-		ImGui_ImplOpenGL3_Init("#version 450");
+		ImGui_ImplOpenGL3_Init("#version 150");
 	}
 
 	void ImGuiLayer::OnDetach()

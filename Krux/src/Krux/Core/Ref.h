@@ -72,6 +72,10 @@ namespace Krux {
 
 		explicit operator bool() const { return m_Ptr != nullptr; }
 
+		bool operator==(const Ref& other) {
+			return this == &other;
+		}
+
 		template<typename T>
 		Ref<T> As() {
 			return Ref<T>((T*)m_Ptr);
