@@ -72,4 +72,11 @@ namespace Krux {
 		}
 	}
 
+	void ImGuiLayer::SetBlockEvents(bool value) {
+		if (m_BlockEvents == value)
+			return;
+
+		m_BlockEvents = value;
+	}
+
 }

@@ -64,12 +64,6 @@ namespace Krux {
     void OpenGLContext::SwapBuffers()
     {
         glfwSwapBuffers(m_Window);
-        glfwPollEvents();
-    }
-
-    void OpenGLContext::SetViewport(int width, int height)
-    {
-        glViewport(0, 0, width, height);
     }
 
 }

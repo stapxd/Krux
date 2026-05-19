@@ -19,6 +19,12 @@ namespace Krux {
 
 		m_Texture = AssetManager::Load<Texture2D>("assets/textures/CrackTexture.png", spec);
 		m_Texture2 = AssetManager::Load<Texture2D>("assets/textures/RedTexture.png", spec);
+
+		FrameBufferSpecification fbSpec;
+		fbSpec.Attachments = { FrameBufferAttachment::RGBA8, FrameBufferAttachment::Depth24_Stencil8 };
+		fbSpec.Width = 1280;
+		fbSpec.Height = 720;
+		m_FrameBuffer = FrameBuffer::Create(fbSpec);
 	}
 
 	void EditorLayer::OnDetach()
@@ -27,16 +33,27 @@ namespace Krux {
 
 	void EditorLayer::OnImGuiRender()
 	{
+
 		ImGuiID dockspace_id = ImGui::GetID("MainDockspaceOverViewport");
 
 		ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
         
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("Panels"))
+			{
+				ImGui::Checkbox("Viewport", m_ViewportPanel.Open());
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+
 		// TODO: future look
-		// SceneHirarchySection.Render();
-		// InspectorSection.Render();
-		// ViewportSection.Render();
-		// FileSystemSection.Render();
-		// StatsSection.Render();
+		// m_SceneHirarchypPanel.Render();
+		// m_InspectorPanel.Render();
+		// m_ViewportPanel.Render();
+		// m_FileSystemPanel.Render();
+		// m_StatsPanel.Render();
 
         ImGui::Begin("First Menu");
 			ImGui::Text("First menu");
@@ -46,13 +63,30 @@ namespace Krux {
 			ImGui::Text("Draw Calls: %d", Renderer2D::GetDrawCallsCount());
 		ImGui::End();
 
+		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0));
+
 	}
 
 	void EditorLayer::OnUpdate(Time time)
 	{
-		m_CameraController.OnUpdate(time);
+		if(m_ViewportPanel.IsFocused())
+			m_CameraController.OnUpdate(time);
+
+		glm::vec2 viewportSize = m_ViewportPanel.GetSize();
+		if (m_ViewportPanel.ShouldUpdateExternalViewport())
+		{
+			viewportSize = m_ViewportPanel.GetSize();
+			m_FrameBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+			m_Camera.SetViewport((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+
+		}
 
 		// Render
+		m_FrameBuffer->Bind();
+		Renderer::Clear();
+
+		Renderer::SetViewport(0, 0, (uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+
 		Renderer2D::BeginFrame(m_Camera);
 
 			Renderer2D::BeginBatch();
@@ -64,6 +98,8 @@ namespace Krux {
 			Renderer2D::EndBatch();
 
 		Renderer2D::EndFrame();
+
+		m_FrameBuffer->UnBind();
 	}
 
 	void EditorLayer::OnEvent(Event& e)
@@ -89,7 +125,7 @@ namespace Krux {
 
 	bool EditorLayer::OnWindowResize(WindowResizeEvent& e)
 	{
-		m_Camera.SetViewport(e.GetWidth(), e.GetHeight());
+		//m_Camera.SetViewport(e.GetWidth(), e.GetHeight());
 		return true;
 	}
 

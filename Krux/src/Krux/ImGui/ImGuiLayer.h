@@ -13,6 +13,7 @@ namespace Krux {
 		virtual void OnDetach() override;
 		virtual void OnEvent(Event& e) override;
 
+		void SetBlockEvents(bool value);
 		void Begin();
 		void End();
 	private:

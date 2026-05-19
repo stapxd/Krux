@@ -127,6 +127,42 @@ namespace Krux {
 			KRX_CORE_ASSERT(false, "Invalid TexturePixelFormat!");
 			return 0;
 		}
+
+		AttachmentType GetAttachmentType(FrameBufferAttachment attachment)
+		{
+			switch (attachment)
+			{
+			case Krux::FrameBufferAttachment::Int32:
+			case Krux::FrameBufferAttachment::Int8:
+			case Krux::FrameBufferAttachment::RGB8:
+			case Krux::FrameBufferAttachment::RGBA8:
+				return AttachmentType::Color;
+			case Krux::FrameBufferAttachment::Depth24_Stencil8:
+				return AttachmentType::Depth;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid FrameBufferAttachment!");
+			return AttachmentType::None;
+		}
+		GLint FrameBufferAttachmentToOpenGLInternalFormat(FrameBufferAttachment attachment)
+		{
+			switch (attachment)
+			{
+			case Krux::FrameBufferAttachment::Int32:
+				return GL_R32I;
+			case Krux::FrameBufferAttachment::Int8:
+				return GL_R8I;
+			case Krux::FrameBufferAttachment::RGB8:
+				return GL_RGB8;
+			case Krux::FrameBufferAttachment::RGBA8:
+				return GL_RGBA8;
+			case Krux::FrameBufferAttachment::Depth24_Stencil8:
+				return GL_DEPTH24_STENCIL8;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid FrameBufferAttachment!");
+			return 0;
+		}
     }
 
 }

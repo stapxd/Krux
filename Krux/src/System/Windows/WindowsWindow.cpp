@@ -33,7 +33,6 @@ namespace Krux {
 
     void WindowsWindow::OnUpdate()
     {
-        glfwSwapBuffers(m_Window);
         glfwPollEvents();
     }
 

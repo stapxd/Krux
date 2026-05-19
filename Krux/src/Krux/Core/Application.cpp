@@ -64,6 +64,7 @@ namespace Krux {
 	void Application::Run()
 	{
 		while (m_IsRunning) {
+			m_Window->OnUpdate();
 
 			float currentTime = m_Window->GetTime();
 			m_Time.SetDeltaTime(currentTime - m_LastFrame);
@@ -96,7 +97,7 @@ namespace Krux {
 		m_Specification.Width = e.GetWidth();
 		m_Specification.Height = e.GetHeight();
 
-		m_Context->SetViewport(m_Specification.Width, m_Specification.Height);
+		Renderer::SetViewport(0, 0, e.GetWidth(), e.GetHeight());
 
 		return false;
 	}

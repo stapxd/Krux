@@ -1,23 +1,29 @@
 #pragma once
 
+// Core
 #include "Krux/Core/Application.h"
 #include "Krux/Core/Core.h"
 #include "Krux/Core/Time.h"
+#include "Krux/Core/Layer.h"
 
+// Events
 #include "Krux/Events/KeyEvents.h"
 #include "Krux/Events/WindowEvents.h"
 #include "Krux/Events/MouseEvents.h"
 
+// Render
 #include "Krux/Render/Renderer.h"
-
-#include "Krux/Core/Layer.h"
-
+#include "Krux/Render/FrameBuffer.h"
 #include "Krux/Render/OrthographicCamera.h"
 #include "Krux/Render/OrthographicCameraController.h"
 #include "Krux/Render/Assets/AssetManager.h"
 #include "Krux/Render/Assets/Texture2D.h"
 
+// Panels
+#include "Panels/ViewportPanel.h"
+
 #include <imgui.h>
+
 
 namespace Krux {
 
@@ -30,12 +36,12 @@ namespace Krux {
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnImGuiRender() override;
-		void OnUpdate(Krux::Time time) override;
-		void OnEvent(Krux::Event& e) override;
+		void OnUpdate(Time time) override;
+		void OnEvent(Event& e) override;
 
-		bool OnKeyPressed(Krux::KeyPressedEvent& e);
-		bool OnWindowResize(Krux::WindowResizeEvent& e);
-		bool OnMouseScroll(Krux::MouseScrollEvent& e);
+		bool OnKeyPressed(KeyPressedEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
+		bool OnMouseScroll(MouseScrollEvent& e);
 
 	private:
 		OrthographicCamera m_Camera;
@@ -44,6 +50,10 @@ namespace Krux {
 		AssetHandle m_Texture;
 		AssetHandle m_Texture2;
 
+		Ref<FrameBuffer> m_FrameBuffer;
+
+		// Panels
+		ViewportPanel m_ViewportPanel;
 
 	};
 

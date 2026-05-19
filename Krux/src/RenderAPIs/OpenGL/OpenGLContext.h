@@ -10,7 +10,6 @@ namespace Krux {
 
 		virtual bool Init() override;
 		virtual void SwapBuffers() override;
-		virtual void SetViewport(int width, int height) override;
 	};
 
 }

@@ -6,6 +6,7 @@
 #include "Krux/Render/Buffer.h"
 
 #include "Krux/Render/Assets/Texture2D.h"
+#include "Krux/Render/FrameBuffer.h"
 
 #include <glad/glad.h>
 
@@ -24,6 +25,10 @@ namespace Krux {
 		GLint TextureInternalFormatToOpenGLFormat(TextureInternalFormat format);
 		GLint TexturePixelFormatToOpenGLFormat(TextureInternalFormat format);
 		uint32_t GetTextureInternalFormatBPP(TextureInternalFormat format);
+
+			// FrameBuffer Attachments
+		AttachmentType GetAttachmentType(FrameBufferAttachment attachment);
+		GLint FrameBufferAttachmentToOpenGLInternalFormat(FrameBufferAttachment attachment);
 	}
 
 }

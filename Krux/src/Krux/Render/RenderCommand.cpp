@@ -20,6 +20,11 @@ namespace Krux {
 		s_API->ClearColor(color);
 	}
 
+	void RenderCommand::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+	{
+		s_API->SetViewport(x, y, width, height);
+	}
+
 	void RenderCommand::DrawIndexed(Ref<VertexArray> vao, uint32_t indexCount /*= 0*/)
 	{
 		s_API->DrawIndexed(vao, indexCount);

@@ -36,6 +36,7 @@ namespace Krux {
 		int GetWidth()  { return m_Specification.Width;  }
 		int GetHeight() { return m_Specification.Height; }
 		Window* GetWindow() const { return m_Window; }
+		ImGuiLayer* GetImGuiLayer() const { return m_ImGuiLayer; }
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
