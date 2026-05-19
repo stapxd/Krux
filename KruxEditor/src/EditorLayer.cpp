@@ -27,14 +27,25 @@ namespace Krux {
 
 	void EditorLayer::OnImGuiRender()
 	{
-		/*static bool show = true;
-		ImGui::ShowDemoWindow(&show);*/
+		ImGuiID dockspace_id = ImGui::GetID("MainDockspaceOverViewport");
+
+		ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
+        
+		// TODO: future look
+		// SceneHirarchySection.Render();
+		// InspectorSection.Render();
+		// ViewportSection.Render();
+		// FileSystemSection.Render();
+		// StatsSection.Render();
+
+        ImGui::Begin("First Menu");
+			ImGui::Text("First menu");
+        ImGui::End();
 
 		ImGui::Begin("Stats");
-
-		ImGui::Text("Draw Calls: %d", Renderer2D::GetDrawCallsCount());
-
+			ImGui::Text("Draw Calls: %d", Renderer2D::GetDrawCallsCount());
 		ImGui::End();
+
 	}
 
 	void EditorLayer::OnUpdate(Time time)
