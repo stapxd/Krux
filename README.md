@@ -38,3 +38,7 @@ GenerateProjects.bat
 - Open Krux.sln in Visual Studio.
 - Set your configuration (e.g., Debug or Release).
 - Hit Build
+
+### Acknowledgments 
+
+Special thanks to [The Cherno](https://github.com/thecherno) and [Hazel Engine](https://github.com/TheCherno/Hazel/)
