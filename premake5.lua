@@ -14,6 +14,7 @@ group "Dependencies"
     include "Krux/vendor/GLFW"
     include "Krux/vendor/ImGui"
     include "Krux/vendor/Glad"
+    include "Krux/vendor/ECS"
 group ""
 
 include "Krux"

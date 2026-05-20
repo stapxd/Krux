@@ -34,7 +34,8 @@ project "Krux"
         "%{IncludeDirs.ImGui}",
         "%{IncludeDirs.Glad}",
         "%{IncludeDirs.glm}",
-        "%{IncludeDirs.stb}"
+        "%{IncludeDirs.stb}",
+        "%{IncludeDirs.ECS}"
     }
     externalwarnings "Off"
 
@@ -42,7 +43,8 @@ project "Krux"
     {
         "GLFW",
         "Glad",
-        "ImGui"
+        "ImGui",
+        "ECS"
     }
 
     libdirs 
