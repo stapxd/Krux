@@ -9,16 +9,16 @@ namespace Krux {
 	static std::mt19937_64 s_Engine(s_RandomDevise());
 	std::uniform_int_distribution<uint64_t> s_Distribution;
 
-	UUID::UUID()
+	UUID64::UUID64()
 		: m_UUID(s_Distribution(s_RandomDevise))
 	{}
 
-	UUID::UUID(const UUID & uuid)
+	UUID64::UUID64(const UUID64& uuid)
 		: m_UUID(uuid.m_UUID)
 	{
 	}
 
-	UUID::UUID(uint64_t uuid)
+	UUID64::UUID64(uint64_t uuid)
 		: m_UUID(uuid)
 	{
 	}

@@ -57,6 +57,8 @@ namespace Krux {
 		uint32_t GetWidth() { return m_Specification.Width; }
 		uint32_t GetHeight() { return m_Specification.Height; }
 
+		REGISTER_ASSET_TYPE_FUNCTIONS(Texture);
+
 	protected:
 		TextureSpecification m_Specification;
 	};

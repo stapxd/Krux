@@ -2,21 +2,24 @@
 
 #include "Krux/Core/Core.h"
 
+#include "Krux/Render/Assets/AssetManager.h"
+
+#include "Krux/Core/UUID.h"
+
 #include <glm/glm.hpp>
 
 namespace Krux {
 
-
 	namespace Components {
 
-		struct ID {
-			UUID UUID;
+		struct IDComponent {
+			UUID64 ID;
 
-			ID(uint64_t id)
-				: UUID(id)
+			IDComponent(uint64_t id)
+				: ID(id)
 			{}
 
-			REGISTER_CLASS_NAME(ID)
+			REGISTER_CLASS_NAME(IDComponent)
 		};
 
 		struct Tag {
@@ -39,6 +42,18 @@ namespace Krux {
 			{}
 
 			REGISTER_CLASS_NAME(Transform)
+		};
+
+		struct SpriteRenderer {
+			glm::vec4 Color = glm::vec4(1.0f);
+			AssetHandle TextureHandle = AssetHandle();
+			float TilingFactor = 1.0f;
+
+			SpriteRenderer(glm::vec4 color = glm::vec4(1.0f), AssetHandle textureHandle = AssetHandle(), float tilingFactor = 1.0f)
+				: Color(color), TextureHandle(textureHandle), TilingFactor(tilingFactor)
+			{}
+
+			REGISTER_CLASS_NAME(SpriteRenderer)
 		};
 
 	}

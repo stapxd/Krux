@@ -4,11 +4,11 @@
 
 namespace Krux {
 
-	class UUID {
+	class UUID64 {
 	public:
-		UUID();
-		UUID(const UUID& uuid);
-		UUID(uint64_t uuid);
+		UUID64();
+		UUID64(const UUID64& uuid);
+		UUID64(uint64_t uuid);
 
 		operator uint64_t() const { return m_UUID; }
 
@@ -20,8 +20,8 @@ namespace Krux {
 
 namespace std {
 	template<>
-	struct hash<Krux::UUID> {
-		std::size_t operator()(const Krux::UUID& uuid) const {
+	struct hash<Krux::UUID64> {
+		std::size_t operator()(const Krux::UUID64& uuid) const {
 			return std::hash<uint64_t>()((uint64_t)uuid);
 		}
 	};

@@ -21,6 +21,8 @@ namespace Krux {
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
 
+		REGISTER_ASSET_TYPE_FUNCTIONS(Shader);
+
 		virtual uint32_t GetRendererID() const = 0;
 
 		static Ref<Shader> Create(const std::filesystem::path& path);

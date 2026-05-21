@@ -28,7 +28,6 @@
 
 #include <imgui.h>
 
-
 namespace Krux {
 
 	class EditorLayer : public Layer {

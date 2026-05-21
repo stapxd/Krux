@@ -39,6 +39,17 @@ namespace Krux {
 		//m_Scene.GetAllWith<Components::ID, Components::Transform>();
 		//
 
+		Entity e001 = m_Scene.CreateEntity();
+		Entity e002 = m_Scene.CreateEntity();
+
+		e001.AddComponent<Components::SpriteRenderer>(glm::vec4(1.0f), m_Texture);
+		e002.AddComponent<Components::SpriteRenderer>(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
+
+		Components::Transform* trm = e001.GetComponent<Components::Transform>();
+		if (trm) {
+			trm->Position.x -= 5.0f;
+		}
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -81,20 +92,38 @@ namespace Krux {
 
 	void EditorLayer::OnUpdate(Time time)
 	{
-		if(m_ViewportPanel.IsFocused())
-			m_CameraController.OnUpdate(time);
-
 		glm::vec2 viewportSize = m_ViewportPanel.GetSize();
 		if (m_ViewportPanel.ShouldUpdateExternalViewport())
 		{
 			viewportSize = m_ViewportPanel.GetSize();
 			m_FrameBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_Camera.SetViewport((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-
 		}
 
 		// Render
+
 		m_FrameBuffer->Bind();
+		Renderer::Clear();
+		Renderer::SetViewport(0, 0, (uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+
+		switch (m_Scene.GetState())
+		{
+			case SceneState::Edit:
+			{
+				if (m_ViewportPanel.IsFocused())
+					m_CameraController.OnUpdate(time);
+
+				m_Scene.OnUpdateEdit(time, m_Camera);
+			}
+			case SceneState::Play: 
+			{
+
+			}
+		}
+
+		m_FrameBuffer->UnBind();
+
+		/*m_FrameBuffer->Bind();
 		Renderer::Clear();
 
 		Renderer::SetViewport(0, 0, (uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
@@ -111,7 +140,7 @@ namespace Krux {
 
 		Renderer2D::EndFrame();
 
-		m_FrameBuffer->UnBind();
+		m_FrameBuffer->UnBind();*/
 	}
 
 	void EditorLayer::OnEvent(Event& e)

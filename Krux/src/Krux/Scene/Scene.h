@@ -1,7 +1,10 @@
 #pragma once
+
 #include "Krux/Core/Log.h"
 #include "Krux/Core/Time.h"
 #include "Krux/Core/UUID.h"
+
+#include "Krux/Render/OrthographicCamera.h"
 
 #include <ECS/Registry.h>
 
@@ -13,6 +16,9 @@ namespace Krux {
     class Scene {
     public:
         Scene();
+
+        SceneState GetState() { return m_State; }
+
         Entity CreateEntity();
 
         template<typename C, typename... Args>
@@ -24,7 +30,7 @@ namespace Krux {
         template<typename C>
         bool Has(Entity e);
 
-        void OnUpdateEdit(Time time);
+        void OnUpdateEdit(Time time, const OrthographicCamera& camera);
         void OnUpdateRuntime(Time time);
 
         template<typename... C>
@@ -33,7 +39,6 @@ namespace Krux {
     private:
         SceneState m_State = SceneState::Edit;
         ecs::registry m_Registry;
-        std::unordered_map<UUID, ecs::entity> m_Entities;
     };
 }
 

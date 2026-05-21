@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Krux/Core/Core.h"
 #include "Asset.h"
 
 #include <stdint.h>
@@ -18,10 +19,10 @@ namespace Krux {
 		int32_t Index = -1;
 		int16_t Magic = -1;
 
-		bool operator != (const AssetHandle& other) { return Index != other.Index; }
-		bool operator == (const AssetHandle& other) { return Index == other.Index; }
+		bool operator != (const AssetHandle& other) const { return Index != other.Index; }
+		bool operator == (const AssetHandle& other) const { return Index == other.Index; }
 
-		bool IsValid() {
+		bool IsValid() const {
 			return *this != AssetHandle();
 		}
 	};
@@ -82,6 +83,12 @@ namespace Krux {
 
 			auto it = s_Assets.find(handle.Index);
 			if (it != s_Assets.end() && it->second.Magic == handle.Magic) {
+				
+				if (it->second.Asset->GetType() != T::GetStaticAssetType()) {
+					KRX_CORE_ASSERT(false, "This asset handle does not correspond to type you are trying to cast to!");
+					return nullptr;
+				}
+
 				return it->second.Asset.As<T>();
 			}
 

@@ -354,22 +354,28 @@ namespace Krux {
 					NextBatch();
 
 				float texIndex = -1.0f;
-				for (uint32_t i = 0; i < s_Data.TextureIndex; i++) {
-					if (s_Data.TextureSlots[i] == quad.Texture) {
-						texIndex = (float)i;
-						break;
+
+				if (quad.Texture.IsValid()) {
+					for (uint32_t i = 0; i < s_Data.TextureIndex; i++) {
+						if (s_Data.TextureSlots[i] == quad.Texture) {
+							texIndex = (float)i;
+							break;
+						}
+					}
+
+					if (texIndex == -1.0f) {
+						if (s_Data.TextureIndex >= s_Data.MaxTextureSlots)
+							NextBatch();
+
+						s_Data.TextureSlots[s_Data.TextureIndex] = quad.Texture;
+						texIndex = (float)s_Data.TextureIndex;
+						s_Data.TextureIndex++;
+
+						//KRX_CORE_INFO("texIndex assigned: {}, TextureIndex now: {}", texIndex, s_Data.TextureIndex);
 					}
 				}
-
-				if (texIndex == -1.0f) {
-					if (s_Data.TextureIndex >= s_Data.MaxTextureSlots)
-						NextBatch();
-
-					s_Data.TextureSlots[s_Data.TextureIndex] = quad.Texture;
-					texIndex = (float)s_Data.TextureIndex;
-					s_Data.TextureIndex++;
-
-					//KRX_CORE_INFO("texIndex assigned: {}, TextureIndex now: {}", texIndex, s_Data.TextureIndex);
+				else {
+					texIndex = 0.0f;
 				}
 
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) *
@@ -538,6 +544,25 @@ namespace Krux {
 			}
 			case RendererState::BeginBatch: {
 				s_Data.BatchCirclesToDraw.emplace_back(position, radius, color, thickness, fade, position.z);
+				break;
+			}
+		}
+	}
+
+	void Renderer2D::DrawSprite(const Components::Transform& trm, const Components::SpriteRenderer sprR)
+	{
+		auto it = s_RendererStateStack.begin();
+		if (it == s_RendererStateStack.end())
+			KRX_CORE_ASSERT(false, "Forgot to call Renderer2D::BeginFrame()!");
+
+		switch (s_CurrentState)
+		{
+			case RendererState::BeginFrame: {
+				s_Data.QuadsToDraw.emplace_back(trm.Position, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.Position.z);
+				break;
+			}
+			case RendererState::BeginBatch: {
+				s_Data.BatchQuadsToDraw.emplace_back(trm.Position, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.Position.z);
 				break;
 			}
 		}
