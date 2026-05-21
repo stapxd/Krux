@@ -11,6 +11,9 @@
 #include "Krux/Events/WindowEvents.h"
 #include "Krux/Events/MouseEvents.h"
 
+// Scene
+#include "Krux/Scene/Scene.h"
+
 // Render
 #include "Krux/Render/Renderer.h"
 #include "Krux/Render/FrameBuffer.h"
@@ -21,6 +24,7 @@
 
 // Panels
 #include "Panels/ViewportPanel.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 #include <imgui.h>
 
@@ -52,8 +56,12 @@ namespace Krux {
 
 		Ref<FrameBuffer> m_FrameBuffer;
 
+		// Scene
+		Scene m_Scene;
+
 		// Panels
 		ViewportPanel m_ViewportPanel;
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 
 	};
 

@@ -17,3 +17,12 @@ namespace Krux {
 	};
 
 }
+
+namespace std {
+	template<>
+	struct hash<Krux::UUID> {
+		std::size_t operator()(const Krux::UUID& uuid) const {
+			return std::hash<uint64_t>()((uint64_t)uuid);
+		}
+	};
+}

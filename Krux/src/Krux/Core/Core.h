@@ -7,6 +7,7 @@
 #endif
 
 // Macros
+#define REGISTER_CLASS_NAME(name) static constexpr const char* GetStaticClassName() { return #name; }
 #define BIND_EVENT_FUNC(name) [this](auto& event) { return name(event); }
 #define BIT(x) (1 << x)
 

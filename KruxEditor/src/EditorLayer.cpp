@@ -1,5 +1,9 @@
 #include "EditorLayer.h"
 
+// Scene
+#include "Krux/Scene/Entity.h"
+#include "Krux/Scene/Components.h"
+
 // temp
 #include "Krux/Render/VertexLayout.h"
 #include "Krux/Render/RenderCommand.h"
@@ -25,6 +29,16 @@ namespace Krux {
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_FrameBuffer = FrameBuffer::Create(fbSpec);
+
+
+		//Entity e = m_Scene.CreateEntity();
+		////e.AddComponent<Components::Transform>();
+		//// m_Scene.AddComponent<Transform>(e);
+
+		////Components::Transform* tmE = e.GetComponent<Components::Transform>();
+		//m_Scene.GetAllWith<Components::ID, Components::Transform>();
+		//
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -43,6 +57,7 @@ namespace Krux {
 			if (ImGui::BeginMenu("Panels"))
 			{
 				ImGui::Checkbox("Viewport", m_ViewportPanel.Open());
+				ImGui::Checkbox("Scene Hierarchy", m_SceneHierarchyPanel.Open());
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
@@ -55,15 +70,12 @@ namespace Krux {
 		// m_FileSystemPanel.Render();
 		// m_StatsPanel.Render();
 
-        ImGui::Begin("First Menu");
-			ImGui::Text("First menu");
-        ImGui::End();
-
 		ImGui::Begin("Stats");
 			ImGui::Text("Draw Calls: %d", Renderer2D::GetDrawCallsCount());
 		ImGui::End();
 
 		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0));
+		m_SceneHierarchyPanel.OnRender();
 
 	}
 

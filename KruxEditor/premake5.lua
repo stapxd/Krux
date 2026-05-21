@@ -26,6 +26,7 @@ project "KruxEditor"
         "%{wks.location}/Krux/vendor/stb/include",
         "%{IncludeDirs.ImGui}",
         "%{IncludeDirs.glm}",
+        "%{IncludeDirs.ECS}"
     }
     externalwarnings "Off"
 

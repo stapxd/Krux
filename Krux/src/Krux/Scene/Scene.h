@@ -1,13 +1,40 @@
 #pragma once
+#include "Krux/Core/Log.h"
+#include "Krux/Core/Time.h"
+#include "Krux/Core/UUID.h"
 
 #include <ECS/Registry.h>
 
 namespace Krux {
+    class Entity; 
 
-	class Scene {
-	private:
-		ecs::registry m_Registry;
+    enum class SceneState { Edit, Play };
 
-	};
+    class Scene {
+    public:
+        Scene();
+        Entity CreateEntity();
 
+        template<typename C, typename... Args>
+        C* AddComponent(Entity e, Args&&... args);
+
+        template<typename C>
+        C* GetComponent(Entity e);
+
+        template<typename C>
+        bool Has(Entity e);
+
+        void OnUpdateEdit(Time time);
+        void OnUpdateRuntime(Time time);
+
+        template<typename... C>
+        auto GetAllWith();
+
+    private:
+        SceneState m_State = SceneState::Edit;
+        ecs::registry m_Registry;
+        std::unordered_map<UUID, ecs::entity> m_Entities;
+    };
 }
+
+#include "Scene.inl"
