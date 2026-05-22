@@ -6,11 +6,19 @@ namespace Krux {
 
 	class UUID64 {
 	public:
+		inline static uint64_t INVALID = 0;
+
+	public:
 		UUID64();
 		UUID64(const UUID64& uuid);
 		UUID64(uint64_t uuid);
 
 		operator uint64_t() const { return m_UUID; }
+
+		bool operator==(const UUID64& other) const { return m_UUID == other.m_UUID; }
+		bool operator!=(const UUID64& other) const { return m_UUID != other.m_UUID; }
+
+		bool IsValid() { return m_UUID != INVALID; }
 
 	private:
 		uint64_t m_UUID;

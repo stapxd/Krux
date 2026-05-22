@@ -549,7 +549,7 @@ namespace Krux {
 		}
 	}
 
-	void Renderer2D::DrawSprite(const Components::Transform& trm, const Components::SpriteRenderer sprR)
+	void Renderer2D::DrawSprite(const TransformComponent& trm, const SpriteRendererComponent sprR)
 	{
 		auto it = s_RendererStateStack.begin();
 		if (it == s_RendererStateStack.end())

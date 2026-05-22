@@ -8,7 +8,7 @@ namespace Krux {
     }
 
     template<typename C>
-    C* Entity::GetComponent() {
+    C* Entity::GetComponent() const {
         return m_Scene->GetComponent<C>(*this);
     }
 }

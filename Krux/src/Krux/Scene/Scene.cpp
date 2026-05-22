@@ -12,16 +12,36 @@ namespace Krux {
 	{
 	}
 
-	Entity Scene::CreateEntity()
+	Entity& Scene::CreateEntity()
 	{
 		ecs::entity e = m_Registry.create();
 		Entity entity(e, this);
+		UUID64 id;
 
-		AddComponent<Components::IDComponent>(entity, UUID64());
-		AddComponent<Components::Tag>(entity);
-		AddComponent<Components::Transform>(entity);
+		AddComponent<IDComponent>(entity, id);
+		AddComponent<TagComponent>(entity);
+		AddComponent<NameComponent>(entity);
+		AddComponent<TransformComponent>(entity);
 
-		return entity;
+		m_Entities[id] = entity;
+
+		return m_Entities[id];
+	}
+
+	void Scene::DeleteEntity(const Entity& e)
+	{
+		IDComponent* idComp = m_Registry.get<IDComponent>(e);
+		m_Entities.erase(idComp->ID);
+		m_Registry.destroy(e);
+	}
+
+	Entity* Scene::FindByUUID(UUID64 id)
+	{
+		auto it = m_Entities.find(id);
+		if (it != m_Entities.end())
+			return &it->second;
+
+		return nullptr;
 	}
 
 	void Scene::OnUpdateEdit(Time time, const OrthographicCamera& camera)
@@ -31,7 +51,7 @@ namespace Krux {
 		Renderer2D::BeginFrame(camera);
 
 		{
-			auto group = m_Registry.group<Components::Transform, Components::SpriteRenderer>();
+			auto group = m_Registry.group<TransformComponent, SpriteRendererComponent>();
 
 			Renderer2D::BeginBatch();
 

@@ -3,7 +3,7 @@
 
 namespace Krux {
     template<typename C, typename... Args>
-    C* Scene::AddComponent(Entity e, Args&&... args) {
+    C* Scene::AddComponent(const Entity& e, Args&&... args) {
         if (m_Registry.has<C>(e)) {
             return m_Registry.get<C>(e);
         }
@@ -12,7 +12,7 @@ namespace Krux {
     }
 
     template<typename C>
-    C* Scene::GetComponent(Entity e) {
+    C* Scene::GetComponent(const Entity& e) {
         return m_Registry.get<C>(e);
     }
 

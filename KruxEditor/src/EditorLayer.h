@@ -32,9 +32,7 @@ namespace Krux {
 
 	class EditorLayer : public Layer {
 	public:
-		EditorLayer()
-		: Layer("Editor Layer"), m_Camera(Krux::Application::Instance()->GetWidth(), Application::Instance()->GetHeight()), m_CameraController(m_Camera)
-		{}
+		EditorLayer();
 
 		void OnAttach() override;
 		void OnDetach() override;

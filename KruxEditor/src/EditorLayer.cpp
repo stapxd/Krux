@@ -14,6 +14,12 @@
 
 namespace Krux {
 
+	EditorLayer::EditorLayer()
+		: Layer("Editor Layer"), m_Camera(Krux::Application::Instance()->GetWidth(), Application::Instance()->GetHeight()), m_CameraController(m_Camera),
+		m_SceneHierarchyPanel(&m_Scene)
+	{
+	}
+
 	void EditorLayer::OnAttach()
 	{
 		TextureSpecification spec;
@@ -39,16 +45,32 @@ namespace Krux {
 		//m_Scene.GetAllWith<Components::ID, Components::Transform>();
 		//
 
-		Entity e001 = m_Scene.CreateEntity();
-		Entity e002 = m_Scene.CreateEntity();
+		Entity& e001 = m_Scene.CreateEntity();
+		Entity& e002 = m_Scene.CreateEntity();
+		Entity& e003 = m_Scene.CreateEntity();
+		Entity& e004 = m_Scene.CreateEntity();
 
-		e001.AddComponent<Components::SpriteRenderer>(glm::vec4(1.0f), m_Texture);
-		e002.AddComponent<Components::SpriteRenderer>(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
+		e001.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f), m_Texture);
+		e002.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
 
-		Components::Transform* trm = e001.GetComponent<Components::Transform>();
+		TransformComponent* trm = e001.GetComponent<TransformComponent>();
 		if (trm) {
 			trm->Position.x -= 5.0f;
 		}
+
+		NameComponent* n1 = e001.GetComponent<NameComponent>();
+		NameComponent* n2 = e002.GetComponent<NameComponent>();
+		NameComponent* n3 = e003.GetComponent<NameComponent>();
+
+		n1->Text = "E1";
+		n2->Text = "E2";
+		n3->Text = "E3";
+
+		e001.AddChild(e002);
+		e003.AddChild(e001);
+		e004.AddChild(e001);
+
+		e002.BecomeOrphan();
 
 	}
 
@@ -58,6 +80,9 @@ namespace Krux {
 
 	void EditorLayer::OnImGuiRender()
 	{
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
+
 
 		ImGuiID dockspace_id = ImGui::GetID("MainDockspaceOverViewport");
 

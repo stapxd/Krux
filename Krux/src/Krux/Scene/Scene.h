@@ -19,13 +19,17 @@ namespace Krux {
 
         SceneState GetState() { return m_State; }
 
-        Entity CreateEntity();
+        Entity& CreateEntity();
+        void DeleteEntity(const Entity& e);
+
+        const std::unordered_map<UUID64, Entity>& GetEntities() const& { return m_Entities; }
+        Entity* FindByUUID(UUID64 id);
 
         template<typename C, typename... Args>
-        C* AddComponent(Entity e, Args&&... args);
+        C* AddComponent(const Entity& e, Args&&... args);
 
         template<typename C>
-        C* GetComponent(Entity e);
+        C* GetComponent(const Entity& e);
 
         template<typename C>
         bool Has(Entity e);
@@ -39,6 +43,9 @@ namespace Krux {
     private:
         SceneState m_State = SceneState::Edit;
         ecs::registry m_Registry;
+
+        // add positions so they are correctly sorted in SceneHierarchy
+        std::unordered_map<UUID64, Entity> m_Entities;
     };
 }
 

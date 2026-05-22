@@ -43,7 +43,7 @@ namespace Krux {
 		static void DrawCircle(glm::vec2 position, float radius, glm::vec4 color, float thickness = 1.0f, float fade = 0.005f);
 		static void DrawCircle(glm::vec3 position, float radius, glm::vec4 color, float thickness = 1.0f, float fade = 0.005f);
 
-		static void DrawSprite(const Components::Transform& trm, const Components::SpriteRenderer sprR);
+		static void DrawSprite(const TransformComponent& trm, const SpriteRendererComponent sprR);
 
 		static int GetDrawCallsCount() { return s_Data.DrawCallsCount; }
 
