@@ -24,7 +24,7 @@ namespace Krux {
 			}
 
 			if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemHovered()) {
-				m_SelectedId = UUID64::INVALID;
+				m_SelectedEntityID = UUID64::INVALID;
 			}
 
 			ImGui::End();
@@ -42,7 +42,7 @@ namespace Krux {
 
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnArrow;
 
-		if (m_SelectedId == id) { 
+		if (m_SelectedEntityID == id) {
 			flags |= ImGuiTreeNodeFlags_Selected; 
 		}
 
@@ -54,8 +54,8 @@ namespace Krux {
 		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
 
 		if (ImGui::IsItemClicked()) {
-			if (m_SelectedId != id) {
-				m_SelectedId = id;
+			if (m_SelectedEntityID != id) {
+				m_SelectedEntityID = id;
 				//KRX_CORE_TRACE("Entity id: {}", (uint64_t)m_SelectedId);
 			}
 		}

@@ -16,7 +16,7 @@ namespace Krux {
 
 	EditorLayer::EditorLayer()
 		: Layer("Editor Layer"), m_Camera(Krux::Application::Instance()->GetWidth(), Application::Instance()->GetHeight()), m_CameraController(m_Camera),
-		m_SceneHierarchyPanel(&m_Scene)
+		m_SceneHierarchyPanel(&m_Scene), m_InspectorPanel(&m_Scene)
 	{
 	}
 
@@ -94,6 +94,7 @@ namespace Krux {
 			{
 				ImGui::Checkbox("Viewport", m_ViewportPanel.Open());
 				ImGui::Checkbox("Scene Hierarchy", m_SceneHierarchyPanel.Open());
+				ImGui::Checkbox("Inspector", m_InspectorPanel.Open());
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
@@ -111,6 +112,7 @@ namespace Krux {
 		ImGui::End();
 
 		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0));
+		m_InspectorPanel.OnRender(m_SceneHierarchyPanel.SelectedEntityID());
 		m_SceneHierarchyPanel.OnRender();
 
 	}
@@ -139,10 +141,11 @@ namespace Krux {
 					m_CameraController.OnUpdate(time);
 
 				m_Scene.OnUpdateEdit(time, m_Camera);
+				break;
 			}
 			case SceneState::Play: 
 			{
-
+				break;
 			}
 		}
 

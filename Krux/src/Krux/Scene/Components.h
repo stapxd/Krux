@@ -6,7 +6,10 @@
 
 #include "Krux/Core/UUID.h"
 
+#include <iostream>
 #include <glm/glm.hpp>
+
+#define REGISTER_NAME(name) static const char* GetName() { return #name; }
 
 namespace Krux {
 
@@ -18,6 +21,7 @@ namespace Krux {
 		{}
 
 		REGISTER_CLASS_NAME(IDComponent)
+		REGISTER_NAME(ID Component)
 	};
 
 	struct TagComponent {
@@ -28,6 +32,7 @@ namespace Krux {
 		{}
 
 		REGISTER_CLASS_NAME(TagComponent)
+		REGISTER_NAME(Tag Component)
 	};
 
 	struct NameComponent {
@@ -38,6 +43,7 @@ namespace Krux {
 		{}
 
 		REGISTER_CLASS_NAME(NameComponent)
+		REGISTER_NAME(Name Component)
 	};
 
 
@@ -51,6 +57,7 @@ namespace Krux {
 		{}
 
 		REGISTER_CLASS_NAME(TransformComponent)
+		REGISTER_NAME(Transform Component)
 	};
 
 	struct SpriteRendererComponent {
@@ -63,6 +70,7 @@ namespace Krux {
 		{}
 
 		REGISTER_CLASS_NAME(SpriteRendererComponent)
+		REGISTER_NAME(Sprite Renderer Component)
 	};
 
 }
