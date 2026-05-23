@@ -27,6 +27,50 @@ namespace Krux {
 				m_SelectedEntityID = UUID64::INVALID;
 			}
 
+			if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !ImGui::IsAnyItemHovered()) {
+				m_SelectedEntityID = UUID64::INVALID;
+			
+				ImGui::OpenPopup("CreationPopup");
+				
+			}
+
+			if (ImGui::BeginPopup("CreationPopup"))
+			{
+				ImGui::SeparatorText("Create");
+
+				if (ImGui::BeginMenu("2D"))
+				{
+					if (ImGui::MenuItem("Quad")) {
+						Entity& e = m_Scene->CreateEntity();
+						e.AddComponent<SpriteRendererComponent>();
+
+						NameComponent* nameComp = e.GetComponent<NameComponent>();
+						nameComp->Text = "Quad";
+					}
+
+					if (ImGui::MenuItem("Circle")) {
+						Entity& e = m_Scene->CreateEntity();
+						e.AddComponent<CircleRendererComponent>();
+
+						NameComponent* nameComp = e.GetComponent<NameComponent>();
+						nameComp->Text = "Circle";
+					}
+
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::Selectable("Empty entity")) {
+					m_Scene->CreateEntity();
+				}
+
+				ImGui::Separator();
+				ImGui::Text("Tooltip here");
+				ImGui::SetItemTooltip("I am a tooltip over a popup");
+
+				ImGui::EndPopup();
+			}
+
+
 			ImGui::End();
 		}
 	}

@@ -33,7 +33,11 @@ namespace Krux {
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
-		KRX_CORE_ASSERT(Load(path), "Could not load Texture2D!");
+		//KRX_CORE_ASSERT(Load(path), "Could not load Texture2D!");
+		if (!Load(path)) {
+			std::string pathStr = path.string();
+			KRX_CORE_ERROR("Could not load Texture with path: {}", pathStr.c_str());
+		}
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, Utils::TextureFilterToOpenGLParam(spec.MinFilter));
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, Utils::TextureFilterToOpenGLParam(spec.MagFilter));

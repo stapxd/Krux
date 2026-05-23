@@ -28,6 +28,7 @@ namespace Krux {
 		spec.WrapT = TextureWrap::Repeat;
 
 		m_Texture = AssetManager::Load<Texture2D>("assets/textures/CrackTexture.png", spec);
+		//m_Texture = AssetManager::Load<Texture2D>("assets/shaders/color.glsl", spec);
 		m_Texture2 = AssetManager::Load<Texture2D>("assets/textures/RedTexture.png", spec);
 
 		FrameBufferSpecification fbSpec;
@@ -80,9 +81,8 @@ namespace Krux {
 
 	void EditorLayer::OnImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
-
+		/*static bool show = true;
+		ImGui::ShowDemoWindow(&show);*/
 
 		ImGuiID dockspace_id = ImGui::GetID("MainDockspaceOverViewport");
 

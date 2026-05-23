@@ -41,9 +41,19 @@ namespace Krux {
 					ImGui::DragFloat3("Scale",	  &comp->Scale[0]   , 0.02f);
 				});
 
+				// TODO: add ability to add Textures
 				// Sprite Renderer Component
 				DrawComponent<SpriteRendererComponent>(e, [](SpriteRendererComponent* comp) {
 					ImGui::ColorEdit4("Color", &comp->Color[0]);
+					ImGui::DragFloat("Tiling Factor", &comp->TilingFactor, 1.0f, 1.0f, 50.0f);
+				});
+
+				// Circle Renderer Component
+				DrawComponent<CircleRendererComponent>(e, [](CircleRendererComponent* comp) {
+					ImGui::ColorEdit4("Color", &comp->Color[0]);
+					ImGui::DragFloat("Radius", &comp->Radius, 0.02f, 0.0f);
+					ImGui::DragFloat("Thickness", &comp->Thickness, 0.01f, 0.01f, 1.0f);
+					ImGui::DragFloat("Fade", &comp->Fade, 0.02f, 0.02f, 1.0f);
 				});
 			}
 

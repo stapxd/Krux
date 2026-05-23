@@ -50,17 +50,21 @@ namespace Krux {
 		
 		Renderer2D::BeginFrame(camera);
 
-		{
-			auto group = m_Registry.group<TransformComponent, SpriteRendererComponent>();
-
 			Renderer2D::BeginBatch();
-
-			for (auto& [e, trm, sprR] : group) {
-				Renderer2D::DrawSprite(trm, sprR);
+			{
+				auto group = m_Registry.group<TransformComponent, SpriteRendererComponent>();
+				for (auto& [e, trm, sprR] : group) {
+					Renderer2D::DrawSprite(trm, sprR);
+				}
 			}
 
+			{
+				auto group = m_Registry.group<TransformComponent, CircleRendererComponent>();
+				for (auto& [e, trm, circleR] : group) {
+					Renderer2D::DrawCircle(trm.Position, circleR.Radius, circleR.Color, circleR.Thickness, circleR.Fade);
+				}
+			}
 			Renderer2D::EndBatch();
-		}
 
 		Renderer2D::EndFrame();
 	}

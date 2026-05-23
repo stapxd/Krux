@@ -73,4 +73,17 @@ namespace Krux {
 		REGISTER_NAME(Sprite Renderer Component)
 	};
 
+	struct CircleRendererComponent {
+		glm::vec4 Color = glm::vec4(1.0f);
+		float Radius = 1.0f;
+		float Thickness = 1.0f;
+		float Fade = 0.005f;
+
+		CircleRendererComponent(glm::vec4 color = glm::vec4(1.0f), float radius = 1.0f, float thickness = 1.0f, float fade = 0.005f)
+			: Color(color), Radius(radius), Thickness(thickness), Fade(fade)
+		{}
+
+		REGISTER_CLASS_NAME(CircleRendererComponent)
+		REGISTER_NAME(Circle Renderer Component)
+	};
 }
