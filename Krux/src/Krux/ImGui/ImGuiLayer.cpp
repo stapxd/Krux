@@ -27,6 +27,9 @@ namespace Krux {
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
 
+		ImFont* openSansRegular = io.Fonts->AddFontFromFileTTF("assets/builtin/fonts/OpenSans/static/OpenSans-Regular.ttf", 18.0f);
+		io.FontDefault = openSansRegular;
+
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 

@@ -17,7 +17,7 @@ namespace Krux {
 		if (m_IsOpen) {
 
 			ImGui::Begin("Scene Hierarchy", &m_IsOpen);
-			
+
 			for (const auto& [id, e] : m_Scene->GetEntities()) {
 				if (e.IsRoot())
 					DrawEntityNode(id, e);
@@ -34,6 +34,7 @@ namespace Krux {
 				
 			}
 
+			ImVec2 availableSpace = ImGui::GetContentRegionAvail();
 			if (ImGui::BeginPopup("CreationPopup"))
 			{
 				ImGui::SeparatorText("Create");
@@ -70,6 +71,20 @@ namespace Krux {
 				ImGui::EndPopup();
 			}
 
+			ImGui::InvisibleButton("##WindowDropTarget", availableSpace);
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_ENTITY"))
+				{
+					if (payload->DataSize == sizeof(UUID64)) {
+						UUID64 uuid = *(const UUID64*)payload->Data;
+						Entity* changableEntity = m_Scene->FindByUUID(uuid);
+						changableEntity->BecomeOrphan();
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
+
 
 			ImGui::End();
 		}
@@ -96,6 +111,25 @@ namespace Krux {
 		}
 
 		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			ImGui::SetDragDropPayload("DND_ENTITY", &id, sizeof(UUID64));
+
+			ImGui::EndDragDropSource();
+		}
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_ENTITY"))
+			{
+				if (payload->DataSize == sizeof(UUID64)) {
+					UUID64 uuid = *(const UUID64*)payload->Data;
+					Entity& changableEntity = const_cast<Entity&>(e);
+					changableEntity.AddChild(uuid);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
 
 		if (ImGui::IsItemClicked()) {
 			if (m_SelectedEntityID != id) {

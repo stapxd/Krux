@@ -13,6 +13,7 @@ namespace Krux {
         Entity(const Entity& other);
         
         void AddChild(Entity& e);
+        void AddChild(const UUID64& id);
         void BecomeOrphan();
         const std::vector<UUID64>& GetChildEntities() const& { return m_ChildEntities; }
         bool IsRoot() const { return !m_IsChild; }
@@ -34,6 +35,8 @@ namespace Krux {
         bool m_IsChild = false;
         Entity* m_Parent = nullptr;
         std::vector<UUID64> m_ChildEntities;
+
+        friend Scene;
     };
 }
 

@@ -558,11 +558,11 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(trm.Position, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.Position.z);
+				s_Data.QuadsToDraw.emplace_back(trm.WorldPosition, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.WorldPosition.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(trm.Position, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.Position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(trm.WorldPosition, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.WorldPosition.z);
 				break;
 			}
 		}

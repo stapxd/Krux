@@ -36,7 +36,7 @@ namespace Krux {
 				// TODO: parent entity must affect its children
 				// Transform Component
 				DrawComponent<TransformComponent>(e, [](TransformComponent* comp) {
-					ImGui::DragFloat3("Position", &comp->Position[0], 0.02f);
+					ImGui::DragFloat3("Position", &comp->LocalPosition[0], 0.02f);
 					ImGui::DragFloat3("Rotation", &comp->Rotation[0], 0.02f);
 					ImGui::DragFloat3("Scale",	  &comp->Scale[0]   , 0.02f);
 				});

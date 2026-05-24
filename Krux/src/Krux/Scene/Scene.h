@@ -34,6 +34,9 @@ namespace Krux {
         template<typename C>
         bool Has(Entity e);
 
+        void UpdateWorldPositions();
+        void UpdateWorldPositionRecursively(Entity& e, glm::vec3 parentPosition = glm::vec3(0.0f));
+
         void OnUpdateEdit(Time time, const OrthographicCamera& camera);
         void OnUpdateRuntime(Time time);
 
@@ -46,6 +49,8 @@ namespace Krux {
 
         // add positions so they are correctly sorted in SceneHierarchy
         std::unordered_map<UUID64, Entity> m_Entities;
+
+        friend Entity;
     };
 }
 

@@ -56,7 +56,7 @@ namespace Krux {
 
 		TransformComponent* trm = e001.GetComponent<TransformComponent>();
 		if (trm) {
-			trm->Position.x -= 5.0f;
+			trm->LocalPosition.x -= 5.0f;
 		}
 
 		NameComponent* n1 = e001.GetComponent<NameComponent>();
@@ -81,8 +81,8 @@ namespace Krux {
 
 	void EditorLayer::OnImGuiRender()
 	{
-		/*static bool show = true;
-		ImGui::ShowDemoWindow(&show);*/
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 
 		ImGuiID dockspace_id = ImGui::GetID("MainDockspaceOverViewport");
 
@@ -92,9 +92,9 @@ namespace Krux {
 		{
 			if (ImGui::BeginMenu("Panels"))
 			{
-				ImGui::Checkbox("Viewport", m_ViewportPanel.Open());
-				ImGui::Checkbox("Scene Hierarchy", m_SceneHierarchyPanel.Open());
-				ImGui::Checkbox("Inspector", m_InspectorPanel.Open());
+				ImGui::MenuItem("Viewport", "", m_ViewportPanel.Open());
+				ImGui::MenuItem("Scene Hierarchy", "", m_SceneHierarchyPanel.Open());
+				ImGui::MenuItem("Inspector", "", m_InspectorPanel.Open());
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();

@@ -44,8 +44,32 @@ namespace Krux {
 		return nullptr;
 	}
 
+	void Scene::UpdateWorldPositions()
+	{
+		for (auto& entityPair : m_Entities) {
+			if (entityPair.second.IsRoot())
+				UpdateWorldPositionRecursively(entityPair.second);
+		}
+	}
+
+	void Scene::UpdateWorldPositionRecursively(Entity& e, glm::vec3 parentPosition /*= glm::vec3(0.0f)*/)
+	{
+		TransformComponent* trm = e.GetComponent<TransformComponent>();
+
+		trm->WorldPosition = trm->LocalPosition + parentPosition;
+
+		for (UUID64 childUUID : e.GetChildEntities()) {
+			Entity* child = FindByUUID(childUUID);
+			if (child) {
+				UpdateWorldPositionRecursively(*child, trm->WorldPosition);
+			}
+		}
+	}
+
 	void Scene::OnUpdateEdit(Time time, const OrthographicCamera& camera)
 	{
+		UpdateWorldPositions();
+
 		Renderer::Clear();
 		
 		Renderer2D::BeginFrame(camera);
@@ -61,7 +85,7 @@ namespace Krux {
 			{
 				auto group = m_Registry.group<TransformComponent, CircleRendererComponent>();
 				for (auto& [e, trm, circleR] : group) {
-					Renderer2D::DrawCircle(trm.Position, circleR.Radius, circleR.Color, circleR.Thickness, circleR.Fade);
+					Renderer2D::DrawCircle(trm.WorldPosition, circleR.Radius, circleR.Color, circleR.Thickness, circleR.Fade);
 				}
 			}
 			Renderer2D::EndBatch();

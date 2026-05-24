@@ -48,12 +48,14 @@ namespace Krux {
 
 
 	struct TransformComponent {
-		glm::vec3 Position = glm::vec3(0.0f);
-		glm::vec3 Rotation = glm::vec3(0.0f);
-		glm::vec3 Scale    = glm::vec3(1.0f);
+		glm::vec3 LocalPosition = glm::vec3(0.0f);
+		glm::vec3 Rotation		= glm::vec3(0.0f);
+		glm::vec3 Scale			= glm::vec3(1.0f);
+
+		glm::vec3 WorldPosition = glm::vec3(0.0f);
 
 		TransformComponent(glm::vec3 position = glm::vec3(0.0f), glm::vec3 rotation = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f))
-			: Position(position), Rotation(rotation), Scale(scale)
+			: LocalPosition(position), Rotation(rotation), Scale(scale)
 		{}
 
 		REGISTER_CLASS_NAME(TransformComponent)
