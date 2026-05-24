@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <functional>
 
 namespace Krux {
 
@@ -17,6 +18,9 @@ namespace Krux {
 
 		bool operator==(const UUID64& other) const { return m_UUID == other.m_UUID; }
 		bool operator!=(const UUID64& other) const { return m_UUID != other.m_UUID; }
+
+		bool operator==(const uint64_t& uuid) const { return m_UUID != uuid; }
+		bool operator!=(const uint64_t& uuid) const { return m_UUID != uuid; }
 
 		bool IsValid() { return m_UUID != INVALID; }
 

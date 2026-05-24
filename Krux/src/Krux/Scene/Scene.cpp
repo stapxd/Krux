@@ -30,9 +30,28 @@ namespace Krux {
 
 	void Scene::DeleteEntity(const Entity& e)
 	{
-		IDComponent* idComp = m_Registry.get<IDComponent>(e);
-		m_Entities.erase(idComp->ID);
-		m_Registry.destroy(e);
+		std::vector<UUID64> entitiesToDelete;
+		CollectAllChildren(e, entitiesToDelete);
+
+		entitiesToDelete.push_back(e.GetComponent<IDComponent>()->ID);
+
+		for (auto uuid : entitiesToDelete) {
+			Entity* target = FindByUUID(uuid);
+			if (target) {
+				m_Registry.destroy(*target);
+				m_Entities.erase(uuid);
+			}
+		}
+	}
+
+	void Scene::CollectAllChildren(const Entity& parent, std::vector<UUID64>& outList) {
+		for (auto childUUID : parent.GetChildEntities()) {
+			Entity* child = FindByUUID(childUUID);
+			if (child) {
+				CollectAllChildren(*child, outList);
+				outList.push_back(childUUID);
+			}
+		}
 	}
 
 	Entity* Scene::FindByUUID(UUID64 id)

@@ -82,4 +82,17 @@ namespace Krux {
 		m_BlockEvents = value;
 	}
 
+	void ImGuiLayer::BeginWindowCollection() {
+		m_AnyWindowFocusedOrHovered = false;
+	}
+
+	void ImGuiLayer::RegisterWindowState(bool isFocused, bool isHovered) {
+		if (isFocused || isHovered)
+			m_AnyWindowFocusedOrHovered = true;
+	}
+
+	void ImGuiLayer::EndWindowCollection() {
+		SetBlockEvents(!m_AnyWindowFocusedOrHovered);
+	}
+
 }

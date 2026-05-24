@@ -44,6 +44,9 @@ namespace Krux {
         auto GetAllWith();
 
     private:
+        void CollectAllChildren(const Entity& parent, std::vector<UUID64>& outList);
+
+    private:
         SceneState m_State = SceneState::Edit;
         ecs::registry m_Registry;
 

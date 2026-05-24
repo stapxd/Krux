@@ -2,91 +2,76 @@
 
 #include "Krux/Scene/Components.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
+#include <imgui_internal.h>
 
 namespace Krux {
 
 	SceneHierarchyPanel::SceneHierarchyPanel(Scene* scene)
-		: m_Scene(scene)
+		: m_Scene(scene), Panel("Scene Hierarchy")
 	{
 	}
 
 	// TODO: add drag&drop to make entities be children to other
-	void SceneHierarchyPanel::OnRender()
+	void SceneHierarchyPanel::RenderContent(PanelData panelData)
 	{
-		if (m_IsOpen) {
+		for (const auto& [id, e] : m_Scene->GetEntities()) {
+			if (e.IsRoot())
+				DrawEntityNode(id, e);
+		}
 
-			ImGui::Begin("Scene Hierarchy", &m_IsOpen);
-
-			for (const auto& [id, e] : m_Scene->GetEntities()) {
-				if (e.IsRoot())
-					DrawEntityNode(id, e);
+		if (ImGui::BeginDragDropTargetCustom(ImGui::GetCurrentWindow()->Rect(), ImGui::GetCurrentWindow()->ID))
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_ENTITY"))
+			{
+				if (payload->DataSize == sizeof(UUID64)) {
+					UUID64 uuid = *(const UUID64*)payload->Data;
+					Entity* changableEntity = m_Scene->FindByUUID(uuid);
+					changableEntity->BecomeOrphan();
+				}
 			}
+			ImGui::EndDragDropTarget();
+		}
 
-			if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemHovered()) {
-				m_SelectedEntityID = UUID64::INVALID;
-			}
+		bool clickedOnItem = ImGui::IsAnyItemHovered();
 
-			if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !ImGui::IsAnyItemHovered()) {
+		if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && !clickedOnItem)
+		{
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 				m_SelectedEntityID = UUID64::INVALID;
-			
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+			{
+				m_SelectedEntityID = UUID64::INVALID;
 				ImGui::OpenPopup("CreationPopup");
-				
 			}
+		}
 
-			ImVec2 availableSpace = ImGui::GetContentRegionAvail();
-			if (ImGui::BeginPopup("CreationPopup"))
+		if (ImGui::BeginPopup("CreationPopup"))
+		{
+			ImGui::SeparatorText("Create");
+			if (ImGui::BeginMenu("2D"))
 			{
-				ImGui::SeparatorText("Create");
-
-				if (ImGui::BeginMenu("2D"))
-				{
-					if (ImGui::MenuItem("Quad")) {
-						Entity& e = m_Scene->CreateEntity();
-						e.AddComponent<SpriteRendererComponent>();
-
-						NameComponent* nameComp = e.GetComponent<NameComponent>();
-						nameComp->Text = "Quad";
-					}
-
-					if (ImGui::MenuItem("Circle")) {
-						Entity& e = m_Scene->CreateEntity();
-						e.AddComponent<CircleRendererComponent>();
-
-						NameComponent* nameComp = e.GetComponent<NameComponent>();
-						nameComp->Text = "Circle";
-					}
-
-					ImGui::EndMenu();
+				if (ImGui::MenuItem("Quad")) {
+					Entity& e = m_Scene->CreateEntity();
+					e.AddComponent<SpriteRendererComponent>();
+					e.GetComponent<NameComponent>()->Text = "Quad";
 				}
-
-				if (ImGui::Selectable("Empty entity")) {
-					m_Scene->CreateEntity();
+				if (ImGui::MenuItem("Circle")) {
+					Entity& e = m_Scene->CreateEntity();
+					e.AddComponent<CircleRendererComponent>();
+					e.GetComponent<NameComponent>()->Text = "Circle";
 				}
-
-				ImGui::Separator();
-				ImGui::Text("Tooltip here");
-				ImGui::SetItemTooltip("I am a tooltip over a popup");
-
-				ImGui::EndPopup();
+				ImGui::EndMenu();
 			}
+			if (ImGui::Selectable("Empty entity"))
+				m_Scene->CreateEntity();
 
-			ImGui::InvisibleButton("##WindowDropTarget", availableSpace);
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_ENTITY"))
-				{
-					if (payload->DataSize == sizeof(UUID64)) {
-						UUID64 uuid = *(const UUID64*)payload->Data;
-						Entity* changableEntity = m_Scene->FindByUUID(uuid);
-						changableEntity->BecomeOrphan();
-					}
-				}
-				ImGui::EndDragDropTarget();
-			}
-
-
-			ImGui::End();
+			ImGui::Separator();
+			ImGui::Text("Tooltip here");
+			ImGui::SetItemTooltip("I am a tooltip over a popup");
+			ImGui::EndPopup();
 		}
 	}
 

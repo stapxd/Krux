@@ -13,11 +13,16 @@ namespace Krux {
 		virtual void OnDetach() override;
 		virtual void OnEvent(Event& e) override;
 
+		void BeginWindowCollection();
+		void RegisterWindowState(bool isFocused, bool isHovered);
+		void EndWindowCollection();
+
 		void SetBlockEvents(bool value);
 		void Begin();
 		void End();
 	private:
 		bool m_BlockEvents = true;
+		bool m_AnyWindowFocusedOrHovered = false;
 	};
 
 }

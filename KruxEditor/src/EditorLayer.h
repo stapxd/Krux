@@ -56,6 +56,7 @@ namespace Krux {
 
 		// Scene
 		Scene m_Scene;
+		UUID64 m_EntityToDelete = UUID64(UUID64::INVALID);
 
 		// Panels
 		ViewportPanel m_ViewportPanel;

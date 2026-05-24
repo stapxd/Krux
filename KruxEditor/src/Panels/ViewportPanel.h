@@ -1,23 +1,25 @@
 #pragma once
 
+#include "Panel.h"
+
 #include <glm/glm.hpp>
 
 namespace Krux {
 
-	class ViewportPanel {
+	class ViewportPanel : public Panel {
 	public:
 		ViewportPanel();
-		void OnRender(uint32_t colorAttachment);
+		virtual void PushWindowStyles() override;
+		virtual void PopWindowStyles() override;
+		virtual void RenderContent(PanelData panelData = std::monostate{}) override;
 		bool ShouldUpdateExternalViewport();
 
 		glm::vec2 GetSize() { return m_ViewportSize; }
-		bool IsFocused() const { return m_IsFocused; }
-
-		bool* Open() { return &m_IsOpen; }
 
 	private:
 		bool m_IsOpen = true;
 		bool m_IsFocused = false;
+		bool m_IsHovered = false;
 
 		glm::vec2 m_ViewportSize = glm::vec2(0.0f);
 		glm::vec2 m_NewViewportSize = glm::vec2(0.0f);

@@ -7,17 +7,17 @@
 namespace Krux {
 
 	InspectorPanel::InspectorPanel(Scene* scene)
-		: m_Scene(scene)
+		: m_Scene(scene), Panel("Inspector")
 	{
 	}
 
-	// TODO: add ability to add & delete components 
-	void InspectorPanel::OnRender(UUID64 selectedEntityID)
+	// TODO: add ability to add & delete components
+	void InspectorPanel::RenderContent(PanelData panelData)
 	{
-		if (m_IsOpen) {
-			Entity* e = m_Scene->FindByUUID(selectedEntityID);
+		if(std::holds_alternative<UUID64>(panelData)) {
+			UUID64 selectedEntityID = std::get<UUID64>(panelData);
 
-			ImGui::Begin("Inspector", &m_IsOpen);
+			Entity* e = m_Scene->FindByUUID(selectedEntityID);
 
 			if (e && selectedEntityID.IsValid()) {
 				// TODO: add tag component
@@ -56,8 +56,6 @@ namespace Krux {
 					ImGui::DragFloat("Fade", &comp->Fade, 0.02f, 0.02f, 1.0f);
 				});
 			}
-
-			ImGui::End();
 		}
 	}
 

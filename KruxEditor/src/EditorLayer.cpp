@@ -1,5 +1,9 @@
 #include "EditorLayer.h"
 
+// Core
+#include "Krux/Core/Application.h"
+#include "Krux/Core/Input.h"
+
 // Scene
 #include "Krux/Scene/Entity.h"
 #include "Krux/Scene/Components.h"
@@ -10,7 +14,6 @@
 #include "Krux/Render/Assets/AssetManager.h"
 
 #include "Krux/Render/Renderer2D.h"
-#include "Krux/Core/Input.h"
 
 namespace Krux {
 
@@ -107,14 +110,59 @@ namespace Krux {
 		// m_FileSystemPanel.Render();
 		// m_StatsPanel.Render();
 
+		// Modal window if deleting entity has children
+		if (m_EntityToDelete != UUID64::INVALID) {
+			Entity* entityToDelete = m_Scene.FindByUUID(m_EntityToDelete);
+
+			if (entityToDelete && !entityToDelete->GetChildEntities().empty()) {
+				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+				ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+				ImGui::OpenPopup("Delete?");
+				if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					ImGui::Text("Entity has child entities in it.\nThis operation cannot be undone!");
+					ImGui::Separator();
+
+					if (ImGui::Button("OK", ImVec2(120, 0))) { 
+						m_EntityToDelete = UUID64::INVALID;
+						m_Scene.DeleteEntity(*entityToDelete);
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Cancel", ImVec2(120, 0))) { 
+						m_EntityToDelete = UUID64::INVALID;
+						ImGui::CloseCurrentPopup(); 
+					}
+					ImGui::EndPopup();
+				}
+			}
+			else if (entityToDelete) {
+				m_Scene.DeleteEntity(*entityToDelete);
+			}
+			else {
+				m_EntityToDelete = UUID64::INVALID;
+			}
+		}
+
 		ImGui::Begin("Stats");
 			ImGui::Text("Draw Calls: %d", Renderer2D::GetDrawCallsCount());
 		ImGui::End();
 
-		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0));
-		m_InspectorPanel.OnRender(m_SceneHierarchyPanel.SelectedEntityID());
-		m_SceneHierarchyPanel.OnRender();
+		ImGuiLayer* imguiLayer = Application::Instance()->GetImGuiLayer();
 
+		imguiLayer->BeginWindowCollection();
+
+		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0));
+		imguiLayer->RegisterWindowState(m_ViewportPanel.IsFocused(), m_ViewportPanel.IsHovered());
+
+		m_InspectorPanel.OnRender(m_SceneHierarchyPanel.SelectedEntityID());
+		imguiLayer->RegisterWindowState(m_InspectorPanel.IsFocused(), m_InspectorPanel.IsHovered());
+
+		m_SceneHierarchyPanel.OnRender();
+		imguiLayer->RegisterWindowState(m_SceneHierarchyPanel.IsFocused(), m_SceneHierarchyPanel.IsHovered());
+
+		imguiLayer->EndWindowCollection();
 	}
 
 	void EditorLayer::OnUpdate(Time time)
@@ -182,12 +230,19 @@ namespace Krux {
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
+		if (m_SceneHierarchyPanel.IsFocused() && e.GetKey() == (int)Key::DEL) {
+			
+			m_EntityToDelete = m_SceneHierarchyPanel.SelectedEntityID();
+		}
+
 		return true;
 	}
 
 	bool EditorLayer::OnMouseScroll(MouseScrollEvent& e)
 	{
-		m_CameraController.AddZoom(-(float)e.GetYOffset());
+		if(m_ViewportPanel.IsHovered())
+			m_CameraController.AddZoom(-(float)e.GetYOffset());
+
 		return true;
 	}
 

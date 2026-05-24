@@ -1,15 +1,17 @@
 #pragma once
 
-#include "Krux/Scene/Scene.h"
+#include "Panel.h"
 
+#include "Krux/Scene/Scene.h"
 #include "Krux/Core/UUID.h"
 
 namespace Krux {
 
-	class InspectorPanel {
+	class InspectorPanel : public Panel {
 	public:
 		InspectorPanel(Scene* scene);
-		void OnRender(UUID64 selectedEntityID);
+		
+		virtual void RenderContent(PanelData panelData = std::monostate{}) override;
 
 		template<typename Component>
 		void DrawComponent(Entity* e, void(*callback)(Component*)) {
@@ -21,13 +23,7 @@ namespace Krux {
 			}
 		}
 
-		bool IsFocused() const { return m_IsFocused; }
-		bool* Open() { return &m_IsOpen; }
-
 	private:
-		bool m_IsOpen = true;
-		bool m_IsFocused = false;
-
 		Scene* m_Scene;
 		UUID64 m_SelectedId = UUID64::INVALID;
 	};

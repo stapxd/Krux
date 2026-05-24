@@ -7,32 +7,27 @@
 namespace Krux {
 
 	ViewportPanel::ViewportPanel()
+		: Panel("Viewport")
 	{}
 
-	void ViewportPanel::OnRender(uint32_t colorAttachment) {
-		if (m_IsOpen)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-			ImGui::Begin("Viewport", &m_IsOpen, ImGuiWindowFlags_NoScrollbar);
+	void ViewportPanel::PushWindowStyles() {
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+	}
 
+	void ViewportPanel::PopWindowStyles() {
+		ImGui::PopStyleVar();
+	}
 
-				m_IsFocused = ImGui::IsWindowFocused();
+	void ViewportPanel::RenderContent(PanelData panelData) {
 
-				if (m_IsFocused || ImGui::IsWindowHovered()) {
-					Application::Instance()->GetImGuiLayer()->SetBlockEvents(false);
-				}
-				else
-					Application::Instance()->GetImGuiLayer()->SetBlockEvents(true);
+		if (std::holds_alternative<uint32_t>(panelData)) {
+			uint32_t colorAttachment = std::get<uint32_t>(panelData);
+			ImVec2 panelSize = ImGui::GetContentRegionAvail();
+			m_NewViewportSize = { panelSize.x, panelSize.y };
 
-				ImVec2 panelSize = ImGui::GetContentRegionAvail();
-				m_NewViewportSize = { panelSize.x, panelSize.y };
-
-				ImGui::Image((ImTextureID)colorAttachment, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-
-			ImGui::End();
-			ImGui::PopStyleVar();
+			ImGui::Image((ImTextureID)colorAttachment, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		}
+
 	}
 
 	bool ViewportPanel::ShouldUpdateExternalViewport() {
