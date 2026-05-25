@@ -25,4 +25,9 @@ namespace Krux {
     auto Scene::GetAllWith() {
         return m_Registry.group<C...>();
     }
+
+    template<typename C>
+    void Scene::RemoveComponent(const Entity& e) {
+        m_Registry.remove<C>(e);
+    }
 }

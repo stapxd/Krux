@@ -148,7 +148,7 @@ namespace Krux {
 		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0), ImGuiWindowFlags_NoScrollbar);
 		imguiLayer->RegisterWindowState(m_ViewportPanel.IsFocused(), m_ViewportPanel.IsHovered());
 
-		m_InspectorPanel.OnRender(m_SceneHierarchyPanel.SelectedEntityID());
+		m_InspectorPanel.OnRender(m_Scene.GetSelectedEntityID());
 		imguiLayer->RegisterWindowState(m_InspectorPanel.IsFocused(), m_InspectorPanel.IsHovered());
 
 		m_SceneHierarchyPanel.OnRender();
@@ -223,8 +223,7 @@ namespace Krux {
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
 		if (m_SceneHierarchyPanel.IsFocused() && e.GetKey() == (int)Key::DEL) {
-			
-			m_EntityToDelete = m_SceneHierarchyPanel.SelectedEntityID();
+			m_EntityToDelete = m_Scene.GetSelectedEntityID();
 		}
 
 		return true;

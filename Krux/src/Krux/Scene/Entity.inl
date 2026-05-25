@@ -16,4 +16,9 @@ namespace Krux {
     bool Entity::HasComponent() const {
         return m_Scene->Has<C>(*this);
     }
+
+    template<typename C>
+    void Entity::RemoveComponent() {
+        m_Scene->RemoveComponent<C>(*this);
+    }
 }

@@ -39,11 +39,11 @@ namespace Krux {
 		if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && !clickedOnItem)
 		{
 			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-				m_SelectedEntityID = UUID64::INVALID;
+				m_Scene->SetSelectedEntityID(UUID64::INVALID);
 
 			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 			{
-				m_SelectedEntityID = UUID64::INVALID;
+				m_Scene->SetSelectedEntityID(UUID64::INVALID);
 				ImGui::OpenPopup("CreationPopup");
 			}
 		}
@@ -86,7 +86,7 @@ namespace Krux {
 
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnArrow;
 
-		if (m_SelectedEntityID == id) {
+		if (m_Scene->GetSelectedEntityID() == id) {
 			flags |= ImGuiTreeNodeFlags_Selected; 
 		}
 
@@ -117,8 +117,8 @@ namespace Krux {
 		}
 
 		if (ImGui::IsItemClicked()) {
-			if (m_SelectedEntityID != id) {
-				m_SelectedEntityID = id;
+			if (m_Scene->GetSelectedEntityID() != id) {
+				m_Scene->SetSelectedEntityID(id);
 				//KRX_CORE_TRACE("Entity id: {}", (uint64_t)m_SelectedId);
 			}
 		}

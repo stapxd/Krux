@@ -14,11 +14,9 @@ namespace Krux {
 		void DrawEntityNode(const UUID64& id, const Entity& e);
 
 		bool* Open() { return &m_IsOpen; }
-		UUID64 SelectedEntityID() { return m_SelectedEntityID; }
 
 	private:
 		Scene* m_Scene;
-		UUID64 m_SelectedEntityID = UUID64::INVALID;
 	};
 
 }

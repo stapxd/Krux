@@ -32,6 +32,9 @@ namespace Krux {
         C* GetComponent(const Entity& e);
 
         template<typename C>
+        void RemoveComponent(const Entity& e);
+
+        template<typename C>
         bool Has(Entity e);
 
         void UpdateWorldPositions();
@@ -43,6 +46,9 @@ namespace Krux {
         template<typename... C>
         auto GetAllWith();
 
+        void SetSelectedEntityID(UUID64 id) { m_SelectedEntityID = id; }
+        UUID64 GetSelectedEntityID() { return m_SelectedEntityID; }
+
     private:
         void CollectAllChildren(const Entity& parent, std::vector<UUID64>& outList);
 
@@ -52,6 +58,7 @@ namespace Krux {
 
         // add positions so they are correctly sorted in SceneHierarchy
         std::unordered_map<UUID64, Entity> m_Entities;
+        UUID64 m_SelectedEntityID = UUID64::INVALID;
 
         friend Entity;
     };

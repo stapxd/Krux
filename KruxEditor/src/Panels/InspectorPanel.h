@@ -13,7 +13,7 @@ namespace Krux {
 	public:
 		InspectorPanel(Scene* scene);
 		
-		void DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float default = 0.0f, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f,
+		void DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float defaultVal = 0.0f, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f,
 			const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
 		template<typename T>
@@ -29,13 +29,33 @@ namespace Krux {
 		virtual void RenderContent(PanelData panelData = std::monostate{}) override;
 
 		template<typename Component, typename Func>
-		void DrawComponent(Entity* e, Func callback) {
-			if (m_Scene->Has<Component>(*e)) {
+		void DrawComponent(Entity* e, Func callback, bool deletable = false) {
+			if (e->HasComponent<Component>()) {
 
 				ImGui::PushID(typeid(Component).name());
+				float button_size = 20.0f;
+				float padding = ImGui::GetStyle().FramePadding.x;
+				float available_width = ImGui::GetContentRegionAvail().x;
 
-				if (ImGui::CollapsingHeader(Component::GetName(), ImGuiTreeNodeFlags_None)) {
-					Component* comp = m_Scene->GetComponent<Component>(*e);
+				bool opened = ImGui::CollapsingHeader(Component::GetName(),
+					ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
+
+				if (deletable) {
+					ImGui::SameLine(available_width - button_size + padding);
+
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.3f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.3f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.1f, 0.1f, 1.0f));
+
+					if (ImGui::Button("X", ImVec2(button_size, button_size))) {
+						e->RemoveComponent<Component>();
+					}
+
+					ImGui::PopStyleColor(3);
+				}
+
+				if (opened && e->HasComponent<Component>()) {
+					Component* comp = e->GetComponent<Component>();
 					callback(comp);
 				}
 

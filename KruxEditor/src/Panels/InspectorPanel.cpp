@@ -13,7 +13,7 @@ namespace Krux {
 	{
 	}
 
-	void InspectorPanel::DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float default, float v_speed, float v_min, float v_max,
+	void InspectorPanel::DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float defaultVal, float v_speed, float v_min, float v_max,
 		const char* format, ImGuiSliderFlags flags)
 	{
 		float availableHeight = ImGui::GetContentRegionAvail().y;
@@ -44,7 +44,7 @@ namespace Krux {
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 5.0f));
 
 				if (ImGui::Button(colNames[i - 1])) {
-					v[i - 1] = default;
+					v[i - 1] = defaultVal;
 				}
 
 				ImGui::PopStyleColor(3);
@@ -140,15 +140,15 @@ namespace Krux {
 					ImGui::DragFloat("Tiling Factor", &comp->TilingFactor, 1.0f, 1.0f, 50.0f);
 
 					ImGui::Button("Texture");
-					ImGui::SameLine();
 
 					if (comp->TextureHandle.IsValid()) {
+						ImGui::SameLine();
 						Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(comp->TextureHandle);
 						std::string pathStr = texture->GetPath().string();
 						ImGui::Text("%s", pathStr.c_str());
 					}
 
-				});
+				}, true);
 
 				// Circle Renderer Component
 				DrawComponent<CircleRendererComponent>(e, [](CircleRendererComponent* comp) {
@@ -156,7 +156,7 @@ namespace Krux {
 					ImGui::DragFloat("Radius", &comp->Radius, 0.02f, 0.0f);
 					ImGui::DragFloat("Thickness", &comp->Thickness, 0.01f, 0.01f, 1.0f);
 					ImGui::DragFloat("Fade", &comp->Fade, 0.02f, 0.02f, 1.0f);
-				});
+				}, true);
 			}
 		}
 	}
