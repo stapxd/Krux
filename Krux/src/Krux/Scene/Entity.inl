@@ -11,4 +11,9 @@ namespace Krux {
     C* Entity::GetComponent() const {
         return m_Scene->GetComponent<C>(*this);
     }
+
+    template<typename C>
+    bool Entity::HasComponent() const {
+        return m_Scene->Has<C>(*this);
+    }
 }

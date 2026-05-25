@@ -24,6 +24,9 @@ namespace Krux {
         template<typename C>
         C* GetComponent() const;
 
+        template<typename C>
+        bool HasComponent() const;
+
         operator ecs::entity() const { return m_EntityHandle; }
 
 

@@ -39,6 +39,8 @@ namespace Krux {
 			KRX_CORE_ERROR("Could not load Texture with path: {}", pathStr.c_str());
 		}
 
+		m_Path = path;
+
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, Utils::TextureFilterToOpenGLParam(spec.MinFilter));
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, Utils::TextureFilterToOpenGLParam(spec.MagFilter));
 

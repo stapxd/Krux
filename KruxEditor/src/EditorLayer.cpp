@@ -40,15 +40,7 @@ namespace Krux {
 		fbSpec.Height = 720;
 		m_FrameBuffer = FrameBuffer::Create(fbSpec);
 
-
-		//Entity e = m_Scene.CreateEntity();
-		////e.AddComponent<Components::Transform>();
-		//// m_Scene.AddComponent<Transform>(e);
-
-		////Components::Transform* tmE = e.GetComponent<Components::Transform>();
-		//m_Scene.GetAllWith<Components::ID, Components::Transform>();
-		//
-
+		// Temp
 		Entity& e001 = m_Scene.CreateEntity();
 		Entity& e002 = m_Scene.CreateEntity();
 		Entity& e003 = m_Scene.CreateEntity();
@@ -153,7 +145,7 @@ namespace Krux {
 
 		imguiLayer->BeginWindowCollection();
 
-		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0));
+		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0), ImGuiWindowFlags_NoScrollbar);
 		imguiLayer->RegisterWindowState(m_ViewportPanel.IsFocused(), m_ViewportPanel.IsHovered());
 
 		m_InspectorPanel.OnRender(m_SceneHierarchyPanel.SelectedEntityID());

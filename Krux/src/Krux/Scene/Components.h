@@ -7,6 +7,8 @@
 #include "Krux/Core/UUID.h"
 
 #include <iostream>
+#include <tuple> 
+
 #include <glm/glm.hpp>
 
 #define REGISTER_NAME(name) static const char* GetName() { return #name; }
@@ -16,6 +18,7 @@ namespace Krux {
 	struct IDComponent {
 		UUID64 ID;
 
+		IDComponent() = default;
 		IDComponent(uint64_t id)
 			: ID(id)
 		{}
@@ -88,4 +91,14 @@ namespace Krux {
 		REGISTER_CLASS_NAME(CircleRendererComponent)
 		REGISTER_NAME(Circle Renderer Component)
 	};
+
+	using AllComponents = std::tuple<
+		IDComponent,
+		TagComponent,
+		NameComponent,
+		TransformComponent,
+		SpriteRendererComponent, 
+		CircleRendererComponent
+	>;
+
 }

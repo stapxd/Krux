@@ -11,11 +11,11 @@ namespace Krux {
 		: m_Name(name)
 	{}
 
-	void Panel::OnRender(PanelData panelData) {
+	void Panel::OnRender(PanelData panelData, ImGuiWindowFlags flags) {
 
 		if (m_IsOpen) {
 			PushWindowStyles();
-			ImGui::Begin(m_Name.c_str(), &m_IsOpen);
+			ImGui::Begin(m_Name.c_str(), &m_IsOpen, flags);
 
 			m_IsFocused = ImGui::IsWindowFocused();
 			m_IsHovered = ImGui::IsWindowHovered();

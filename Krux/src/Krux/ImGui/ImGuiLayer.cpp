@@ -32,6 +32,7 @@ namespace Krux {
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
+		SetColorTheme();
 
 		ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Application::Instance()->GetWindow()->GetNativeWindow(), true);
 		ImGui_ImplOpenGL3_Init("#version 450");
@@ -73,6 +74,14 @@ namespace Krux {
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
+	}
+
+	void ImGuiLayer::SetColorTheme()
+	{
+		ImGuiStyle* style = &ImGui::GetStyle();
+		ImVec4* colors = style->Colors;
+
+		colors[ImGuiCol_DragDropTarget] = ImVec4(0.5f, 0.5f, 0.5f, 0.90f);
 	}
 
 	void ImGuiLayer::SetBlockEvents(bool value) {

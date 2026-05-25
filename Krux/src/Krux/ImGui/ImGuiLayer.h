@@ -20,6 +20,10 @@ namespace Krux {
 		void SetBlockEvents(bool value);
 		void Begin();
 		void End();
+		
+	private:
+		void SetColorTheme();
+
 	private:
 		bool m_BlockEvents = true;
 		bool m_AnyWindowFocusedOrHovered = false;

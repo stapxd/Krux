@@ -5,6 +5,9 @@
 #include <xstring>
 #include <variant>
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui.h>
+
 namespace Krux {
 
 	class Panel {
@@ -13,7 +16,7 @@ namespace Krux {
 
 		Panel(const std::string& name);
 
-		void OnRender(PanelData panelData = std::monostate{});
+		void OnRender(PanelData panelData = std::monostate{}, ImGuiWindowFlags flags = 0);
 
 		virtual void RenderContent(PanelData panelData = std::monostate{}) = 0;
 		virtual void PushWindowStyles() {}
