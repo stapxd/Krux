@@ -25,6 +25,8 @@ namespace Krux {
 		glTextureStorage2D(m_RendererID, 1, Utils::TextureInternalFormatToOpenGLFormat(m_Specification.InternalFormat), m_Specification.Width, m_Specification.Height);
 
 		glGenerateTextureMipmap(m_RendererID);
+
+		m_IsLoadedSuccessfully = true;
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path, const TextureSpecification& spec)
@@ -37,6 +39,7 @@ namespace Krux {
 		if (!Load(path)) {
 			std::string pathStr = path.string();
 			KRX_CORE_ERROR("Could not load Texture with path: {}", pathStr.c_str());
+			return;
 		}
 
 		m_Path = path;
@@ -49,6 +52,8 @@ namespace Krux {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_R, Utils::TextureWrapToOpenGLParam(spec.WrapR));
 
 		glGenerateTextureMipmap(m_RendererID);
+
+		m_IsLoadedSuccessfully = true;
 	}
 
 	bool OpenGLTexture2D::Load(const std::filesystem::path& path)

@@ -14,6 +14,9 @@ namespace Krux {
 		if (!Load(path)) {
 			KRX_CORE_ERROR("Failed to load Shader Asset in \'{}\'", path.string());
 		}
+		else {
+			m_IsLoadedSuccessfully = true;
+		}
 	}
 
 	OpenGLShader::~OpenGLShader()

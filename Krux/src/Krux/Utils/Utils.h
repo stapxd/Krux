@@ -8,6 +8,7 @@
 #include "Krux/Render/Assets/Texture2D.h"
 #include "Krux/Render/FrameBuffer.h"
 
+#include <filesystem>
 #include <glad/glad.h>
 
 namespace Krux {
@@ -29,6 +30,10 @@ namespace Krux {
 			// FrameBuffer Attachments
 		AttachmentType GetAttachmentType(FrameBufferAttachment attachment);
 		GLint FrameBufferAttachmentToOpenGLInternalFormat(FrameBufferAttachment attachment);
+
+		// File System
+		bool IsPathATexture(const std::filesystem::path& path);
+		bool IsPathAShader(const std::filesystem::path& path);
 	}
 
 }

@@ -24,6 +24,7 @@ project "KruxEditor"
         "%{wks.location}/Krux/src",
         "%{wks.location}/Krux/vendor/spdlog/include",
         "%{wks.location}/Krux/vendor/stb/include",
+        "%{IncludeDirs.Glad}",
         "%{IncludeDirs.ImGui}",
         "%{IncludeDirs.glm}",
         "%{IncludeDirs.ECS}"

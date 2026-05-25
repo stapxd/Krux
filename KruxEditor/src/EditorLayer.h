@@ -26,6 +26,7 @@
 #include "Panels/ViewportPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/InspectorPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 #include <imgui.h>
 
@@ -60,6 +61,7 @@ namespace Krux {
 
 		// Panels
 		ViewportPanel m_ViewportPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		InspectorPanel m_InspectorPanel;
 

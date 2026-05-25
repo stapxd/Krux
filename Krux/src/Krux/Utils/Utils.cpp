@@ -3,6 +3,8 @@
 
 #include "Krux/Render/Buffer.h"
 
+#include <array>
+
 namespace Krux {
 
     namespace Utils {
@@ -48,6 +50,8 @@ namespace Krux {
 			KRX_CORE_ASSERT(false, "Invalid BufferUsage!");
 			return 0;
 		}
+
+		// Texture
 		GLint TextureFilterToOpenGLParam(TextureFilter filter)
 		{
 			switch (filter)
@@ -128,6 +132,7 @@ namespace Krux {
 			return 0;
 		}
 
+		// FrameBuffer Attachments
 		AttachmentType GetAttachmentType(FrameBufferAttachment attachment)
 		{
 			switch (attachment)
@@ -163,6 +168,39 @@ namespace Krux {
 			KRX_CORE_ASSERT(false, "Invalid FrameBufferAttachment!");
 			return 0;
 		}
+
+		// File System
+		bool IsPathATexture(const std::filesystem::path& path) {
+			if (path.empty())
+				return false;
+
+			std::array<const char*, 7> textureExtensions{ ".png", ".jpeg", ".jpg", ".bmp", ".pic", ".tga", ".hdr" };
+
+			std::string extStr = path.extension().string();
+			const char* extension = extStr.c_str();
+			for (auto ext : textureExtensions) {
+				if (strcmp(extension, ext) == 0) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		bool IsPathAShader(const std::filesystem::path& path) {
+			if (path.empty()) 
+				return false;
+
+			std::array<const char*, 1> shaderExtensions{ ".glsl" };
+
+			std::string extension = path.extension().string();
+			for (auto ext : shaderExtensions)
+				if (extension == ext)
+					return true;
+
+			return false;
+		}
+
     }
 
 }

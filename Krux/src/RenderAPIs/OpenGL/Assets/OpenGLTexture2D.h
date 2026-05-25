@@ -18,7 +18,7 @@ namespace Krux {
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 	private:
-		uint32_t m_RendererID;
+		uint32_t m_RendererID = 0;
 	};
 
 }

@@ -1,5 +1,6 @@
 #include "InspectorPanel.h"
 
+#include "Krux/Utils/Utils.h"
 #include "Krux/Scene/Components.h"
 
 #include "Krux/Render/Assets/Texture2D.h"
@@ -135,18 +136,44 @@ namespace Krux {
 
 				// TODO: add ability to add Textures
 				// Sprite Renderer Component
-				DrawComponent<SpriteRendererComponent>(e, [](SpriteRendererComponent* comp) {
+				DrawComponent<SpriteRendererComponent>(e, [&](SpriteRendererComponent* comp) {
+					ImGui::PushID("SpriteRendererComponent");
 					ImGui::ColorEdit4("Color", &comp->Color[0]);
 					ImGui::DragFloat("Tiling Factor", &comp->TilingFactor, 1.0f, 1.0f, 50.0f);
 
-					ImGui::Button("Texture");
+					float imageSize = 50.0f;
+					if (comp->TextureHandle.IsValid()) {
+						Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(comp->TextureHandle);
+						ImGui::ImageButton("EntityTexture", texture->GetRendererID(), ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
+					}
+					else {
+						ImGui::Button("Texture", ImVec2(imageSize, imageSize));
+					}
+
+					if (ImGui::BeginDragDropTarget()) {
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_FILE_PATH"))
+						{
+							std::filesystem::path path = std::string((const char*)payload->Data, payload->DataSize);
+							comp->TextureHandle = AssetManager::Load<Texture2D>(path);
+						}
+						ImGui::EndDragDropTarget();
+					}
 
 					if (comp->TextureHandle.IsValid()) {
 						ImGui::SameLine();
 						Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(comp->TextureHandle);
+						bool isValidTexturePath = Utils::IsPathATexture(texture->GetPath());
 						std::string pathStr = texture->GetPath().string();
+						if (!isValidTexturePath) ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
 						ImGui::Text("%s", pathStr.c_str());
+						if (!isValidTexturePath) ImGui::PopStyleColor();
+
+						ImGui::SameLine();
+						if(ImGui::Button("X")) {
+							comp->TextureHandle = AssetHandle();
+						}
 					}
+					ImGui::PopID();
 
 				}, true);
 

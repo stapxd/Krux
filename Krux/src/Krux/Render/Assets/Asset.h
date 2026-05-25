@@ -22,9 +22,12 @@ namespace Krux {
 		virtual bool Load(const std::filesystem::path& path) = 0;
 		virtual AssetType GetType() const = 0;
 
+		bool IsLoadedSuccessfully() { return m_IsLoadedSuccessfully; }
 		const std::filesystem::path& GetPath() const { return m_Path; }
-	protected:
+
+	protected:		
 		std::filesystem::path m_Path;
+		bool m_IsLoadedSuccessfully = false;
 	};
 
 }

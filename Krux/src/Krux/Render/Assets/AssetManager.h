@@ -41,7 +41,12 @@ namespace Krux {
 				return AssetHandle(id, magic);
 			}
 
-			s_Assets[currentID] = { T::Create(path, std::forward<Args>(args)...), currentMagic };
+			Ref<T> asset = T::Create(path, std::forward<Args>(args)...);
+			if (!asset->IsLoadedSuccessfully()) {
+				return AssetHandle();
+			}
+
+			s_Assets[currentID] = { asset, currentMagic };
 			s_PathCache[pathStr] = currentID;
 
 			s_ID++;

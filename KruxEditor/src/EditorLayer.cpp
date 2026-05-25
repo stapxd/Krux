@@ -76,8 +76,8 @@ namespace Krux {
 
 	void EditorLayer::OnImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		/*static bool show = true;
+		ImGui::ShowDemoWindow(&show);*/
 
 		ImGuiID dockspace_id = ImGui::GetID("MainDockspaceOverViewport");
 
@@ -90,17 +90,11 @@ namespace Krux {
 				ImGui::MenuItem("Viewport", "", m_ViewportPanel.Open());
 				ImGui::MenuItem("Scene Hierarchy", "", m_SceneHierarchyPanel.Open());
 				ImGui::MenuItem("Inspector", "", m_InspectorPanel.Open());
+				ImGui::MenuItem("Content Browser", "", m_ContentBrowserPanel.Open());
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
 		}
-
-		// TODO: future look
-		// m_SceneHirarchypPanel.Render();
-		// m_InspectorPanel.Render();
-		// m_ViewportPanel.Render();
-		// m_FileSystemPanel.Render();
-		// m_StatsPanel.Render();
 
 		// Modal window if deleting entity has children
 		if (m_EntityToDelete != UUID64::INVALID) {
@@ -145,14 +139,17 @@ namespace Krux {
 
 		imguiLayer->BeginWindowCollection();
 
-		m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0), ImGuiWindowFlags_NoScrollbar);
-		imguiLayer->RegisterWindowState(m_ViewportPanel.IsFocused(), m_ViewportPanel.IsHovered());
+			m_ViewportPanel.OnRender(m_FrameBuffer->GetAttachmentID(0), ImGuiWindowFlags_NoScrollbar);
+			imguiLayer->RegisterWindowState(m_ViewportPanel.IsFocused(), m_ViewportPanel.IsHovered());
 
-		m_InspectorPanel.OnRender(m_Scene.GetSelectedEntityID());
-		imguiLayer->RegisterWindowState(m_InspectorPanel.IsFocused(), m_InspectorPanel.IsHovered());
+			m_InspectorPanel.OnRender(m_Scene.GetSelectedEntityID());
+			imguiLayer->RegisterWindowState(m_InspectorPanel.IsFocused(), m_InspectorPanel.IsHovered());
 
-		m_SceneHierarchyPanel.OnRender();
-		imguiLayer->RegisterWindowState(m_SceneHierarchyPanel.IsFocused(), m_SceneHierarchyPanel.IsHovered());
+			m_SceneHierarchyPanel.OnRender();
+			imguiLayer->RegisterWindowState(m_SceneHierarchyPanel.IsFocused(), m_SceneHierarchyPanel.IsHovered());
+
+			m_ContentBrowserPanel.OnRender();
+			imguiLayer->RegisterWindowState(m_ContentBrowserPanel.IsFocused(), m_ContentBrowserPanel.IsHovered());
 
 		imguiLayer->EndWindowCollection();
 	}
@@ -168,7 +165,6 @@ namespace Krux {
 		}
 
 		// Render
-
 		m_FrameBuffer->Bind();
 		Renderer::Clear();
 		Renderer::SetViewport(0, 0, (uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
@@ -190,25 +186,6 @@ namespace Krux {
 		}
 
 		m_FrameBuffer->UnBind();
-
-		/*m_FrameBuffer->Bind();
-		Renderer::Clear();
-
-		Renderer::SetViewport(0, 0, (uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-
-		Renderer2D::BeginFrame(m_Camera);
-
-			Renderer2D::BeginBatch();
-				Renderer2D::DrawCircle({ -0.5, -0.5 }, 1.0f, { 0.0f, 1.0f, 1.0f, 1.0f });
-				Renderer2D::DrawCircle({ 0.5, -0.5 }, 0.5f, { 1.0f, 0.0f, 0.0f, 1.0f });
-				Renderer2D::DrawQuad({ 0.5,  0.5 }, glm::vec2(1.0f), { 0.0f, 0.0f, 1.0f, 1.0f });
-				Renderer2D::DrawQuad({ -0.5, 0.5 }, glm::vec2(1.0f), m_Texture, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
-				Renderer2D::DrawQuad({ -1.5, 0.5 }, glm::vec2(1.0f), m_Texture2, 5, { 1.0f, 1.0f, 1.0f, 1.0f });
-			Renderer2D::EndBatch();
-
-		Renderer2D::EndFrame();
-
-		m_FrameBuffer->UnBind();*/
 	}
 
 	void EditorLayer::OnEvent(Event& e)
