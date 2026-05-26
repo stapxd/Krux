@@ -14,7 +14,7 @@ namespace Krux {
 	void Panel::OnRender(PanelData panelData, ImGuiWindowFlags flags) {
 
 		if (m_IsOpen) {
-			PushWindowStyles();
+			BeforeWindowSettings();
 			ImGui::Begin(m_Name.c_str(), &m_IsOpen, flags);
 
 			m_IsFocused = ImGui::IsWindowFocused();
@@ -29,7 +29,7 @@ namespace Krux {
 			RenderContent(panelData);
 
 			ImGui::End();
-			PopWindowStyles();
+			AfterWindowSettings();
 		}
 	}
 

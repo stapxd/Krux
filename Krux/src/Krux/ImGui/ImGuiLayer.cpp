@@ -7,6 +7,8 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+#include <ImGuizmo.h>
+
 #include <GLFW/glfw3.h>
 
 namespace Krux {
@@ -50,7 +52,7 @@ namespace Krux {
 		if (m_BlockEvents) {
 			ImGuiIO& io = ImGui::GetIO();
 			e.IsHandled |= e.IsInCategory(KeyEvent) && io.WantCaptureKeyboard;
-			e.IsHandled |= e.IsInCategory(MouseButtonEvent) && io.WantCaptureMouse;
+			e.IsHandled |= e.IsInCategory(MouseEvent) && io.WantCaptureMouse;
 		}
 	}
 
@@ -59,6 +61,12 @@ namespace Krux {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
+
+		if (m_BlockEventsOverride) {
+			ImGuiIO& io = ImGui::GetIO();
+			io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX); 
+		}
 	}
 
 	void ImGuiLayer::End()
@@ -84,6 +92,12 @@ namespace Krux {
 		colors[ImGuiCol_DragDropTarget] = ImVec4(0.5f, 0.5f, 0.5f, 0.90f);
 	}
 
+	void ImGuiLayer::SetBlockEventsOverride(bool value) {
+		m_BlockEventsOverride = value;
+		if (value)
+			m_BlockEvents = true;
+	}
+
 	void ImGuiLayer::SetBlockEvents(bool value) {
 		if (m_BlockEvents == value)
 			return;
@@ -101,7 +115,8 @@ namespace Krux {
 	}
 
 	void ImGuiLayer::EndWindowCollection() {
-		SetBlockEvents(!m_AnyWindowFocusedOrHovered);
+		if (!m_BlockEventsOverride)
+			SetBlockEvents(!m_AnyWindowFocusedOrHovered);
 	}
 
 }

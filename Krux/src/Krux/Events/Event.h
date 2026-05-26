@@ -24,7 +24,7 @@ namespace Krux {
 	#define EVENT_SET_TYPE(type) static EventType GetStaticType() { return EventType::##type; } \
 								 virtual EventType GetType() override { return  GetStaticType(); }
 
-	#define EVENT_SET_CATEGORY(category) virtual EventCategoty GetCategoty() override { return category; }
+	#define EVENT_SET_CATEGORY(category) virtual int GetCategoty() override { return (int)(category); }
 
 	class Event
 	{
@@ -32,10 +32,10 @@ namespace Krux {
 		bool IsHandled = false;
 	
 	public:
-		bool IsInCategory(EventCategoty category) { return (int)GetCategoty() & (int)category; }
+		bool IsInCategory(EventCategoty category) { return GetCategoty() & (int)category; }
 
 		virtual EventType GetType() = 0;
-		virtual EventCategoty GetCategoty() = 0;
+		virtual int GetCategoty() = 0;
 
 	protected:
 		static EventType m_Type;

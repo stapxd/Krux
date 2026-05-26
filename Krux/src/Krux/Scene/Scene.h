@@ -4,7 +4,7 @@
 #include "Krux/Core/Time.h"
 #include "Krux/Core/UUID.h"
 
-#include "Krux/Render/OrthographicCamera.h"
+#include "Krux/Render/Cameras/Camera.h"
 
 #include <ECS/Registry.h>
 
@@ -29,6 +29,9 @@ namespace Krux {
         C* AddComponent(const Entity& e, Args&&... args);
 
         template<typename C>
+        C* GetComponent(UUID64 id);
+
+        template<typename C>
         C* GetComponent(const Entity& e);
 
         template<typename C>
@@ -40,7 +43,7 @@ namespace Krux {
         void UpdateWorldPositions();
         void UpdateWorldPositionRecursively(Entity& e, glm::vec3 parentPosition = glm::vec3(0.0f));
 
-        void OnUpdateEdit(Time time, const OrthographicCamera& camera);
+        void OnUpdateEdit(Time time, const Camera& camera);
         void OnUpdateRuntime(Time time);
 
         template<typename... C>

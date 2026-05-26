@@ -2,7 +2,7 @@
 
 #include "Assets/AssetManager.h"
 
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "Structures/RenderData.h"
 
 #include <glm/glm.hpp>

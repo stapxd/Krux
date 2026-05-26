@@ -14,3 +14,6 @@
 [submodule "Krux/vendor/ECS"]
 	path = Krux/vendor/ECS
 	url = https://github.com/stapxd/ECS.git
+[submodule "Krux/vendor/ImGuizmo"]
+	path = Krux/vendor/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git

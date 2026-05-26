@@ -12,6 +12,9 @@ namespace Krux {
 		virtual void UpdateProjection() = 0;
 		virtual glm::mat4 GetProjectionView() const = 0;
 
+		virtual glm::mat4 GetProjection() { return m_Projection; }
+		virtual glm::mat4 GetView() { return m_View; }
+
 		void SetViewport(uint32_t width, uint32_t height);
 
 		void SetPosition(glm::vec3 position) { m_Position = position; }

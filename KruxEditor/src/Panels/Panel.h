@@ -19,8 +19,8 @@ namespace Krux {
 		void OnRender(PanelData panelData = std::monostate{}, ImGuiWindowFlags flags = 0);
 
 		virtual void RenderContent(PanelData panelData = std::monostate{}) = 0;
-		virtual void PushWindowStyles() {}
-		virtual void PopWindowStyles() {}
+		virtual void BeforeWindowSettings() {}
+		virtual void AfterWindowSettings() {}
 
 		bool IsFocused() const { return m_IsFocused; }
 		bool IsHovered() const { return m_IsHovered; }

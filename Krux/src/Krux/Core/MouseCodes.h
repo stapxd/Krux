@@ -19,4 +19,11 @@ namespace Krux {
 		BUTTON_MIDDLE  =  BUTTON_3
 	};
 
+	enum class CursorInputMode {
+		NORMAL         =  0x00034001,
+		HIDDEN         =  0x00034002,
+		DISABLED       =  0x00034003,
+		CAPTURED       =  0x00034004
+	};
+
 }

@@ -21,6 +21,16 @@ namespace Krux {
 		return state == GLFW_PRESS;
 	}
 
+	void Input::GetMousePosition(double& xpos, double& ypos) {
+		GLFWwindow* window = (GLFWwindow*)Application::Instance()->GetWindow()->GetNativeWindow();
+		glfwGetCursorPos(window, &xpos, &ypos);
+	}
+
+	void Input::SetCursorInputMode(CursorInputMode mode) {
+		GLFWwindow* window = (GLFWwindow*)Application::Instance()->GetWindow()->GetNativeWindow();
+		glfwSetInputMode(window, GLFW_CURSOR, (int)mode);
+	}
+
 }
 
 #endif

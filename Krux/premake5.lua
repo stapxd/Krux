@@ -21,6 +21,9 @@ project "Krux"
         "vendor/stb/include/stb/**.cpp",
         "vendor/glm/glm/**.hpp",
         "vendor/glm/glm/**.inl",
+
+        "vendor/ImGuizmo/src/ImGuizmo.h",
+        "vendor/ImGuizmo/src/ImGuizmo.cpp"
     }
 
     includedirs
@@ -35,7 +38,8 @@ project "Krux"
         "%{IncludeDirs.Glad}",
         "%{IncludeDirs.glm}",
         "%{IncludeDirs.stb}",
-        "%{IncludeDirs.ECS}"
+        "%{IncludeDirs.ECS}",
+        "%{IncludeDirs.ImGuizmo}"
     }
     externalwarnings "Off"
 
@@ -44,7 +48,7 @@ project "Krux"
         "GLFW",
         "Glad",
         "ImGui",
-        "ECS"
+        "ECS",
     }
 
     libdirs 
@@ -52,6 +56,9 @@ project "Krux"
     }
 
     filter "files:vendor/stb/include/stb/**.cpp"
+        enablepch "Off"
+
+    filter "files:vendor/ImGuizmo/src/ImGuizmo.cpp"
         enablepch "Off"
 
     filter "system:windows"

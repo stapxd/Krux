@@ -85,7 +85,7 @@ namespace Krux {
 		}
 	}
 
-	void Scene::OnUpdateEdit(Time time, const OrthographicCamera& camera)
+	void Scene::OnUpdateEdit(Time time, const Camera& camera)
 	{
 		UpdateWorldPositions();
 

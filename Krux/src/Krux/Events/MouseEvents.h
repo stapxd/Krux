@@ -11,7 +11,7 @@ namespace Krux {
 		{}
 
 		EVENT_SET_TYPE(MouseButtonPressed);
-		EVENT_SET_CATEGORY(MouseButtonEvent);
+		EVENT_SET_CATEGORY(MouseEvent | MouseButtonEvent);
 
 		int GetKey() const { return m_KeyCode; }
 
@@ -26,7 +26,7 @@ namespace Krux {
 		{}
 
 		EVENT_SET_TYPE(MouseButtonReleased);
-		EVENT_SET_CATEGORY(MouseButtonEvent);
+		EVENT_SET_CATEGORY(MouseEvent | MouseButtonEvent);
 
 		int GetKey() const { return m_KeyCode; }
 
@@ -41,7 +41,7 @@ namespace Krux {
 		{}
 
 		EVENT_SET_TYPE(MouseScrolled);
-		EVENT_SET_CATEGORY(MouseButtonEvent);
+		EVENT_SET_CATEGORY(MouseEvent | MouseButtonEvent);
 
 		double GetXOffset() const { return m_XOffset; }
 		double GetYOffset() const { return m_YOffset; }

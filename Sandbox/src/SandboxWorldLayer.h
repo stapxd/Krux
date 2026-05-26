@@ -15,8 +15,8 @@
 #include <imgui.h>
 
 // TEMP
-#include "Krux/Render/OrthographicCamera.h"
-#include "Krux/Render/OrthographicCameraController.h"
+#include "Krux/Render/Cameras/OrthographicCamera.h"
+#include "Krux/Render/Cameras/OrthographicCameraController.h"
 #include "Krux/Render/Assets/AssetManager.h"
 #include "Krux/Render/Assets/Texture2D.h"
 

@@ -17,8 +17,10 @@
 // Render
 #include "Krux/Render/Renderer.h"
 #include "Krux/Render/FrameBuffer.h"
-#include "Krux/Render/OrthographicCamera.h"
-#include "Krux/Render/OrthographicCameraController.h"
+//#include "Krux/Render/Cameras/OrthographicCamera.h"
+//#include "Krux/Render/Cameras/OrthographicCameraController.h"
+#include "Krux/Render/Cameras/EditorCamera.h"
+#include "Krux/Render/Cameras/EditorCameraController.h"
 #include "Krux/Render/Assets/AssetManager.h"
 #include "Krux/Render/Assets/Texture2D.h"
 
@@ -47,8 +49,8 @@ namespace Krux {
 		bool OnMouseScroll(MouseScrollEvent& e);
 
 	private:
-		OrthographicCamera m_Camera;
-		OrthographicCameraController m_CameraController;
+		EditorCamera m_Camera;
+		EditorCameraController m_CameraController;
 
 		AssetHandle m_Texture;
 		AssetHandle m_Texture2;

@@ -19,7 +19,7 @@ namespace Krux {
 
 	EditorLayer::EditorLayer()
 		: Layer("Editor Layer"), m_Camera(Krux::Application::Instance()->GetWidth(), Application::Instance()->GetHeight()), m_CameraController(m_Camera),
-		m_SceneHierarchyPanel(&m_Scene), m_InspectorPanel(&m_Scene)
+		m_SceneHierarchyPanel(&m_Scene), m_InspectorPanel(&m_Scene), m_ViewportPanel({0, &m_Scene, &m_Camera})
 	{
 	}
 
@@ -156,6 +156,14 @@ namespace Krux {
 
 	void EditorLayer::OnUpdate(Time time)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		bool cameraActive = m_ViewportPanel.IsFocused() &&
+			(Input::IsMouseButtonPressed(Mouse::BUTTON_MIDDLE) ||
+				Input::IsMouseButtonPressed(Mouse::BUTTON_RIGHT));
+
+		Application::Instance()->GetImGuiLayer()->SetBlockEventsOverride(cameraActive);
+		ImGui::SetNextFrameWantCaptureMouse(!cameraActive);
+
 		glm::vec2 viewportSize = m_ViewportPanel.GetSize();
 		if (m_ViewportPanel.ShouldUpdateExternalViewport())
 		{
@@ -208,8 +216,11 @@ namespace Krux {
 
 	bool EditorLayer::OnMouseScroll(MouseScrollEvent& e)
 	{
-		if(m_ViewportPanel.IsHovered())
-			m_CameraController.AddZoom(-(float)e.GetYOffset());
+		/*if(m_ViewportPanel.IsHovered())
+			m_CameraController.AddZoom(-(float)e.GetYOffset());*/
+
+		if (m_ViewportPanel.IsHovered())
+			m_CameraController.MoveForward((float)e.GetYOffset());
 
 		return true;
 	}

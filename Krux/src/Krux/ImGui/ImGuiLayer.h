@@ -17,6 +17,7 @@ namespace Krux {
 		void RegisterWindowState(bool isFocused, bool isHovered);
 		void EndWindowCollection();
 
+		void SetBlockEventsOverride(bool value);
 		void SetBlockEvents(bool value);
 		void Begin();
 		void End();
@@ -26,6 +27,7 @@ namespace Krux {
 
 	private:
 		bool m_BlockEvents = true;
+		bool m_BlockEventsOverride = false;
 		bool m_AnyWindowFocusedOrHovered = false;
 	};
 

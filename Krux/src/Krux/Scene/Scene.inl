@@ -17,6 +17,12 @@ namespace Krux {
     }
 
     template<typename C>
+    C* Scene::GetComponent(UUID64 id) {
+        Entity* e = FindByUUID(id);
+        return m_Registry.get<C>(*e);
+    }
+
+    template<typename C>
     bool Scene::Has(Entity e) {
         return m_Registry.has<C>(e);
     }

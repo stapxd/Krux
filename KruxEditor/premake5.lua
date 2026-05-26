@@ -27,7 +27,8 @@ project "KruxEditor"
         "%{IncludeDirs.Glad}",
         "%{IncludeDirs.ImGui}",
         "%{IncludeDirs.glm}",
-        "%{IncludeDirs.ECS}"
+        "%{IncludeDirs.ECS}",
+        "%{IncludeDirs.ImGuizmo}"
     }
     externalwarnings "Off"
 
