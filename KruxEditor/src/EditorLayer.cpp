@@ -15,6 +15,8 @@
 
 #include "Krux/Render/Renderer2D.h"
 
+#include <ImGuizmo.h>
+
 namespace Krux {
 
 	EditorLayer::EditorLayer()
@@ -164,6 +166,10 @@ namespace Krux {
 		Application::Instance()->GetImGuiLayer()->SetBlockEventsOverride(cameraActive);
 		ImGui::SetNextFrameWantCaptureMouse(!cameraActive);
 
+		if (ImGuizmo::IsOver()) {
+			KRX_CORE_DEBUG("OVER IMGUIZMO!");
+		}
+
 		glm::vec2 viewportSize = m_ViewportPanel.GetSize();
 		if (m_ViewportPanel.ShouldUpdateExternalViewport())
 		{
@@ -209,6 +215,21 @@ namespace Krux {
 	{
 		if (m_SceneHierarchyPanel.IsFocused() && e.GetKey() == (int)Key::DEL) {
 			m_EntityToDelete = m_Scene.GetSelectedEntityID();
+		}
+
+		if (m_ViewportPanel.IsHovered()) {
+			if (e.GetKey() == (int)Key::Q) {
+				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::BOUNDS);
+			}
+			else if (e.GetKey() == (int)Key::Z) {
+				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::TRANSLATE);
+			}
+			else if (e.GetKey() == (int)Key::X) {
+				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::ROTATE);
+			}
+			else if (e.GetKey() == (int)Key::C) {
+				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::SCALE);
+			}
 		}
 
 		return true;

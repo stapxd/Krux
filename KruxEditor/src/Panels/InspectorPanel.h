@@ -13,7 +13,7 @@ namespace Krux {
 	public:
 		InspectorPanel(Scene* scene);
 		
-		void DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float defaultVal = 0.0f, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f,
+		bool DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float defaultVal = 0.0f, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f,
 			const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
 		template<typename T>

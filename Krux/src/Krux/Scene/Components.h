@@ -9,7 +9,10 @@
 #include <iostream>
 #include <tuple> 
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #define REGISTER_NAME(name) static const char* GetName() { return #name; }
 
@@ -60,6 +63,15 @@ namespace Krux {
 		TransformComponent(glm::vec3 position = glm::vec3(0.0f), glm::vec3 rotation = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1.0f))
 			: LocalPosition(position), Rotation(rotation), Scale(scale)
 		{}
+
+		glm::mat4 GetTransform() const
+		{
+			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+
+			return glm::translate(glm::mat4(1.0f), WorldPosition)
+				* rotation
+				* glm::scale(glm::mat4(1.0f), Scale);
+		}
 
 		REGISTER_CLASS_NAME(TransformComponent)
 		REGISTER_NAME(Transform Component)

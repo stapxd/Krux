@@ -24,12 +24,12 @@ namespace Krux {
 		// Transform
 		glm::vec3 Position = glm::vec3(0.0f);
 		glm::vec2 Size = glm::vec2(1.0f);
-		float Rotation = 0.0f;
+		glm::vec3 Rotation = glm::vec3(0.0f);
 
 		// Sorting
 		float ZIndex = 0.0f;
 
-		QuadData(glm::vec3 pos, glm::vec2 size, float rotation, AssetHandle texture, float tilingFactor, glm::vec4 color, float zIndex)
+		QuadData(glm::vec3 pos, glm::vec2 size, glm::vec3 rotation, AssetHandle texture, float tilingFactor, glm::vec4 color, float zIndex)
 			: Position(pos), Size(size), Rotation(rotation), Texture(texture), TilingFactor(tilingFactor), Color(color), ZIndex(zIndex)
 		{}
 	};

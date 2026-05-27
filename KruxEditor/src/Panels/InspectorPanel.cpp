@@ -14,7 +14,7 @@ namespace Krux {
 	{
 	}
 
-	void InspectorPanel::DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float defaultVal, float v_speed, float v_min, float v_max,
+	bool InspectorPanel::DrawDragFloat3(const char* label, float v[3], const char* colNames[3], float defaultVal, float v_speed, float v_min, float v_max,
 		const char* format, ImGuiSliderFlags flags)
 	{
 		float availableHeight = ImGui::GetContentRegionAvail().y;
@@ -23,6 +23,7 @@ namespace Krux {
 		ImGuiStyle* style = &ImGui::GetStyle();
 		ImVec4* colors = style->Colors;
 
+		bool active = false;
 		if (ImGui::BeginTable(label, 4, ImGuiTableFlags_None))
 		{
 			ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 50.0f);
@@ -46,6 +47,7 @@ namespace Krux {
 
 				if (ImGui::Button(colNames[i - 1])) {
 					v[i - 1] = defaultVal;
+					active = true;
 				}
 
 				ImGui::PopStyleColor(3);
@@ -55,12 +57,16 @@ namespace Krux {
 
 				ImGui::PushID(i);
 				ImGui::SetNextItemWidth(-FLT_MIN);
-				ImGui::DragFloat("##v", &v[i - 1], v_speed, v_min, v_max, format, flags);
+				if (ImGui::DragFloat("##v", &v[i - 1], v_speed, v_min, v_max, format, flags)) {
+					active = true;
+				}
 				ImGui::PopID();
 			}
 
 			ImGui::EndTable();
 		}
+
+		return active;
 	}
 
 	void InspectorPanel::RenderAddableComponents(Entity* e)
@@ -126,7 +132,10 @@ namespace Krux {
 					ImGui::PopID();
 
 					ImGui::PushID("Rot");
-					DrawDragFloat3("Rotation", &comp->Rotation[0],		namings, 0.0f, 0.02f);
+					glm::vec3 rotDegrees = glm::degrees(comp->Rotation);
+					if (DrawDragFloat3("Rotation", &rotDegrees[0], namings, 0.0f, 0.02f)) {
+						comp->Rotation = glm::radians(rotDegrees);
+					}
 					ImGui::PopID();
 
 					ImGui::PushID("Scale");

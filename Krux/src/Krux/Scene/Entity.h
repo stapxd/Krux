@@ -17,6 +17,7 @@ namespace Krux {
         void BecomeOrphan();
         const std::vector<UUID64>& GetChildEntities() const& { return m_ChildEntities; }
         bool IsRoot() const { return !m_IsChild; }
+        Entity* GetParent() { return m_Parent; }
 
         template<typename C, typename... Args>
         C* AddComponent(Args&&... args); 

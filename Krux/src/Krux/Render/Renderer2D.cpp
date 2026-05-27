@@ -10,6 +10,8 @@
 
 #include "RenderCommand.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cassert>
@@ -221,8 +223,10 @@ namespace Krux {
 
 			for (auto& quad : s_Data.QuadsToDraw) {
 				
+				glm::mat4 rotation = glm::toMat4(glm::quat(quad.Rotation));
+
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) * 
-					glm::rotate(glm::mat4(1.0f), glm::radians(quad.Rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+					rotation *
 					glm::scale(glm::mat4(1.0f), glm::vec3(quad.Size, 1.0f));
 				quadTextureShader->SetMat4("u_Model", transform);
 
@@ -378,8 +382,10 @@ namespace Krux {
 					texIndex = 0.0f;
 				}
 
+				glm::mat4 rotation = glm::toMat4(glm::quat(quad.Rotation));
+
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.Position) *
-					glm::rotate(glm::mat4(1.0f), glm::radians(quad.Rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+					rotation *
 					glm::scale(glm::mat4(1.0f), glm::vec3(quad.Size, 1.0f));
 
 				for (size_t i = 0; i < quadVertexCount; i++)
@@ -447,11 +453,11 @@ namespace Krux {
 		switch (s_CurrentState) 
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, glm::vec3(0.0f), s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, glm::vec3(0.0f), s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 		}
@@ -469,22 +475,22 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, 0.0f, texture, tilingFactor, tintColor, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, glm::vec3(0.0f), texture, tilingFactor, tintColor, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, 0.0f, texture, tilingFactor, tintColor, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, glm::vec3(0.0f), texture, tilingFactor, tintColor, position.z);
 				break;
 			}
 		}
 	}
 
-	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, glm::vec4 color)
+	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color)
 	{
-		DrawRotatedQuad(glm::vec3(position, 0.0f), size, angle, color);
+		DrawRotatedQuad(glm::vec3(position, 0.0f), size, rotation, color);
 	}
 
-	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, glm::vec4 color)
+	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color)
 	{
 		auto it = s_RendererStateStack.begin();
 		if (it == s_RendererStateStack.end())
@@ -493,21 +499,21 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, rotation, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, rotation, s_Data.WhiteTextureHanle, 1.0f, color, position.z);
 				break;
 			}
 		}
 	}
 
-	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, float angle, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
-		DrawRotatedQuad(glm::vec3(position, 0.0f), size, angle, texture, tilingFactor, tintColor);
+	void Renderer2D::DrawRotatedQuad(glm::vec2 position, glm::vec2 size, glm::vec3 rotation, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+		DrawRotatedQuad(glm::vec3(position, 0.0f), size, rotation, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, float angle, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
+	void Renderer2D::DrawRotatedQuad(glm::vec3 position, glm::vec2 size, glm::vec3 rotation, AssetHandle texture, float tilingFactor, glm::vec4 tintColor /*= glm::vec4(1.0f)*/) {
 
 		auto it = s_RendererStateStack.begin();
 		if (it == s_RendererStateStack.end())
@@ -516,11 +522,11 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(position, size, angle, texture, tilingFactor, tintColor, position.z);
+				s_Data.QuadsToDraw.emplace_back(position, size, rotation, texture, tilingFactor, tintColor, position.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(position, size, angle, texture, tilingFactor, tintColor, position.z);
+				s_Data.BatchQuadsToDraw.emplace_back(position, size, rotation, texture, tilingFactor, tintColor, position.z);
 				break;
 			}
 		}
@@ -558,11 +564,11 @@ namespace Krux {
 		switch (s_CurrentState)
 		{
 			case RendererState::BeginFrame: {
-				s_Data.QuadsToDraw.emplace_back(trm.WorldPosition, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.WorldPosition.z);
+				s_Data.QuadsToDraw.emplace_back(trm.WorldPosition, trm.Scale, trm.Rotation, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.WorldPosition.z);
 				break;
 			}
 			case RendererState::BeginBatch: {
-				s_Data.BatchQuadsToDraw.emplace_back(trm.WorldPosition, trm.Scale, trm.Rotation.z, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.WorldPosition.z);
+				s_Data.BatchQuadsToDraw.emplace_back(trm.WorldPosition, trm.Scale, trm.Rotation, sprR.TextureHandle, sprR.TilingFactor, sprR.Color, trm.WorldPosition.z);
 				break;
 			}
 		}
