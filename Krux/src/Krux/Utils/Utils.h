@@ -30,6 +30,8 @@ namespace Krux {
 			// FrameBuffer Attachments
 		AttachmentType GetAttachmentType(FrameBufferAttachment attachment);
 		GLint FrameBufferAttachmentToOpenGLInternalFormat(FrameBufferAttachment attachment);
+		GLenum FrameBufferAttachmentToOpenGLFormat(FrameBufferAttachment attachment);
+		GLenum FrameBufferAttachmentToOpenGLType(FrameBufferAttachment attachment);
 
 		// File System
 		bool IsPathATexture(const std::filesystem::path& path);

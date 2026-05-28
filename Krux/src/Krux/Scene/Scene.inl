@@ -18,7 +18,13 @@ namespace Krux {
 
     template<typename C>
     C* Scene::GetComponent(UUID64 id) {
+        if (!id.IsValid())
+            return nullptr;
+
         Entity* e = FindByUUID(id);
+        if (!e)
+            return nullptr;
+
         return m_Registry.get<C>(*e);
     }
 

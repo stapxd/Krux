@@ -36,7 +36,28 @@ namespace Krux {
         for (auto& el : layout.GetElements()) {
             glEnableVertexArrayAttrib(m_RendererID, attribIndex);
 
-            glVertexArrayAttribFormat(m_RendererID, attribIndex, el.Count, Utils::GetOpenGLTypeFromVertexLayoutType(el.Type), el.Normalized ? GL_TRUE : GL_FALSE, relativeOffset);
+            if (el.Type == VertexLayoutType::Int)
+            {
+                glVertexArrayAttribIFormat(
+                    m_RendererID,
+                    attribIndex,
+                    el.Count,
+                    Utils::GetOpenGLTypeFromVertexLayoutType(el.Type),
+                    relativeOffset
+                );
+            }
+            else
+            {
+                glVertexArrayAttribFormat(
+                    m_RendererID,
+                    attribIndex,
+                    el.Count,
+                    Utils::GetOpenGLTypeFromVertexLayoutType(el.Type),
+                    el.Normalized ? GL_TRUE : GL_FALSE,
+                    relativeOffset
+                );
+            }
+
             relativeOffset += el.Count * Utils::GetSizeOfVertexLayoutType(el.Type);
 
             glVertexArrayAttribBinding(m_RendererID, attribIndex, m_VertexBufferIndex);

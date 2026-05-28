@@ -169,6 +169,40 @@ namespace Krux {
 			return 0;
 		}
 
+		GLenum FrameBufferAttachmentToOpenGLFormat(FrameBufferAttachment attachment) {
+			switch (attachment) {
+				case FrameBufferAttachment::Int32:				
+				case FrameBufferAttachment::Int8:				
+					return GL_RED_INTEGER;
+				case FrameBufferAttachment::RGB8:				
+					return GL_RGB;
+				case FrameBufferAttachment::RGBA8:				
+					return GL_RGBA;
+				case FrameBufferAttachment::Depth24_Stencil8:	
+					return GL_DEPTH_STENCIL;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid FrameBufferAttachment!");
+			return 0;
+		}
+
+		GLenum FrameBufferAttachmentToOpenGLType(FrameBufferAttachment attachment) {
+			switch (attachment) {
+				case FrameBufferAttachment::Int32:				
+					return GL_INT;
+				case FrameBufferAttachment::Int8:				
+					return GL_BYTE;
+				case FrameBufferAttachment::RGB8:				
+				case FrameBufferAttachment::RGBA8:				
+					return GL_UNSIGNED_BYTE;
+				case FrameBufferAttachment::Depth24_Stencil8:
+					return GL_UNSIGNED_INT_24_8;
+			}
+
+			KRX_CORE_ASSERT(false, "Invalid FrameBufferAttachment!");
+			return 0;
+		}
+
 		// File System
 		bool IsPathATexture(const std::filesystem::path& path) {
 			if (path.empty())

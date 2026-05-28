@@ -22,12 +22,15 @@ void main()
 #version 450
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int entityId;
 
 in vec2 v_LocalSpaceCoord;
 
 uniform vec4 u_Color;
 uniform float u_Thickness;
 uniform float u_Fade;
+
+uniform int u_EntityID;
 
 void main()
 {
@@ -40,4 +43,5 @@ void main()
         discard;
 
     color = u_Color * circle;
+    entityId = u_EntityID;
 }

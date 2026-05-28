@@ -118,12 +118,12 @@ namespace Krux {
                 switch (action)
                 {
                 case GLFW_PRESS: {
-                    MouseButtonPressedEvent e(button);
+                    MouseButtonPressedEvent e((Mouse)button);
                     self.InvokeEventCallback(e);
                     break;
                 }
                 case GLFW_RELEASE: {
-                    MouseButtonReleasedEvent e(button);
+                    MouseButtonReleasedEvent e((Mouse)button);
                     self.InvokeEventCallback(e);
                     break;
                 }

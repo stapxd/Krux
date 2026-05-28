@@ -6,11 +6,13 @@ layout(location = 1) in vec4   a_Color;
 layout(location = 2) in vec2   a_TexCoords;
 layout(location = 3) in float  a_TexIndex;
 layout(location = 4) in float  a_TilingFactor;
+layout(location = 5) in int    a_EntityID;
 
-out vec4 v_Color;
-out vec2 v_TexCoords;
-out float v_TexIndex;
-out float v_TilingFactor;
+out vec4	 v_Color;
+out vec2	 v_TexCoords;
+out float	 v_TexIndex;
+out float	 v_TilingFactor;
+out flat int v_EntityID;
 
 layout(std140, binding = 0) uniform Camera {
 	mat4 ProjView;
@@ -22,6 +24,7 @@ void main()
     v_TexCoords = a_TexCoords;
     v_TexIndex = a_TexIndex;
     v_TilingFactor = a_TilingFactor;
+	v_EntityID = a_EntityID;
 
     gl_Position = u_Camera.ProjView * vec4(a_Pos, 1.0);
 }
@@ -30,11 +33,13 @@ void main()
 #version 450
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int entityId;
 
-in vec4 v_Color;
-in vec2 v_TexCoords;
-in float v_TexIndex;
-in float v_TilingFactor;
+in vec4		v_Color;
+in vec2		v_TexCoords;
+in float	v_TexIndex;
+in float	v_TilingFactor;
+in flat int v_EntityID;
 
 uniform sampler2D u_Textures[32];
 
@@ -83,5 +88,6 @@ void main()
 		discard;
 
 	color = texColor;
+	entityId = v_EntityID;
 
 }

@@ -26,6 +26,7 @@ namespace Krux {
 
         const std::unordered_map<UUID64, Entity>& GetEntities() const& { return m_Entities; }
         Entity* FindByUUID(UUID64 id);
+        UUID64 GetUUIDFromECS(ecs::entity entity);
 
         template<typename C, typename... Args>
         C* AddComponent(const Entity& e, Args&&... args);

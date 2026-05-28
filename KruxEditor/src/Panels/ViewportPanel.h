@@ -4,6 +4,7 @@
 
 #include "Krux/Scene/Scene.h"
 #include "Krux/Render/Cameras/Camera.h"
+#include "Krux/Render/FrameBuffer.h"
 
 #include <glm/glm.hpp>
 
@@ -56,15 +57,20 @@ namespace Krux {
 		virtual void RenderContent(PanelData panelData = std::monostate{}) override;
 		bool ShouldUpdateExternalViewport();
 
+		void SetFrameBuffer(Ref<FrameBuffer> framebuffer) { m_FrameBuffer = framebuffer; }
 		void SetGuizmoOperation(GuizmoOperation operation) { m_ViewportData.CurrentOperation = operation; }
 
-		glm::vec2 GetSize() { return m_ViewportSize; }
+		glm::vec2 GetSize() const { return m_ViewportSize; }
+		UUID64 GetHoveredEntityUUID() { return m_HoveredEntity; }
 
 	private:
 		glm::vec2 m_ViewportSize = glm::vec2(0.0f);
 		glm::vec2 m_NewViewportSize = glm::vec2(0.0f);
 
 		ViewportData m_ViewportData;
+
+		UUID64 m_HoveredEntity = UUID64::INVALID;
+		Ref<FrameBuffer> m_FrameBuffer = nullptr;
 	};
 
 }

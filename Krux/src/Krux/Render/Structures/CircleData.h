@@ -11,8 +11,10 @@ namespace Krux {
 		float Thickness = 1.0f;
 		float Fade = 0.005f;
 
-		CircleVertex(glm::vec3 pos = glm::vec3(0), glm::vec4 color = glm::vec4(1.0f), glm::vec2 localSpaceCoord = glm::vec2(0), float thickness = 1.0f, float fade = 0.005f)
-			: Position(pos), Color(color), LocalSpaceCoord(localSpaceCoord), Thickness(thickness), Fade(fade)
+		int EntityID = -1;
+
+		CircleVertex(glm::vec3 pos = glm::vec3(0), glm::vec4 color = glm::vec4(1.0f), glm::vec2 localSpaceCoord = glm::vec2(0), float thickness = 1.0f, float fade = 0.005f, int entityID = -1)
+			: Position(pos), Color(color), LocalSpaceCoord(localSpaceCoord), Thickness(thickness), Fade(fade), EntityID(entityID)
 		{}
 	};
 
@@ -21,6 +23,8 @@ namespace Krux {
 		float Thickness = 1.0f;
 		float Fade = 0.005f;
 
+		int EntityID = -1;
+
 		// Transform
 		glm::vec3 Position = glm::vec3(0.0f);
 		float Radius = 1.0f;
@@ -28,8 +32,8 @@ namespace Krux {
 		// Sorting
 		float ZIndex = 0.0f;
 
-		CircleData(glm::vec3 pos, float radius, glm::vec4 color, float thickness, float fade, float zIndex)
-			: Position(pos), Radius(radius), Color(color), Thickness(thickness), Fade(fade), ZIndex(zIndex)
+		CircleData(glm::vec3 pos, float radius, glm::vec4 color, float thickness, float fade, float zIndex, int entityID)
+			: Position(pos), Radius(radius), Color(color), Thickness(thickness), Fade(fade), ZIndex(zIndex), EntityID(entityID)
 		{}
 	};
 

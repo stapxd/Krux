@@ -4,6 +4,8 @@
 #include "Krux/Math/Math.h"
 #include "Krux/Scene/Components.h"
 
+#include "Krux/Core/Input.h"
+
 #include <imgui.h>
 #include <ImGuizmo.h>
 
@@ -33,59 +35,83 @@ namespace Krux {
 			
 			m_ViewportData.ColorAttachmentID = std::get<uint32_t>(panelData);
 			ImVec2 panelSize = ImGui::GetContentRegionAvail();
+			ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
 			m_NewViewportSize = { panelSize.x, panelSize.y };
 
 			ImGui::Image((ImTextureID)m_ViewportData.ColorAttachmentID, panelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-			
-			if (m_ViewportData.CurrentOperation != GuizmoOperation::NONE && m_ViewportData.Scene->GetState() == SceneState::Edit && m_ViewportData.Scene->GetSelectedEntityID() != UUID64::INVALID) {
-				ImGuizmo::Enable(true);
-				ImGuizmo::SetOrthographic(false);
-				ImGuizmo::SetDrawlist();
 
+			if (m_ViewportData.Scene->GetState() == SceneState::Edit) {
 				ImVec2 viewportPos = ImGui::GetWindowPos();
-				ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
-				ImGuizmo::SetRect(viewportPos.x + contentMin.x, viewportPos.y + contentMin.y, panelSize.x, panelSize.y);
-				
-				TransformComponent* selectedEntTrm = m_ViewportData.Scene->GetComponent<TransformComponent>(m_ViewportData.Scene->GetSelectedEntityID());
-				glm::mat4 rotation = glm::toMat4(glm::quat(selectedEntTrm->Rotation));
+				auto [mx, my] = ImGui::GetMousePos();
+				mx -= viewportPos.x + contentMin.x;
+				my -= viewportPos.y + contentMin.y;
+				my = m_NewViewportSize.y - my;
 
-				glm::mat4 selectedEntTrmMat4 = selectedEntTrm->GetTransform();
+				int mouseX = (int)mx;
+				int mouseY = (int)my;
 
-				ImGuizmo::Manipulate(
-					glm::value_ptr(m_ViewportData.Camera->GetView()),
-					glm::value_ptr(m_ViewportData.Camera->GetProjection()),
-					ImGuizmo::OPERATION(m_ViewportData.CurrentOperation),
-					ImGuizmo::MODE(GuizmoMode::LOCAL),
-					glm::value_ptr(selectedEntTrmMat4),
-					nullptr,
-					nullptr
-				);
-
-				if (ImGuizmo::IsUsing()) {
-					glm::vec3 newWorldPosition, newScale, newRotation;
-
-					if (!Math::DecomposeTransform(selectedEntTrmMat4, newWorldPosition, newRotation, newScale))
-						return;
-
-					if (glm::any(glm::isnan(newWorldPosition)) || glm::any(glm::isnan(newScale)))
-						return;
-
-					glm::vec3 parentWorldPosition = glm::vec3(0.0f);
-					Entity* selectedEntity = m_ViewportData.Scene->FindByUUID(
-						m_ViewportData.Scene->GetSelectedEntityID()
-					);
-					if (selectedEntity && !selectedEntity->IsRoot()) {
-						Entity* parent = selectedEntity->GetParent();
-						if (parent)
-							parentWorldPosition = parent->GetComponent<TransformComponent>()->WorldPosition;
-					}
-
-					selectedEntTrm->LocalPosition = newWorldPosition - parentWorldPosition;
-					selectedEntTrm->Rotation = glm::radians(newRotation); 
-					selectedEntTrm->Scale = newScale;
-					m_ViewportData.Scene->UpdateWorldPositions();
+				if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)m_NewViewportSize.x && mouseY < (int)m_NewViewportSize.y)
+				{
+					int pixelData = m_FrameBuffer->ReadPixel(1, mouseX, mouseY);
+					//KRX_CORE_INFO("Pixeldata {}", pixelData);
+					m_HoveredEntity = pixelData == -1 ? UUID64::INVALID : m_ViewportData.Scene->GetUUIDFromECS(ecs::entity((uint32_t)pixelData));
 				}
 
+				if (m_ViewportData.CurrentOperation != GuizmoOperation::NONE && m_ViewportData.Scene->GetSelectedEntityID() != UUID64::INVALID) {
+					ImGuizmo::Enable(true);
+					ImGuizmo::SetOrthographic(false);
+					ImGuizmo::SetDrawlist();
+
+					ImGuizmo::SetRect(viewportPos.x + contentMin.x, viewportPos.y + contentMin.y, panelSize.x, panelSize.y);
+
+					TransformComponent* selectedEntTrm = m_ViewportData.Scene->GetComponent<TransformComponent>(m_ViewportData.Scene->GetSelectedEntityID());
+					if (selectedEntTrm) {
+						glm::mat4 rotation = glm::toMat4(glm::quat(selectedEntTrm->Rotation));
+
+						glm::mat4 selectedEntTrmMat4 = selectedEntTrm->GetTransform();
+
+						bool isSnaped = Input::IsKeyPressed(Key::LEFT_CONTROL);
+						float snap = 0.5f;
+
+						if (m_ViewportData.CurrentOperation == GuizmoOperation::ROTATE)
+							snap = 45.0f;
+
+						ImGuizmo::Manipulate(
+							glm::value_ptr(m_ViewportData.Camera->GetView()),
+							glm::value_ptr(m_ViewportData.Camera->GetProjection()),
+							ImGuizmo::OPERATION(m_ViewportData.CurrentOperation),
+							ImGuizmo::MODE(GuizmoMode::LOCAL),
+							glm::value_ptr(selectedEntTrmMat4),
+							nullptr,
+							isSnaped ? &snap : nullptr
+						);
+
+						if (ImGuizmo::IsUsing()) {
+							glm::vec3 newWorldPosition, newScale, newRotation;
+
+							if (!Math::DecomposeTransform(selectedEntTrmMat4, newWorldPosition, newRotation, newScale))
+								return;
+
+							if (glm::any(glm::isnan(newWorldPosition)) || glm::any(glm::isnan(newScale)))
+								return;
+
+							glm::vec3 parentWorldPosition = glm::vec3(0.0f);
+							Entity* selectedEntity = m_ViewportData.Scene->FindByUUID(
+								m_ViewportData.Scene->GetSelectedEntityID()
+							);
+							if (selectedEntity && !selectedEntity->IsRoot()) {
+								Entity* parent = selectedEntity->GetParent();
+								if (parent)
+									parentWorldPosition = parent->GetComponent<TransformComponent>()->WorldPosition;
+							}
+
+							selectedEntTrm->LocalPosition = newWorldPosition - parentWorldPosition;
+							selectedEntTrm->Rotation = glm::radians(newRotation);
+							selectedEntTrm->Scale = newScale;
+							m_ViewportData.Scene->UpdateWorldPositions();
+						}
+					}
+				}
 			}
 
 		}

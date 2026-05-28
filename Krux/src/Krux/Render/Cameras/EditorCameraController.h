@@ -11,7 +11,7 @@ namespace Krux {
 		EditorCameraController(EditorCamera& camera);
 
 		void MoveForward(float direction);
-		void OnUpdate(Time time);
+		void OnUpdate(Time time, bool viewportHovered);
 
 	private:
 		float m_CameraSpeed = 10.0f;

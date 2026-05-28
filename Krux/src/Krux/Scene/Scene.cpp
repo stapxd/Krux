@@ -110,6 +110,13 @@ namespace Krux {
 		return nullptr;
 	}
 
+	UUID64 Scene::GetUUIDFromECS(ecs::entity entity) {
+		if(entity.IsValid())
+			return m_Registry.get<IDComponent>(entity)->ID;
+
+		return UUID64::INVALID;
+	}
+
 	void Scene::UpdateWorldPositions()
 	{
 		for (auto& entityPair : m_Entities) {
@@ -136,22 +143,20 @@ namespace Krux {
 	{
 		UpdateWorldPositions();
 
-		Renderer::Clear();
-		
 		Renderer2D::BeginFrame(camera);
 
 			Renderer2D::BeginBatch();
 			{
 				auto group = m_Registry.group<TransformComponent, SpriteRendererComponent>();
 				for (auto& [e, trm, sprR] : group) {
-					Renderer2D::DrawSprite(trm, sprR);
+					Renderer2D::DrawSprite(trm, sprR, (int)e.GetID());
 				}
 			}
 
 			{
 				auto group = m_Registry.group<TransformComponent, CircleRendererComponent>();
 				for (auto& [e, trm, circleR] : group) {
-					Renderer2D::DrawCircle(trm.WorldPosition, circleR.Radius, circleR.Color, circleR.Thickness, circleR.Fade);
+					Renderer2D::DrawCircle(trm.WorldPosition, circleR.Radius, circleR.Color, circleR.Thickness, circleR.Fade, (int)e.GetID());
 				}
 			}
 			Renderer2D::EndBatch();

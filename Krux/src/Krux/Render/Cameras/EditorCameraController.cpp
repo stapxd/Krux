@@ -11,13 +11,17 @@ namespace Krux {
 	{
 	}
 
-	void EditorCameraController::OnUpdate(Time time)
+	void EditorCameraController::OnUpdate(Time time, bool viewportHovered)
 	{
 		if (Input::IsMouseButtonPressed(Mouse::BUTTON_LEFT)) {
 			Input::SetCursorInputMode(CursorInputMode::NORMAL);
 			m_FirstMouse = true;
 		}
 		else if (Input::IsMouseButtonPressed(Mouse::BUTTON_RIGHT)) {
+
+			if (m_FirstMouse && !viewportHovered)
+				return;
+
 			Input::SetCursorInputMode(CursorInputMode::DISABLED);
 			double x, y;
 			Input::GetMousePosition(x, y);
@@ -40,12 +44,12 @@ namespace Krux {
 
 			if (Input::IsKeyPressed(Key::W))
 				moveDir += forward;
-			if (Input::IsKeyPressed(Key::S)) 
+			if (Input::IsKeyPressed(Key::S))
 				moveDir -= forward;
 
 			if (Input::IsKeyPressed(Key::D))
 				moveDir += right;
-			if (Input::IsKeyPressed(Key::A)) 
+			if (Input::IsKeyPressed(Key::A))
 				moveDir -= right;
 
 			if (Input::IsKeyPressed(Key::SPACE))
@@ -59,6 +63,10 @@ namespace Krux {
 			}
 		}
 		else if (Input::IsMouseButtonPressed(Mouse::BUTTON_MIDDLE)) {
+
+			if (m_FirstMouse && !viewportHovered)
+				return;
+
 			glm::vec3 cameraRight = glm::normalize(glm::cross(m_Camera.Forward(), m_Camera.Up()));
 
 			double x, y;

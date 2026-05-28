@@ -45,6 +45,7 @@ namespace Krux {
 		void OnEvent(Event& e) override;
 
 		bool OnKeyPressed(KeyPressedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 		bool OnMouseScroll(MouseScrollEvent& e);
 

@@ -2,36 +2,38 @@
 
 #include "Event.h"
 
+#include "Krux/Core/MouseCodes.h"
+
 namespace Krux {
 
 	class MouseButtonPressedEvent : public Event {
 	public:
-		MouseButtonPressedEvent(int keyCode)
-			: m_KeyCode(keyCode)
+		MouseButtonPressedEvent(Mouse mouseButton)
+			: m_MouseCode(mouseButton)
 		{}
 
 		EVENT_SET_TYPE(MouseButtonPressed);
 		EVENT_SET_CATEGORY(MouseEvent | MouseButtonEvent);
 
-		int GetKey() const { return m_KeyCode; }
+		Mouse GetMouseButton() const { return m_MouseCode; }
 
 	private:
-		int m_KeyCode;
+		Mouse m_MouseCode;
 	};
 
 	class MouseButtonReleasedEvent : public Event {
 	public:
-		MouseButtonReleasedEvent(int keyCode)
-			: m_KeyCode(keyCode)
+		MouseButtonReleasedEvent(Mouse mouseButton)
+			: m_MouseCode(mouseButton)
 		{}
 
 		EVENT_SET_TYPE(MouseButtonReleased);
 		EVENT_SET_CATEGORY(MouseEvent | MouseButtonEvent);
 
-		int GetKey() const { return m_KeyCode; }
+		Mouse GetKey() const { return m_MouseCode; }
 
 	private:
-		int m_KeyCode;
+		Mouse m_MouseCode;
 	};
 
 	class MouseScrollEvent : public Event {

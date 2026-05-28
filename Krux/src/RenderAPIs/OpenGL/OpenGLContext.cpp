@@ -43,7 +43,7 @@ namespace Krux {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-#define KRX_ENABLE_RENDER_DEBUG_OUTPUT 0
+#define KRX_ENABLE_RENDER_DEBUG_OUTPUT 1
 #if KRX_ENABLE_RENDER_DEBUG_OUTPUT
         glDebugMessageCallback(DebugCallback, nullptr);
 #endif
