@@ -10,6 +10,7 @@
 namespace Krux {
 
 	enum class GuizmoOperation {
+		NONE                = 0,
 		// from ImGuizmo.h
 		TRANSLATE_X			= (1u << 0),
 		TRANSLATE_Y			= (1u << 1),

@@ -12,7 +12,7 @@ namespace Krux {
 	{
 	}
 
-	Entity& Scene::CreateEntity()
+	UUID64 Scene::CreateEntity()
 	{
 		ecs::entity e = m_Registry.create();
 		Entity entity(e, this);
@@ -25,7 +25,54 @@ namespace Krux {
 
 		m_Entities[id] = entity;
 
-		return m_Entities[id];
+		return id;
+	}
+
+	UUID64 Scene::CreateNewFromExisting(UUID64 id) {
+		Entity* fromEnt = FindByUUID(id);
+		if (!fromEnt) {
+			return UUID64::INVALID;
+		}
+
+		std::vector<UUID64> childrenSnapshot = fromEnt->GetChildEntities();
+
+		ecs::entity e = m_Registry.create();
+		Entity entity(e, this);
+		UUID64 newId;
+
+		AddComponent<IDComponent>(entity, newId);
+		m_Entities[newId] = entity;
+
+		CopyAllComponents(id, newId);
+
+		for (UUID64 childId : childrenSnapshot) {
+			UUID64 newChildId = CreateNewFromExisting(childId);
+			if (newChildId != UUID64::INVALID) {
+				m_Entities[newId].AddChild(newChildId);
+			}
+		}
+		
+		return newId;
+	}
+
+	void Scene::CopyAllComponents(UUID64 from, UUID64 to) {
+		Entity* fromEntPtr = FindByUUID(from);
+		Entity* toEntPtr = FindByUUID(to);
+
+		std::apply([&](const auto&&... args) {
+
+			auto copyComponentFunc = [&](const auto& comp) {
+				using T = std::decay_t<decltype(comp)>;
+
+				if (fromEntPtr->HasComponent<T>() && typeid(T) != typeid(IDComponent)) {
+					T* newComp = AddComponent<T>(*toEntPtr);
+					*newComp = *(fromEntPtr->GetComponent<T>());
+				}
+			};
+
+			(copyComponentFunc(args), ...);
+
+		}, AllComponents{});
 	}
 
 	void Scene::DeleteEntity(const Entity& e)

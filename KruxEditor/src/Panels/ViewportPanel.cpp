@@ -37,7 +37,7 @@ namespace Krux {
 
 			ImGui::Image((ImTextureID)m_ViewportData.ColorAttachmentID, panelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 			
-			if (m_ViewportData.Scene->GetState() == SceneState::Edit && m_ViewportData.Scene->GetSelectedEntityID() != UUID64::INVALID) {
+			if (m_ViewportData.CurrentOperation != GuizmoOperation::NONE && m_ViewportData.Scene->GetState() == SceneState::Edit && m_ViewportData.Scene->GetSelectedEntityID() != UUID64::INVALID) {
 				ImGuizmo::Enable(true);
 				ImGuizmo::SetOrthographic(false);
 				ImGuizmo::SetDrawlist();

@@ -43,32 +43,28 @@ namespace Krux {
 		m_FrameBuffer = FrameBuffer::Create(fbSpec);
 
 		// Temp
-		Entity& e001 = m_Scene.CreateEntity();
-		Entity& e002 = m_Scene.CreateEntity();
-		Entity& e003 = m_Scene.CreateEntity();
-		Entity& e004 = m_Scene.CreateEntity();
+		Entity* e001 = m_Scene.FindByUUID(m_Scene.CreateEntity());
+		Entity* e002 = m_Scene.FindByUUID(m_Scene.CreateEntity());
+		Entity* e003 = m_Scene.FindByUUID(m_Scene.CreateEntity());
+		Entity* e004 = m_Scene.FindByUUID(m_Scene.CreateEntity());
 
-		e001.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f), m_Texture);
-		e002.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
+		e001->AddComponent<SpriteRendererComponent>(glm::vec4(1.0f), m_Texture);
+		e002->AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.5f, 0.2f, 1.0f));
 
-		TransformComponent* trm = e001.GetComponent<TransformComponent>();
+		TransformComponent* trm = e001->GetComponent<TransformComponent>();
 		if (trm) {
 			trm->LocalPosition.x -= 5.0f;
 		}
 
-		NameComponent* n1 = e001.GetComponent<NameComponent>();
-		NameComponent* n2 = e002.GetComponent<NameComponent>();
-		NameComponent* n3 = e003.GetComponent<NameComponent>();
+		NameComponent* n1 = e001->GetComponent<NameComponent>();
+		NameComponent* n2 = e002->GetComponent<NameComponent>();
+		NameComponent* n3 = e003->GetComponent<NameComponent>();
 
 		n1->Text = "E1";
 		n2->Text = "E2";
 		n3->Text = "E3";
 
-		e001.AddChild(e002);
-		e003.AddChild(e001);
-		e004.AddChild(e001);
-
-		e002.BecomeOrphan();
+		e002->BecomeOrphan();
 
 	}
 
@@ -166,9 +162,9 @@ namespace Krux {
 		Application::Instance()->GetImGuiLayer()->SetBlockEventsOverride(cameraActive);
 		ImGui::SetNextFrameWantCaptureMouse(!cameraActive);
 
-		if (ImGuizmo::IsOver()) {
+		/*if (ImGuizmo::IsOver()) {
 			KRX_CORE_DEBUG("OVER IMGUIZMO!");
-		}
+		}*/
 
 		glm::vec2 viewportSize = m_ViewportPanel.GetSize();
 		if (m_ViewportPanel.ShouldUpdateExternalViewport())
@@ -213,22 +209,37 @@ namespace Krux {
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
-		if (m_SceneHierarchyPanel.IsFocused() && e.GetKey() == (int)Key::DEL) {
+		if (m_SceneHierarchyPanel.IsFocused() && e.GetKey() == Key::DEL) {
 			m_EntityToDelete = m_Scene.GetSelectedEntityID();
 		}
 
 		if (m_ViewportPanel.IsHovered()) {
-			if (e.GetKey() == (int)Key::Q) {
-				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::BOUNDS);
+			if (e.GetKey() == Key::Q) {
+				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::NONE);
 			}
-			else if (e.GetKey() == (int)Key::Z) {
+			else if (e.GetKey() == Key::Z) {
 				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::TRANSLATE);
 			}
-			else if (e.GetKey() == (int)Key::X) {
+			else if (e.GetKey() == Key::X) {
 				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::ROTATE);
 			}
-			else if (e.GetKey() == (int)Key::C) {
+			else if (e.GetKey() == Key::C) {
 				m_ViewportPanel.SetGuizmoOperation(GuizmoOperation::SCALE);
+			}
+		}
+
+		if (e.IsRepeated())
+			return false;
+
+		bool control = Input::IsKeyPressed(Key::LEFT_CONTROL) || Input::IsKeyPressed(Key::RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(Key::LEFT_SHIFT) || Input::IsKeyPressed(Key::RIGHT_SHIFT);
+
+		switch (e.GetKey())
+		{
+			case Key::D: {
+				UUID64 selEntId = m_Scene.GetSelectedEntityID();
+				if (control && selEntId != UUID64::INVALID)
+					m_Scene.SetSelectedEntityID(m_Scene.CreateNewFromExisting(selEntId));
 			}
 		}
 

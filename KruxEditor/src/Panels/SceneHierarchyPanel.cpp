@@ -54,14 +54,16 @@ namespace Krux {
 			if (ImGui::BeginMenu("2D"))
 			{
 				if (ImGui::MenuItem("Quad")) {
-					Entity& e = m_Scene->CreateEntity();
-					e.AddComponent<SpriteRendererComponent>();
-					e.GetComponent<NameComponent>()->Text = "Quad";
+					UUID64 newEntityID = m_Scene->CreateEntity();
+					Entity* newEntitiPtr = m_Scene->FindByUUID(newEntityID);
+					newEntitiPtr->AddComponent<SpriteRendererComponent>();
+					newEntitiPtr->GetComponent<NameComponent>()->Text = "Quad";
 				}
 				if (ImGui::MenuItem("Circle")) {
-					Entity& e = m_Scene->CreateEntity();
-					e.AddComponent<CircleRendererComponent>();
-					e.GetComponent<NameComponent>()->Text = "Circle";
+					UUID64 newEntityID = m_Scene->CreateEntity();
+					Entity* newEntitiPtr = m_Scene->FindByUUID(newEntityID);
+					newEntitiPtr->AddComponent<CircleRendererComponent>();
+					newEntitiPtr->GetComponent<NameComponent>()->Text = "Circle";
 				}
 				ImGui::EndMenu();
 			}

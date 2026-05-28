@@ -88,12 +88,12 @@ namespace Krux {
                     switch (action)
                     {
                     case GLFW_PRESS: {
-                        KeyPressedEvent e(key, 0);
+                        KeyPressedEvent e(key, false);
                         self.InvokeEventCallback(e);
                         break;
                     }
                     case GLFW_REPEAT: {
-                        KeyPressedEvent e(key, 1);
+                        KeyPressedEvent e(key, true);
                         self.InvokeEventCallback(e);
                         break;
                     }

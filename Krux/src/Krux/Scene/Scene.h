@@ -19,7 +19,9 @@ namespace Krux {
 
         SceneState GetState() { return m_State; }
 
-        Entity& CreateEntity();
+        UUID64 CreateEntity();
+        UUID64 CreateNewFromExisting(UUID64 id);
+        void CopyAllComponents(UUID64 from, UUID64 to);
         void DeleteEntity(const Entity& e);
 
         const std::unordered_map<UUID64, Entity>& GetEntities() const& { return m_Entities; }
