@@ -19,7 +19,15 @@ namespace Krux {
 
 	ViewportPanel::ViewportPanel(ViewportData data)
 		: Panel("Viewport"), m_ViewportData(data)
-	{}
+	{
+		TextureSpecification spec;
+		spec.WrapR = TextureWrap::Repeat;
+		spec.WrapS = TextureWrap::Repeat;
+		spec.WrapT = TextureWrap::Repeat;
+
+		m_PlayTextureHandle = AssetManager::Load<Texture2D>("assets/builtin/textures/play.png", spec);
+		m_StopTextureHandle = AssetManager::Load<Texture2D>("assets/builtin/textures/stop.png", spec);
+	}
 
 	void ViewportPanel::BeforeWindowSettings() {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -33,18 +41,53 @@ namespace Krux {
 
 		if (std::holds_alternative<uint32_t>(panelData)) {
 			
+			Ref<Texture2D> currentStateBtnTexture;
+			SceneState stateToSet = SceneState::Play;
+			switch (m_ViewportData.Scene->GetState())
+			{
+			case Krux::SceneState::Edit:
+				currentStateBtnTexture = AssetManager::GetAsset<Texture2D>(m_PlayTextureHandle);
+				stateToSet = SceneState::Play;
+				break;
+			case Krux::SceneState::Play:
+				currentStateBtnTexture = AssetManager::GetAsset<Texture2D>(m_StopTextureHandle);
+				stateToSet = SceneState::Edit;
+				break;
+			default:
+				KRX_CORE_ASSERT(false, "Invalid Scene state!");
+			}
+
+			Ref<Texture2D> stopTexture = AssetManager::GetAsset<Texture2D>(m_StopTextureHandle);
+
 			m_ViewportData.ColorAttachmentID = std::get<uint32_t>(panelData);
 			ImVec2 panelSize = ImGui::GetContentRegionAvail();
+
+			// Top Bar
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(m_TopBarBtnPadding, m_TopBarBtnPadding));
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+			
+			ImGui::SameLine(panelSize.x / 2 - (m_TopBarBtnPadding + m_TopBarBtnSize));
+			if (ImGui::ImageButton("SceneStateBtn", (ImTextureID)currentStateBtnTexture->GetRendererID(), ImVec2((float)m_TopBarBtnSize, (float)m_TopBarBtnSize), ImVec2(0, 1), ImVec2(1, 0)))
+			{
+				m_ViewportData.Scene->SetState(stateToSet);
+			}
+
+			ImGui::PopStyleVar();
+
+			panelSize = ImGui::GetContentRegionAvail();
 			ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
 			m_NewViewportSize = { panelSize.x, panelSize.y };
 
+			// Main Content
 			ImGui::Image((ImTextureID)m_ViewportData.ColorAttachmentID, panelSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			
+			ImGui::PopStyleVar();
 
 			if (m_ViewportData.Scene->GetState() == SceneState::Edit) {
 				ImVec2 viewportPos = ImGui::GetWindowPos();
 				auto [mx, my] = ImGui::GetMousePos();
 				mx -= viewportPos.x + contentMin.x;
-				my -= viewportPos.y + contentMin.y;
+				my -= viewportPos.y + contentMin.y + m_TopBarBtnSize + m_TopBarBtnPadding * 2;
 				my = m_NewViewportSize.y - my;
 
 				int mouseX = (int)mx;
@@ -62,7 +105,7 @@ namespace Krux {
 					ImGuizmo::SetOrthographic(false);
 					ImGuizmo::SetDrawlist();
 
-					ImGuizmo::SetRect(viewportPos.x + contentMin.x, viewportPos.y + contentMin.y, panelSize.x, panelSize.y);
+					ImGuizmo::SetRect(viewportPos.x + contentMin.x, viewportPos.y + contentMin.y + m_TopBarBtnSize + m_TopBarBtnPadding * 2, panelSize.x, panelSize.y);
 
 					TransformComponent* selectedEntTrm = m_ViewportData.Scene->GetComponent<TransformComponent>(m_ViewportData.Scene->GetSelectedEntityID());
 					if (selectedEntTrm) {

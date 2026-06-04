@@ -193,6 +193,64 @@ namespace Krux {
 					ImGui::DragFloat("Thickness", &comp->Thickness, 0.01f, 0.01f, 1.0f);
 					ImGui::DragFloat("Fade", &comp->Fade, 0.02f, 0.02f, 1.0f);
 				}, true);
+
+				// Camera Component
+				DrawComponent<CameraComponent>(e, [this](CameraComponent* comp) {
+					
+					bool recalculateProj = false;
+					const char* types[] = { "Perspective", "Orthographic" };
+
+					if (ImGui::BeginCombo("Type", types[(int)comp->Type])) {
+
+						for (int i = 0; i < (int)CameraType::Count; i++)
+						{
+							const bool isSelected = ((int)comp->Type == i);
+
+							if (ImGui::Selectable(types[i], isSelected))
+							{
+								comp->Type = CameraType(i);
+								recalculateProj = true;
+							}
+
+							if (isSelected)
+							{
+								ImGui::SetItemDefaultFocus();
+							}
+						}
+						ImGui::EndCombo();
+					}
+
+					ImGui::Checkbox("Primary", &comp->Primary);
+
+					switch (comp->Type)
+					{
+						case CameraType::Perspective: 
+							if (ImGui::DragFloat("FOV", &comp->FOV, 0.5f, 30.0f, 110.0f))
+								recalculateProj = true;
+
+							if (ImGui::DragFloat("Near", &comp->PerspectiveNear))
+								recalculateProj = true;
+
+							if (ImGui::DragFloat("Far", &comp->PerspectiveFar))
+								recalculateProj = true;
+							break;
+
+						case CameraType::Orthographic: 
+							if (ImGui::DragFloat("Zoom", &comp->OrthoZoom, 0.5f, 1.0f, 110.0f))
+								recalculateProj = true;
+
+							if (ImGui::DragFloat("Near", &comp->OrthoNear))
+								recalculateProj = true;
+
+							if (ImGui::DragFloat("Far", &comp->OrthoFar))
+								recalculateProj = true;
+							break;
+						
+					}
+
+					CameraSystem::RecalculateProjection(*comp);
+
+				});
 			}
 		}
 	}

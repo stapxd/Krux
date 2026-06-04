@@ -207,6 +207,22 @@ namespace Krux {
 		s_RendererStateStack.emplace_back(RendererState::BeginFrame);
 	}
 
+	void Renderer2D::BeginFrame(const CameraComponent& camera, const glm::mat4& cameraTransform)
+	{
+		// Camera
+		s_Data.CameraSettings.ProjectionView = camera.Projection * glm::inverse(cameraTransform);
+		s_Data.CameraUniform->SetData(&s_Data.CameraSettings, sizeof(RendererData::CameraData));
+
+		s_RendererStateStack.clear();
+		s_Data.QuadsToDraw.clear();
+		s_Data.CirclesToDraw.clear();
+
+		s_Data.DrawCallsCount = 0;
+
+		s_CurrentState = RendererState::BeginFrame;
+		s_RendererStateStack.emplace_back(RendererState::BeginFrame);
+	}
+
 	void Renderer2D::EndFrame()
 	{
 		auto it = s_RendererStateStack.begin(); // BeginFrame is the first thing a person calls

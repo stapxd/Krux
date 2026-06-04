@@ -18,6 +18,7 @@ namespace Krux {
         Scene();
 
         SceneState GetState() { return m_State; }
+        void SetState(SceneState state) { m_State = state; }
 
         UUID64 CreateEntity();
         UUID64 CreateNewFromExisting(UUID64 id);
@@ -30,6 +31,9 @@ namespace Krux {
 
         template<typename C, typename... Args>
         C* AddComponent(const Entity& e, Args&&... args);
+
+        template<typename C>
+        void OnComponentAdded(C* comp);
 
         template<typename C>
         C* GetComponent(UUID64 id);
@@ -45,6 +49,7 @@ namespace Krux {
 
         void UpdateWorldPositions();
         void UpdateWorldPositionRecursively(Entity& e, glm::vec3 parentPosition = glm::vec3(0.0f));
+        void UpdateViewport(float width, float height);
 
         void OnUpdateEdit(Time time, const Camera& camera);
         void OnUpdateRuntime(Time time);
@@ -65,6 +70,8 @@ namespace Krux {
         // add positions so they are correctly sorted in SceneHierarchy
         std::unordered_map<UUID64, Entity> m_Entities;
         UUID64 m_SelectedEntityID = UUID64::INVALID;
+
+        glm::vec2 m_ViewportSize = glm::vec2(1.0f);
 
         friend Entity;
     };

@@ -25,6 +25,7 @@ namespace Krux {
 		static void Shutdown();
 		
 		static void BeginFrame(const Camera& camera);
+		static void BeginFrame(const CameraComponent& camera, const glm::mat4& cameraTransform);
 		static void EndFrame();
 
 		static void BeginBatch();

@@ -104,13 +104,42 @@ namespace Krux {
 		REGISTER_NAME(Circle Renderer Component)
 	};
 
+	enum class CameraType {
+		Perspective,
+		Orthographic,
+		Count
+	};
+
+	struct CameraComponent {
+		CameraType Type = CameraType::Perspective;
+		bool Primary = false;
+		float FOV = 50.0f;
+
+		float PerspectiveNear = 0.1f;
+		float PerspectiveFar  = 100.0f;
+
+		float OrthoZoom = 1.0f;
+		float OrthoNear = 1.0f;
+		float OrthoFar  = -1.0f;
+
+		// Not adjustable
+		float Width = 1.0f;
+		float Height = 1.0f;
+		glm::mat4 Projection = glm::mat4(1.0f);
+		glm::mat4 View = glm::mat4(1.0f);
+
+		REGISTER_CLASS_NAME(CameraComponent)
+		REGISTER_NAME(Camera Component)
+	};
+
 	using AllComponents = std::tuple<
 		IDComponent,
 		TagComponent,
 		NameComponent,
 		TransformComponent,
 		SpriteRendererComponent, 
-		CircleRendererComponent
+		CircleRendererComponent,
+		CameraComponent
 	>;
 
 }

@@ -6,6 +6,9 @@
 #include "Krux/Render/Cameras/Camera.h"
 #include "Krux/Render/FrameBuffer.h"
 
+#include "Krux/Render/Assets/Texture2D.h"
+#include "Krux/Render/Assets/AssetManager.h"
+
 #include <glm/glm.hpp>
 
 namespace Krux {
@@ -71,6 +74,11 @@ namespace Krux {
 
 		UUID64 m_HoveredEntity = UUID64::INVALID;
 		Ref<FrameBuffer> m_FrameBuffer = nullptr;
+
+		AssetHandle m_PlayTextureHandle;
+		AssetHandle m_StopTextureHandle;
+		int m_TopBarBtnSize = 20;
+		float m_TopBarBtnPadding = 2.0f;
 	};
 
 }

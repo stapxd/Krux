@@ -139,6 +139,22 @@ namespace Krux {
 		}
 	}
 
+	void Scene::UpdateViewport(float width, float height)
+	{
+		if (width <= 0.0f || height <= 0.0f)
+			return;
+
+		m_ViewportSize.x = (float)width;
+		m_ViewportSize.y = (float)height;
+
+		auto group = m_Registry.group<CameraComponent>();
+		for (auto& [e, cmr] : group) {
+			cmr.Width  = width;
+			cmr.Height = height;
+			CameraSystem::RecalculateProjection(cmr);
+		}
+	}
+
 	void Scene::OnUpdateEdit(Time time, const Camera& camera)
 	{
 		UpdateWorldPositions();
@@ -166,7 +182,42 @@ namespace Krux {
 
 	void Scene::OnUpdateRuntime(Time time)
 	{
+		UpdateWorldPositions();
 
+		CameraComponent* primaryCamera = nullptr;
+		glm::mat4 primaryCameraTransform = glm::mat4(1.0f);
+		{
+			auto group = m_Registry.group<TransformComponent, CameraComponent>();
+			for (auto& [e, trm, cmr] : group) {
+				if (cmr.Primary) {
+					primaryCamera = &cmr;
+					primaryCameraTransform = trm.GetTransform();
+					break;
+				}
+			}
+		}
+
+		if (primaryCamera) {
+			Renderer2D::BeginFrame(*primaryCamera, primaryCameraTransform);
+
+				Renderer2D::BeginBatch();
+					{
+						auto group = m_Registry.group<TransformComponent, SpriteRendererComponent>();
+						for (auto& [e, trm, sprR] : group) {
+							Renderer2D::DrawSprite(trm, sprR, (int)e.GetID());
+						}
+					}
+
+					{
+						auto group = m_Registry.group<TransformComponent, CircleRendererComponent>();
+						for (auto& [e, trm, circleR] : group) {
+							Renderer2D::DrawCircle(trm.WorldPosition, circleR.Radius, circleR.Color, circleR.Thickness, circleR.Fade, (int)e.GetID());
+						}
+					}
+				Renderer2D::EndBatch();
+
+			Renderer2D::EndFrame();
+		}
 	}
 
 }

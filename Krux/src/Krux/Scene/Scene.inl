@@ -1,6 +1,10 @@
 #pragma once
 #include "Entity.h"
 
+#include "Systems/CameraSystem.h"
+
+#include <type_traits>
+
 namespace Krux {
     template<typename C, typename... Args>
     C* Scene::AddComponent(const Entity& e, Args&&... args) {
@@ -8,7 +12,21 @@ namespace Krux {
             return m_Registry.get<C>(e);
         }
         m_Registry.emplace<C>(e, std::forward<Args>(args)...);
-        return m_Registry.get<C>(e);
+
+        C* comp = m_Registry.get<C>(e);
+        OnComponentAdded<C>(comp);
+        return comp;
+    }
+
+    template<typename C>
+    void Scene::OnComponentAdded(C* comp) {
+
+        if constexpr (std::is_same_v<C, CameraComponent>) {
+            comp->Width  = m_ViewportSize.x;
+            comp->Height = m_ViewportSize.y;
+            CameraSystem::RecalculateProjection(*comp);
+        }
+
     }
 
     template<typename C>
